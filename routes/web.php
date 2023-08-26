@@ -37,6 +37,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', function(){
     return Inertia::render('Home');
-});
+})->middleware(['auth', 'verified'])->name('home');
 
 require __DIR__.'/auth.php';

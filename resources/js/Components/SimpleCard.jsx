@@ -1,0 +1,27 @@
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+} from "@material-tailwind/react";
+ 
+export default function SimpleCard() {
+  return (
+    <Card className="mt-6 w-45 my-5">
+      <CardBody>
+        <Typography variant="h5" color="blue-gray" className="mb-2">
+          Jumlah Indikator <span class="text-lg text-blue-600">15</span>
+        </Typography>
+        
+        <Typography class="text-justify">
+          Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja
+          antara target dan realisasi
+        </Typography>
+      </CardBody>
+      <CardFooter className="pt-0">
+        <Button color="blue">Detail</Button>
+      </CardFooter>
+    </Card>
+  );
+}
