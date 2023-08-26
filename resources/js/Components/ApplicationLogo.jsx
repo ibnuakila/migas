@@ -1,7 +1,7 @@
 import logo from "../../../public/logo-esdm.jpeg";
 
-export default function ApplicationLogo(props) {
+export default function ApplicationLogo({width, height}) {
     return (
-            <img src ={logo}  width={60} height={60} alt = "alt" / >
+            <img src ={logo}  width={width} height={height} alt = "alt" / >
     );
 }
