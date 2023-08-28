@@ -8,7 +8,7 @@ import {
  
 export default function SimpleCard() {
   return (
-    <Card className="mt-6 w-45 my-5 sm:w-full md:w-full">
+    <Card className="mt-6 w-45 my-5">
       <CardBody>
         <Typography variant="h5" color="blue-gray" className="mb-2">
           Jumlah Indikator <span className="text-lg text-blue-600">15</span>
