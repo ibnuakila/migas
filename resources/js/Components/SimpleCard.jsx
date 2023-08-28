@@ -8,13 +8,13 @@ import {
  
 export default function SimpleCard() {
   return (
-    <Card className="mt-6 w-45 my-5">
+    <Card className="mt-6 w-45 my-5 sm:w-full md:w-full">
       <CardBody>
         <Typography variant="h5" color="blue-gray" className="mb-2">
-          Jumlah Indikator <span class="text-lg text-blue-600">15</span>
+          Jumlah Indikator <span className="text-lg text-blue-600">15</span>
         </Typography>
         
-        <Typography class="text-justify">
+        <Typography className="text-justify">
           Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja
           antara target dan realisasi
         </Typography>

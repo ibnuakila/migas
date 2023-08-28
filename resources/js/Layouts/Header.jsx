@@ -26,11 +26,12 @@ CubeTransparentIcon,
         Bars2Icon,
         } from "@heroicons/react/24/outline";
 import ApplicationLogo from '../Components/ApplicationLogo';
+import { useState, useEffect } from 'react';
 
 export default function Header(auth) {
-    const [openNav, setOpenNav] = React.useState(false);
+    const [openNav, setOpenNav] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener(
                 "resize",
                 () => window.innerWidth >= 960 && setOpenNav(false)
@@ -199,7 +200,7 @@ export default function Header(auth) {
                             href="#"
                             className="mr-4 cursor-pointer py-1.5 text-2xl px-1 tracking-1"
                             >          
-                            SI<span class="text-blue-600">CAKI</span>
+                            SI<span className="text-blue-600">CAKI</span>
                         </Typography>
                     </div>
             
