@@ -5,6 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\IndikatorController;
+use App\Http\Controllers\PICController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +19,7 @@ use App\Http\Controllers\PeriodeController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -42,6 +44,16 @@ Route::get('/home', function(){
 Route::middleware('auth')->group(function(){
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
     Route::post('/periode', [PeriodeController::class, 'create'])->name('periode.create');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/indikator', [IndikatorController::class, 'index'])->name('indikator.index');
+    Route::post('/indikator', [IndikatorController::class, 'create'])->name('indikator.create');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
+    Route::post('/pic', [PICController::class, 'create'])->name('pic.create');
 });
 
 require __DIR__.'/auth.php';

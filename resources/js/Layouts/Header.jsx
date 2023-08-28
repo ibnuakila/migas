@@ -86,8 +86,8 @@ export default function Header(auth) {
                     </MenuHandler>
                     <MenuList>
                     <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>
-                        <MenuItem>Master Indikator</MenuItem>
-                        <MenuItem>Master PIC</MenuItem>
+                    <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
+                    <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
                         <MenuItem>Master Satuan</MenuItem>
                         <MenuItem>Master Level</MenuItem>
                         <MenuItem>Master Kategori Kinerja</MenuItem>
@@ -111,29 +111,23 @@ export default function Header(auth) {
         {
             label: "My Profile",
             icon: UserCircleIcon,
+            link: 'profile.edit'
         },
-        {
-            label: "Edit Profile",
-            icon: Cog6ToothIcon,
-        },
-        {
-            label: "Inbox",
-            icon: InboxArrowDownIcon,
-        },
-        {
-            label: "Help",
-            icon: LifebuoyIcon,
-        },
+        
         {
             label: "Sign Out",
             icon: PowerIcon,
+            link: 'logout'
         },
     ];
 
     function ProfileMenu() {
         const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-        const closeMenu = () => setIsMenuOpen(false);
+        const closeMenu = (route) => {
+            setIsMenuOpen(false);
+            
+        }
 
         return (
                 <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -159,12 +153,12 @@ export default function Header(auth) {
                         </Button>
                     </MenuHandler>
                     <MenuList className="p-1">
-                        {profileMenuItems.map(({ label, icon }, key) => {
+                        {profileMenuItems.map(({ label, icon, link }, key) => {
                                         const isLastItem = key === profileMenuItems.length - 1;
                                         return (
                                                 <MenuItem
                                                     key={label}
-                                                    onClick={closeMenu}
+                                                    
                                                     className={`flex items-center gap-2 rounded ${
                                                                         isLastItem
                                                                         ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -181,7 +175,12 @@ export default function Header(auth) {
                                                     className="font-normal"
                                                     color={isLastItem ? "red" : "inherit"}
                                                     >
-                                                    {label}
+                                                    {link=='logout' ? (
+                                                        <Link href={route(link)} method="post">{label}</Link>
+                                                    ):(
+                                                        <Link href={route(link)}>{label}</Link>
+                                                    )}
+                                                                                                        
                                                 </Typography>
                                                 </MenuItem>
                                                 );

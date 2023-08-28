@@ -1,40 +1,38 @@
-
+import {React, useState} from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, Typography, Button } from "@material-tailwind/react";
-import { React, useState } from 'react';
 
-export default function ListPeriode({auth, periodes}){    
-    //const tableHeader = ['ID', 'Periode', 'Status']
-    console.log(periodes);
-    const TABLE_HEAD = ["ID", "Periode", "Status", "Action"];
+export default function ListPic({auth, pics}){
+    const TABLE_HEAD = ["ID", "Nama PIC", "Keterangan", "Action"];
  
-const TABLE_ROWS = [
-  {
-    id: "1",
-    periode: "2017",
-    status: "Inactive",
-  },
-  {
-    id: "2",
-    periode: "2018",
-    status: "Inactive",
-  },
-  {
-    id: "3",
-    periode: "2019",
-    status: "Inactive",
-  },
-  {
-    id: "4",
-    periode: "2020",
-    status: "Inactive",
-  },
-  {
-    id: "5",
-    periode: "2021",
-    status: "Active",
-  },
-];
+    const TABLE_ROWS = [
+      {
+        id: "1",
+        nama: "DMEP",
+        keterangan: "Unit Kerja"
+        
+      },
+      {
+        id: "2",
+        nama: "DMOO",
+        keterangan: "Unit Kerja"
+      },
+      {
+        id: "3",
+        nama: "DMON",
+        keterangan: "Unit Kerja"
+      },
+      {
+        id: "4",
+        nama: "DMBS",
+        keterangan: "Unit Kerja"
+      },
+      {
+        id: "5",
+        nama: "DMOG",
+        keterangan: "Unit Kerja"
+      },
+    ];
 
     const [open, setOpen] = useState(false);
  
@@ -42,14 +40,13 @@ const TABLE_ROWS = [
         setOpen(!open);
         alert("OK");
     }
-  
     return (
-        <AdminLayout 
+            <AdminLayout 
         auth = {auth}
         children={(
                 <div className="container mx-auto max-w-screen-lg py-12">
                     <Card className="p-5 h-full w-full overflow-scroll">
-                    <Typography variant="h2">Data Periode
+                    <Typography variant="h2">Data PIC
                         <Button size="sm" className="ml-2" onClick={handleOpen} color="blue">Add</Button>
                     </Typography>
                     
@@ -70,7 +67,7 @@ const TABLE_ROWS = [
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {TABLE_ROWS.map(({ id, periode, status }, index) => (
+                                {TABLE_ROWS.map(({ id, nama, keterangan }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -79,21 +76,14 @@ const TABLE_ROWS = [
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {periode}
+                                          {nama}
                                         </Typography>
                                       </td>
-                                      <td className="p-4">
-                                      {status=="Active" ? (
+                                      <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                          {status}
-                                        </Typography>
-                                        ):(
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {status}
-                                        </Typography>
-                                        )}
-                                        
-                                      </td>
+                                          {keterangan}
+                                        </Typography>                                                                                
+                                      </td>                                      
                                       <td className="p-4">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">
                                           Edit
@@ -109,5 +99,5 @@ const TABLE_ROWS = [
         >
     
         </AdminLayout>
-            )
-};
+        );
+}
