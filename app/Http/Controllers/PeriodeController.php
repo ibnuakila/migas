@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Periode;
 use Inertia\Response;
+use Illuminate\Http\RedirectResponse;
 
 class PeriodeController extends Controller implements ICrud
 {
     // 
 
-    public function create(Request $request) {
+    public function create(Request $request): RedirectResponse {
         
     }
 
@@ -24,6 +25,8 @@ class PeriodeController extends Controller implements ICrud
     }
 
     public function index():Response {
-        return Inertia::render('Periode/ListPeriode', ['periodes' => Periode::all()]);
+        return Inertia::render('Periode/ListPeriode', [
+            'periodes' => Periode::all()
+                ]);
     }
 }

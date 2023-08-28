@@ -11,35 +11,36 @@ const TABLE_ROWS = [
   {
     id: "1",
     periode: "2017",
-    status: "Closed",
+    status: "Inactive",
   },
   {
     id: "2",
     periode: "2018",
-    status: "Closed",
+    status: "Inactive",
   },
   {
     id: "3",
     periode: "2019",
-    status: "Closed",
+    status: "Inactive",
   },
   {
     id: "4",
     periode: "2020",
-    status: "Closed",
+    status: "Inactive",
   },
   {
     id: "5",
     periode: "2021",
-    status: "Closed",
+    status: "Active",
   },
 ];
     return (
         <AdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto max-w-screen-lg py-12 ">
+                <div className="container mx-auto max-w-screen-lg py-12">
                     <Card className="p-5 h-full w-full overflow-scroll">
+                    <Typography variant="h2">Data Periode</Typography>
                         <table>
                             <thead>
                                 <tr>
@@ -70,9 +71,16 @@ const TABLE_ROWS = [
                                         </Typography>
                                       </td>
                                       <td className="p-4">
+                                      {status=="Active" ? (
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                          {status}
+                                        </Typography>
+                                        ):(
                                         <Typography variant="small" color="blue-gray" className="font-normal">
                                           {status}
                                         </Typography>
+                                        )}
+                                        
                                       </td>
                                       <td className="p-4">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">

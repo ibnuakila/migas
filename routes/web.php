@@ -40,7 +40,8 @@ Route::get('/home', function(){
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function(){
-    Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.read');
+    Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
+    Route::post('/periode', [PeriodeController::class, 'create'])->name('periode.create');
 });
 
 require __DIR__.'/auth.php';
