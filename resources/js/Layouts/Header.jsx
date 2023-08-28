@@ -27,6 +27,7 @@ CubeTransparentIcon,
         } from "@heroicons/react/24/outline";
 import ApplicationLogo from '../Components/ApplicationLogo';
 import { useState, useEffect } from 'react';
+import { Link } from '@inertiajs/react';
 
 export default function Header(auth) {
     const [openNav, setOpenNav] = useState(false);
@@ -46,9 +47,9 @@ export default function Header(auth) {
                     color="blue-gray"
                     className="p-1 font-normal"
                     >
-                    <a href="#" className="flex items-center">
-                        Dashboard
-                    </a>
+                    <Link href="/home" className="flex items-center hover:text-amber-700">
+                        Home
+                    </Link>
                 </Typography>
                 <Menu>
                     <MenuHandler>
@@ -58,7 +59,7 @@ export default function Header(auth) {
                             color="blue-gray"
                             className="p-1 font-normal"
                             >
-                            <a href="#" className="flex items-center">
+                            <a href="#" className="flex items-center hover:text-amber-700">
                                 Kinerja
                             </a>
                         </Typography>
@@ -78,13 +79,13 @@ export default function Header(auth) {
                             color="blue-gray"
                             className="p-1 font-normal"
                             >
-                            <a href="#" className="flex items-center">
+                            <a href="#" className="flex items-center hover:text-amber-700">
                                 Master
                             </a>
                         </Typography>
                     </MenuHandler>
                     <MenuList>
-                        <MenuItem>Setup Periode</MenuItem>
+                    <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>
                         <MenuItem>Master Indikator</MenuItem>
                         <MenuItem>Master PIC</MenuItem>
                         <MenuItem>Master Satuan</MenuItem>
