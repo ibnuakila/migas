@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use App\Http\Controllers\PeriodeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,5 +38,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/home', function(){
     return Inertia::render('Home');
 })->middleware(['auth', 'verified'])->name('home');
+
+Route::middleware('auth')->group(function(){
+    Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.read');
+});
 
 require __DIR__.'/auth.php';
