@@ -43,7 +43,8 @@ Route::get('/home', function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
-    Route::post('/periode', [PeriodeController::class, 'create'])->name('periode.create');
+    Route::post('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
+    Route::post('/periode/update', [PeriodeController::class, 'update'])->name('periode.update');
 });
 
 Route::middleware('auth')->group(function(){
