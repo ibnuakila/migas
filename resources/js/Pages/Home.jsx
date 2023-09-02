@@ -30,7 +30,7 @@ export default function Home({props}) {
                                   />
                                 </CardHeader>
                                 <CardBody>
-                                  <Typography variant="h6" color="gray" className="mb-4 uppercase">
+                                  <Typography variant="h5" color="gray" className="mb-4 uppercase">
                                   Si<span className="text-blue-600">CaKi</span>
                                   </Typography>
                                   <Typography variant="h4" color="blue-gray" className="mb-2">

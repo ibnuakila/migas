@@ -1,11 +1,12 @@
 import { j as jsxs, a as jsx } from "../app.mjs";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Menu, MenuHandler, MenuList, MenuItem, Navbar, IconButton, Button, Avatar } from "@material-tailwind/react";
-import { ChevronDownIcon, UserCircleIcon, Cog6ToothIcon, InboxArrowDownIcon, LifebuoyIcon, PowerIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { A as ApplicationLogo } from "./ApplicationLogo-42bf81ce.mjs";
+import { Link } from "@inertiajs/react";
 function Header(auth) {
-  const [openNav, setOpenNav] = React.useState(false);
-  React.useEffect(() => {
+  const [openNav, setOpenNav] = useState(false);
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setOpenNav(false)
@@ -19,7 +20,7 @@ function Header(auth) {
         variant: "small",
         color: "blue-gray",
         className: "p-1 font-normal",
-        children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center", children: "Dashboard" })
+        children: /* @__PURE__ */ jsx(Link, { href: "/home", className: "flex items-center hover:text-amber-700", children: "Home" })
       }
     ),
     /* @__PURE__ */ jsxs(Menu, { children: [
@@ -30,7 +31,7 @@ function Header(auth) {
           variant: "small",
           color: "blue-gray",
           className: "p-1 font-normal",
-          children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center", children: "Kinerja" })
+          children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center hover:text-amber-700", children: "Kinerja" })
         }
       ) }),
       /* @__PURE__ */ jsxs(MenuList, { children: [
@@ -46,13 +47,13 @@ function Header(auth) {
           variant: "small",
           color: "blue-gray",
           className: "p-1 font-normal",
-          children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center", children: "Master" })
+          children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center hover:text-amber-700", children: "Master" })
         }
       ) }),
       /* @__PURE__ */ jsxs(MenuList, { children: [
-        /* @__PURE__ */ jsx(MenuItem, { children: "Setup Periode" }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Master Indikator" }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Master PIC" }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("periode.index"), children: "Setup Periode" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("indikator.index"), children: "Master Indikator" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("pic.index"), children: "Master PIC" }) }),
         /* @__PURE__ */ jsx(MenuItem, { children: "Master Satuan" }),
         /* @__PURE__ */ jsx(MenuItem, { children: "Master Level" }),
         /* @__PURE__ */ jsx(MenuItem, { children: "Master Kategori Kinerja" })
@@ -72,28 +73,17 @@ function Header(auth) {
   const profileMenuItems = [
     {
       label: "My Profile",
-      icon: UserCircleIcon
-    },
-    {
-      label: "Edit Profile",
-      icon: Cog6ToothIcon
-    },
-    {
-      label: "Inbox",
-      icon: InboxArrowDownIcon
-    },
-    {
-      label: "Help",
-      icon: LifebuoyIcon
+      icon: UserCircleIcon,
+      link: "profile.edit"
     },
     {
       label: "Sign Out",
-      icon: PowerIcon
+      icon: PowerIcon,
+      link: "logout"
     }
   ];
   function ProfileMenu() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const closeMenu = () => setIsMenuOpen(false);
     return /* @__PURE__ */ jsxs(Menu, { open: isMenuOpen, handler: setIsMenuOpen, placement: "bottom-end", children: [
       /* @__PURE__ */ jsx(MenuHandler, { children: /* @__PURE__ */ jsxs(
         Button,
@@ -122,12 +112,11 @@ function Header(auth) {
           ]
         }
       ) }),
-      /* @__PURE__ */ jsx(MenuList, { className: "p-1", children: profileMenuItems.map(({ label, icon }, key) => {
+      /* @__PURE__ */ jsx(MenuList, { className: "p-1", children: profileMenuItems.map(({ label, icon, link }, key) => {
         const isLastItem = key === profileMenuItems.length - 1;
         return /* @__PURE__ */ jsxs(
           MenuItem,
           {
-            onClick: closeMenu,
             className: `flex items-center gap-2 rounded ${isLastItem ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10" : ""}`,
             children: [
               React.createElement(icon, {
@@ -141,7 +130,7 @@ function Header(auth) {
                   variant: "small",
                   className: "font-normal",
                   color: isLastItem ? "red" : "inherit",
-                  children: label
+                  children: link == "logout" ? /* @__PURE__ */ jsx(Link, { href: route(link), method: "post", children: label }) : /* @__PURE__ */ jsx(Link, { href: route(link), children: label })
                 }
               )
             ]
@@ -162,7 +151,7 @@ function Header(auth) {
           className: "mr-4 cursor-pointer py-1.5 text-2xl px-1 tracking-1",
           children: [
             "SI",
-            /* @__PURE__ */ jsx("span", { class: "text-blue-600", children: "CAKI" })
+            /* @__PURE__ */ jsx("span", { className: "text-blue-600", children: "CAKI" })
           ]
         }
       )
@@ -218,12 +207,32 @@ function Header(auth) {
     ] })
   ] }) });
 }
-function AdminLayout({ props, content }) {
-  console.log(props);
-  return /* @__PURE__ */ jsx("div", { className: "flex flex-wrap h-screen w-screen", children: /* @__PURE__ */ jsxs("div", { className: "w-screen h-screen", children: [
-    /* @__PURE__ */ jsx(Header, { auth: null }),
-    content
-  ] }) });
+function AdminLayout({ auth, children }) {
+  return /* @__PURE__ */ jsxs("div", { className: "", children: [
+    /* @__PURE__ */ jsx(Header, { auth }),
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-row max-h-full h-screen", children: [
+      /* @__PURE__ */ jsx("div", { className: "basis-1/6 bg-teal-50" }),
+      /* @__PURE__ */ jsxs("div", { className: "basis-2/3", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-row mt-4 rounded-r-lg p-2 w-40 items-center text-gray-500", children: [
+          /* @__PURE__ */ jsx("a", { href: "#", className: "opacity-60", children: /* @__PURE__ */ jsx(
+            "svg",
+            {
+              xmlns: "http://www.w3.org/2000/svg",
+              className: "h-4 w-4",
+              viewBox: "0 0 20 20",
+              fill: "currentColor",
+              children: /* @__PURE__ */ jsx("path", { d: "M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" })
+            }
+          ) }),
+          /* @__PURE__ */ jsx("a", { href: "#", className: "ml-2", children: /* @__PURE__ */ jsx("span", { children: "SICAKI " }) }),
+          /* @__PURE__ */ jsx("a", { href: location.pathname, className: "pl-2", children: location.pathname.toString().toUpperCase() })
+        ] }),
+        children
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "basis-1/6 bg-teal-50" })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "basis-1/4", children: /* @__PURE__ */ jsx("p", { className: "p-4 text-md text-blue-400 text-center", children: "Copyright © 2023 Dirjen Migas" }) })
+  ] });
 }
 export {
   AdminLayout as A

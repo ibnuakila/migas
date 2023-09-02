@@ -9,4 +9,10 @@ class Periode extends Model
 {
     use HasFactory;
     protected $table = 'Periode';
+    public $timestamps = false;
+    protected $fillable = [
+        'Periode',
+        'Status'
+    ];
+    
 }
