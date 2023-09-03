@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
-class PICController extends Controller implements ICrud
+class PICController extends Controller //implements ICrud
 {
     //
     public function create(Request $request) {

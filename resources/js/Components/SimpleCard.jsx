@@ -5,22 +5,23 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import {Link} from '@inertiajs/react';
  
-export default function SimpleCard() {
+export default function SimpleCard({title, countIndikator, content, link}) {
   return (
-    <Card className="mt-6 w-45 my-5">
+    <Card className="mt-6 w-45">
       <CardBody>
         <Typography variant="h5" color="blue-gray" className="mb-2">
-          Jumlah Indikator <span className="text-lg text-blue-600">15</span>
+          {title} <span className="text-lg text-blue-600">{countIndikator}</span>
         </Typography>
         
         <Typography className="text-justify">
-          Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja
-          antara target dan realisasi
+          {content}
         </Typography>
       </CardBody>
       <CardFooter className="pt-0">
-        <Button color="blue">Detail</Button>
+      <Link href={link}><Button color="blue">Detail</Button></Link>
+        
       </CardFooter>
     </Card>
   );

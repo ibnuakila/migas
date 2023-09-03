@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\Periode;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\PeriodeStoreRequest;
+use App\Http\Resources\PeriodeCollection;
 
-class PeriodeController extends Controller 
+class PeriodeController extends Controller //implements ICrud
 {
     // 
+    public function index() {
+        return Inertia::render('Periode/ListPeriode', [
+            'filter' => Request::all('search', 'trashed'),
+            'periodes' => new PeriodeCollection(
+                    Periode::
+                    //->filter(Request::only('search', 'trashed'))
+                    paginate(10)
+                    ->appends(Request::all())
+            )
+                ]);
+    }
 
     public function create(Request $request): RedirectResponse {
         $validPeriode = $request->validate([
@@ -24,9 +36,7 @@ class PeriodeController extends Controller
         return Redirect::route('periode.index')->with('success', 'Periode created.');
     }
 
-    public function delete($id) {
-        
-    }
+    
 
     public function update(Periode $periode,Request $request) {
         
@@ -44,9 +54,17 @@ class PeriodeController extends Controller
         //return Redirect::route('periode.index')->with('success', 'Periode Updated.');
     }
 
-    public function index():Response {
-        return Inertia::render('Periode/ListPeriode', [
-            'periodes' => Periode::all()
-                ]);
+    
+
+    public function destroy() {
+        
+    }
+
+    public function store() {
+        
+    }
+
+    public function edit() {
+        
     }
 }

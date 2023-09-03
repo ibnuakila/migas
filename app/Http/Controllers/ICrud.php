@@ -14,8 +14,10 @@ use Inertia\Response;
  */
 interface ICrud {
     //put your code here
-    public function create(Request $request);
-    public function index(): Response;
-    public function update($id);
-    public function delete($id);
+    public function create();
+    public function store();
+    public function index();
+    public function edit();
+    public function update();
+    public function destroy();
 }

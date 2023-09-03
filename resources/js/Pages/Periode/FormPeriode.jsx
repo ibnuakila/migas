@@ -18,7 +18,7 @@ export default function FormPeriode(props) {
     const edit = props.edit;
     const objPeriode = props.objPeriode;
   
-    const { data, setData, post, errors, processing, recentlySuccessful } = useForm({
+    const { data, setData, post, patch, errors, processing, recentlySuccessful } = useForm({
         Id: objPeriode.Id || '',
         Periode: objPeriode.Periode || '',
         Status: objPeriode.Status || ''
@@ -31,7 +31,7 @@ export default function FormPeriode(props) {
             let _periode = document.getElementById('Periode').value;
             let _status = document.getElementById('Status').value;
 
-            e.preventDefault();
+            /*e.preventDefault();
             router.visit('/periode/update', {
                method: 'post',
                data:{
@@ -40,8 +40,8 @@ export default function FormPeriode(props) {
                    Status: _status
                },
                onSuccess: page => {console.log(page)},
-            });
-            //post(route('periode.update',data.Id));
+            });*/
+            post(route('periode.update',data.Id));
         }else{
             post(route('periode.create'));
         }
