@@ -9,10 +9,15 @@ import { Card,
   DialogFooter,} from "@material-tailwind/react";
 import { React, useState } from 'react';
 import FormPeriode from './FormPeriode';
+import Pagination from '@/Components/Pagination';
 
 export default function ListPeriode({auth, periodes}){    
-    //const tableHeader = ['ID', 'Periode', 'Status']
-    //console.log(location.pathname);
+    const {
+        data,
+        meta: { links }
+      } = periodes;
+    console.log(links);
+    
     const TABLE_HEAD = ["ID", "Periode", "Status", "Action"];
  
     const [open, setOpen] = useState(false);
@@ -23,13 +28,13 @@ export default function ListPeriode({auth, periodes}){
         <AdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto max-w-screen-lg py-12">
+                <div className="container mx-auto">
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <Typography variant="h2">Data Periode
                         <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
                     </Typography>
                     
-                        <table>
+                        <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
                                     {TABLE_HEAD.map((head) => (
@@ -46,25 +51,25 @@ export default function ListPeriode({auth, periodes}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {periodes.map((object) => (
+                                {data.map((object) => (
                                     <tr key={object.Id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-center">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
                                           {object.Id}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-center">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
                                           {object.Periode}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                       {object.Status=="Active" ? (
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600 text-center">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {object.Status}
                                         </Typography>
                                         ):(
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-center">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
                                           {object.Status}
                                         </Typography>
                                         )}
@@ -85,8 +90,16 @@ export default function ListPeriode({auth, periodes}){
                                       </td>
                                     </tr>
                                   ))}
+                            {data.length === 0 && (
+                              <tr>
+                                <td className="px-6 py-4 border-t" colSpan="4">
+                                  No contacts found.
+                                </td>
+                              </tr>
+                            )}
                             </tbody>
                         </table>
+                        <Pagination links={links} />
                     </Card>
                     
                     <FormPeriode open={open} edit={edit} objPeriode={objPeriode} action={() => setOpen(!open)}/>

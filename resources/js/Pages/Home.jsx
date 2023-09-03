@@ -15,8 +15,8 @@ export default function Home({props}) {
             <AdminLayout 
                 props = {props}
                 children={(
-                        <div className="container mx-auto max-w-screen-lg py-12">
-                        <div className="flex">
+                        <div className="container mx-auto">
+                        <div className="sm:flex sm:mt-2">
                             <Card className="w-full flex-row">
                                 <CardHeader
                                   shadow={false}
@@ -61,10 +61,17 @@ export default function Home({props}) {
                                 </CardBody>
                               </Card>
                             </div>
-                            <div className="flex flex-row gap-4">
-                                <SimpleCard />
-                                <SimpleCard />
-                                <SimpleCard />
+                            <div className="mt-8 sm:mt-0 sm:w-full sm:px-8 flex flex-col md:flex-row justify-between gap-4">
+                            <div class="flex flex-col">
+                                <SimpleCard title="Periode Active" countIndikator="2023" content="Periode ditentukan setiap awal tahun." link="/periode"/>
+                            </div>
+                            <div class="flex flex-col">
+                                <SimpleCard title="Jumlah Indikator" countIndikator="15" content="Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja
+          antara target dan realisasi" link="/indikator"/>
+                            </div>
+                            <div class="flex flex-col">
+                                <SimpleCard title="Indikator Periode" countIndikator="2023" content="Indikator pada Periode berjalan ditentukan setiap awal tahun."/>
+                            </div>
                             </div>
                         </div>
                         )}

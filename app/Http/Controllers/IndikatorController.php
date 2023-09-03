@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
-class IndikatorController extends Controller implements ICrud
+class IndikatorController extends Controller //implements ICrud
 {
     //
     public function create(Request $request) {

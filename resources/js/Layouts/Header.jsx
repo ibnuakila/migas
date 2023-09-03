@@ -192,7 +192,7 @@ export default function Header(auth) {
 
     return (
             <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-0 lg:px-8 lg:py-4">
-                <div className="flex items-center justify-between text-blue-gray-900">
+                <div className="container mx-auto flex flex-wrap flex-col md:flex-row items-center justify-between text-blue-gray-900">
                     <div className="flex items-center">
                         <ApplicationLogo width="45" height="45" />
                         <Typography

@@ -48,7 +48,7 @@ export default function ListIndikator({auth, indikators}){
             <AdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto max-w-screen-lg py-12">
+                <div className="container mx-auto">
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <Typography variant="h2">Data Indikator
                         <Button size="sm" className="ml-2" onClick={handleOpen} color="blue">Add</Button>

@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\IndikatorController;
 use App\Http\Controllers\PICController;
+use App\Models\Periode;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,6 +56,17 @@ Route::middleware('auth')->group(function(){
 Route::middleware('auth')->group(function(){
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
     Route::post('/pic', [PICController::class, 'create'])->name('pic.create');
+});
+
+Route::get('/test', function(){
+    $periode = Periode::findOrFail(9);
+    $data = [
+        'Periode' => '4321',
+        'Status' => 'New'
+    ];
+    $periode->fill($data);
+    $save = $periode->save();
+    return ('test update: '.$save);
 });
 
 require __DIR__.'/auth.php';
