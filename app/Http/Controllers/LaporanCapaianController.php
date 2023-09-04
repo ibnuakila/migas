@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
-use App\Models\IndikatorPeriode;
-use App\Http\Resources\IndikatorPeriodeCollection;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\LaporanCapaian;
+use App\Http\Resources\LaporanCapaianCollection;
 
-class IndikatorPeriodeController extends Controller //implements ICrud
+class LaporanCapaianController extends Controller //implements ICrud
 {
     //
     public function create() {
@@ -25,16 +24,15 @@ class IndikatorPeriodeController extends Controller //implements ICrud
     }
 
     public function index() {
-        return Inertia::render('IndikatorPeriode/ListIndikatorPeriode', [
+        return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
             'filter' => Request::all('search', 'trashed'),
-            'indikator_periodes' => new IndikatorPeriodeCollection(
-                    IndikatorPeriode::
+            'laporan_capaian' => new LaporanCapaianCollection(
+                    LaporanCapaian::
                     //->filter(Request::only('search', 'trashed'))
                     paginate(10)
                     ->appends(Request::all())
             )
                 ]);
-        //return 'Indikator periode';
     }
 
     public function store() {

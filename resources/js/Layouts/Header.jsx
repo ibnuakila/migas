@@ -65,11 +65,29 @@ export default function Header(auth) {
                         </Typography>
                     </MenuHandler>
                     <MenuList>
-                        <MenuItem>Setup Indikator Periode</MenuItem>
-                        <MenuItem>Realisasi Capaian Kinerja</MenuItem>                        
+                        <MenuItem><Link href={route('indikator-periode.index')}>Setup Indikator Periode</Link></MenuItem>
+                        <MenuItem><Link href={route('laporan-capaian.index')}>Laporan Capaian Kinerja</Link></MenuItem>                        
                     </MenuList>
                 </Menu>
-            
+                
+                <Menu>
+                    <MenuHandler>
+                        <Typography
+                            as="li"
+                            variant="small"
+                            color="blue-gray"
+                            className="p-1 font-normal"
+                            >
+                            <a href="#" className="flex items-center hover:text-amber-700">
+                                AKIP
+                            </a>
+                        </Typography>
+                    </MenuHandler>
+                    <MenuList>
+                        <MenuItem><Link href="">Setup Penilaian Kinerja</Link></MenuItem>
+                        <MenuItem><Link href="">Evaluasi Penilaian Kinerja</Link></MenuItem>                        
+                    </MenuList>
+                </Menu>
             
                 <Menu>
                     <MenuHandler>

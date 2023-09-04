@@ -9,19 +9,18 @@ import { Card,
   DialogFooter,
   Input} from "@material-tailwind/react";
 import { React, useState } from 'react';
-import FormPeriode from './FormPeriode';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
 
-export default function ListPeriode({auth}){ 
-    const { periodes } = usePage().props;
+export default function ListIndikatorPeriode({auth}){ 
+    const { indikator_periodes } = usePage().props;
     const {
         data,
         meta: { links }
-      } = periodes;
-    console.log(periodes);
+      } = indikator_periodes;
+    console.log(indikator_periodes);
     
-    const TABLE_HEAD = ["ID", "Periode", "Status", "Action"];
+    const TABLE_HEAD = ["ID", "Periode", "Indikator", "Target", "PIC", "Action"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -34,14 +33,12 @@ export default function ListPeriode({auth}){
                 <div className="container mx-auto">
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <div className="flex justify-between">
-                        <Typography variant="h3">Data Periode                            
+                        <Typography variant="h3">Data Indikator Periode                            
                         </Typography>
                         <span><Input variant="outlined" size="md" className="w-45" label="Search.." /></span>
                     </div>
                     <div className="flex my-2">
-                        <Link href={route('periode.create')}>
-                        <Button size="sm" className="ml-2" color="blue">Add</Button>
-                        </Link>
+                        <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
                     </div>
                     
                     
@@ -100,7 +97,7 @@ export default function ListPeriode({auth}){
                             {data.length === 0 && (
                               <tr>
                                 <td className="px-6 py-4 border-t" colSpan="4">
-                                  No contacts found.
+                                  No data found.
                                 </td>
                               </tr>
                             )}
