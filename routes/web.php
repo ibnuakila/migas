@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\IndikatorController;
 use App\Http\Controllers\PICController;
+use App\Http\Controllers\IndikatorPeriodeController;
+use App\Http\Controllers\LaporanCapaianController;
 use App\Models\Periode;
 /*
 |--------------------------------------------------------------------------
@@ -44,18 +46,43 @@ Route::get('/home', function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
-    Route::post('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
-    Route::post('/periode/update', [PeriodeController::class, 'update'])->name('periode.update');
+    Route::get('/periode/{periode}/edit', [PeriodeController::class, 'edit'])->name('periode.edit');
+    Route::get('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
+    Route::post('/periode/store', [PeriodeController::class, 'store'])->name('periode.store');
+    Route::put('/periode/{periode}', [PeriodeController::class, 'update'])->name('periode.update');
+    Route::delete('/periode/{periode}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
 });
 
 Route::middleware('auth')->group(function(){
     Route::get('/indikator', [IndikatorController::class, 'index'])->name('indikator.index');
-    Route::post('/indikator', [IndikatorController::class, 'create'])->name('indikator.create');
+    Route::get('/indikator/create', [IndikatorController::class, 'create'])->name('indikator.create');
+    Route::post('/indikator/store', [IndikatorController::class, 'store'])->name('indikator.store');
+    Route::get('/indikator/{indikator}/edit', [IndikatorController::class, 'edit'])->name('indikator.edit');
+    Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
+    Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
 });
 
 Route::middleware('auth')->group(function(){
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
     Route::post('/pic', [PICController::class, 'create'])->name('pic.create');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
+    Route::get('/indikator-periode/{indikatorPeriode}/edit', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
+    Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
+    Route::post('/indikator-periode/store', [IndikatorPeriodeController::class, 'store'])->name('indikator-periode.store');
+    Route::put('/indikator-periode/{indikatorPeriode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
+    Route::delete('/indikator-periode/{indikatorPeriode}', [IndikatorPeriodeController::class, 'destroy'])->name('indikator-periode.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
+    Route::get('/laporan-capaian/{laporanCapaian}/edit', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
+    Route::post('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
+    Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
+    Route::put('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
+    Route::delete('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
 });
 
 Route::get('/test', function(){

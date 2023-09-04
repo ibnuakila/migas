@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\PeriodeStoreRequest;
 use App\Http\Resources\PeriodeCollection;
+use App\Http\Resources\PeriodeResource;
 
 class PeriodeController extends Controller //implements ICrud
 {
@@ -26,32 +27,22 @@ class PeriodeController extends Controller //implements ICrud
                 ]);
     }
 
-    public function create(Request $request): RedirectResponse {
-        $validPeriode = $request->validate([
-            'Periode' => 'required|string',
-            'Status' => 'required|string'
-        ]);
-        $objPeriode = new Periode();        
-        $objPeriode->create($validPeriode);
-        return Redirect::route('periode.index')->with('success', 'Periode created.');
+    public function create() {
+        return Inertia::render('Periode/FormPeriode');
     }
 
-    
-
-    public function update(Periode $periode,Request $request) {
-        
-        $validPeriode = $request->validate([    
-            'Id' => 'required',
-            'Periode' => 'required',
-            'Status' => 'required'
+    public function edit(Periode $periode) {
+        return Inertia::render('Periode/EditPeriode', [
+            'periode' => new PeriodeResource($periode)            
         ]);
-        $objPeriode = Periode::find($request->Id);
-        $objPeriode->Periode = $request->Periode;
-        $objPeriode->Status = $request->Status;
-        $objPeriode->save();
-        $data = ['Id' => $request->Id, 'Periode' => $request->Periode];
-        echo json_encode($data);
-        //return Redirect::route('periode.index')->with('success', 'Periode Updated.');
+    }
+
+    public function update(Periode $periode, PeriodeStoreRequest $request) {
+        $periode->update(
+            $request->validated()
+        );
+
+        return Redirect::back()->with('success', 'Contact updated.');        
     }
 
     
@@ -60,11 +51,12 @@ class PeriodeController extends Controller //implements ICrud
         
     }
 
-    public function store() {
-        
+    public function store(PeriodeStoreRequest $request) {
+        $validPeriode = $request->validated();
+        $objPeriode = new Periode();        
+        $objPeriode->create($validPeriode);
+        return Redirect::route('periode.index')->with('success', 'Periode created.');
     }
 
-    public function edit() {
-        
-    }
+    
 }

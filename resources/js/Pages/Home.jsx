@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 
 export default function Home({props}) {
-    console.log(props);
+    //console.log(props);
     return (
             <AdminLayout 
                 props = {props}
@@ -62,14 +62,14 @@ export default function Home({props}) {
                               </Card>
                             </div>
                             <div className="mt-8 sm:mt-0 sm:w-full sm:px-8 flex flex-col md:flex-row justify-between gap-4">
-                            <div class="flex flex-col">
+                            <div className="flex flex-col">
                                 <SimpleCard title="Periode Active" countIndikator="2023" content="Periode ditentukan setiap awal tahun." link="/periode"/>
                             </div>
-                            <div class="flex flex-col">
+                            <div className="flex flex-col">
                                 <SimpleCard title="Jumlah Indikator" countIndikator="15" content="Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja
           antara target dan realisasi" link="/indikator"/>
                             </div>
-                            <div class="flex flex-col">
+                            <div className="flex flex-col">
                                 <SimpleCard title="Indikator Periode" countIndikator="2023" content="Indikator pada Periode berjalan ditentukan setiap awal tahun."/>
                             </div>
                             </div>

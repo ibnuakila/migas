@@ -28,4 +28,16 @@ class IndikatorController extends Controller //implements ICrud
     public function update($id) {
         
     }
+
+    public function destroy() {
+        
+    }
+
+    public function edit() {
+        
+    }
+
+    public function store() {
+        
+    }
 }
