@@ -12,7 +12,7 @@ class LaporanCapaianController extends Controller //implements ICrud
 {
     //
     public function create() {
-        
+        return Inertia::render('LaporanCapaian/FormLaporanCapaian');
     }
 
     public function destroy() {

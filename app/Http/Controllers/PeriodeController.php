@@ -18,12 +18,18 @@ class PeriodeController extends Controller //implements ICrud
     public function index() {
         return Inertia::render('Periode/ListPeriode', [
             'filter' => Request::all('search', 'trashed'),
-            'periodes' => new PeriodeCollection(
+            'periodes' => /*new PeriodeCollection(
                     Periode::
-                    //->filter(Request::only('search', 'trashed'))
+                    //filter(Request::only('search', 'trashed'))
                     paginate(10)
-                    ->appends(Request::all())
-            )
+                    ->appends(Request::all())*/
+                    Periode::query()
+                    ->when(Request::input('search'), function($query, $search){
+                        $query->where('Periode','like', "%{$search}%");
+                    })
+                    ->paginate(10)
+                    ->withQueryString()
+            //)
                 ]);
     }
 

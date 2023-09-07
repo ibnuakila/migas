@@ -38,7 +38,9 @@ export default function ListLaporanCapaian({auth}){
                         <span><Input variant="outlined" size="md" className="w-45" label="Search.." /></span>
                     </div>
                     <div className="flex my-2">
+                    <Link href={route('laporan-capaian.create')}>
                         <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
+                        </Link>
                     </div>
                     
                     

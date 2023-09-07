@@ -73,7 +73,6 @@ export default function ListPeriode({auth}){
                         </Link>
                     </div>
                     
-                    
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
