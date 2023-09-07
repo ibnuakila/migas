@@ -79,7 +79,7 @@ Route::middleware('auth')->group(function(){
 Route::middleware('auth')->group(function(){
     Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
     Route::get('/laporan-capaian/{laporanCapaian}/edit', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
-    Route::post('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
+    Route::get('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
     Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
     Route::put('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
@@ -88,12 +88,23 @@ Route::middleware('auth')->group(function(){
 Route::get('/test', function(){
     $periode = Periode::findOrFail(9);
     $data = [
-        'Periode' => '4321',
-        'Status' => 'New'
+        [
+            'filter' => Request::all('search', 'trashed'),
+            /*'periodes' => new App\Http\Resources\PeriodeCollection(
+                    Periode::
+                    //filter(Request::only('search', 'trashed'))
+                    paginate(10)
+                    ->appends(Request::all())
+            )*/
+            'periodes' => Periode::query()
+            ->when(\Illuminate\Support\Facades\Request::input('search'), function($query, $search){
+                $query->where('Periode','like', "{$search}%");
+            })
+            ->paginate(10)
+                ]
     ];
-    $periode->fill($data);
-    $save = $periode->save();
-    return ('test update: '.$save);
+    
+    return ($data);
 });
 
 require __DIR__.'/auth.php';

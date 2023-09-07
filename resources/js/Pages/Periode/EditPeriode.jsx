@@ -8,7 +8,8 @@ Button,
         Input,
         Textarea,
         Alert,
-        Typography
+        Typography,
+        Select, Option 
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
@@ -20,7 +21,7 @@ export default function EditPeriode() {
         Periode: periode.data.Periode || '',
         Status: periode.data.Status || ''
     });
-    console.log(periode.data.Periode);
+    const [option, setOption] = useState('');
 
     const [open, setOpen] = useState(false);
 
@@ -29,6 +30,11 @@ export default function EditPeriode() {
         put(route('periode.update', periode.data.Id));
     }
 
+    function handleChange(e){
+        setOption({selectValue:e});
+        setData('Status', e);
+    }
+    
     const handleDestroy = (e) => {
         if (confirm('Apakah Anda yakin akan menghapus data periode?')) {
           destroy(route('periode.destroy', periode.data.Id));
@@ -60,12 +66,14 @@ export default function EditPeriode() {
                                                        defaultValue={periode.data.Periode}
                                                        error={errors.Periode}/>                      
                                 
-                                                <Input label="Status" variant="outlined" id="Status" 
-                                                       onChange={e => {
-                                                    setData('Status', e.target.value)
-                                                }} 
-                                                       defaultValue={periode.data.Status}
-                                                       error={errors.Status}/>
+                                                
+                                                    <Select label="Select Status" onChange={handleChange}
+                                                    defaultValue={periode.data.Status}
+                                                    error={errors.Status}>
+                                                      <Option value="Closed">Closed</Option>
+                                                      <Option value="Active">Active</Option>                                                      
+                                                    </Select>
+                                                
                                             </div>
                                 
                                 

@@ -13,7 +13,7 @@ class IndikatorPeriodeController extends Controller //implements ICrud
 {
     //
     public function create() {
-        
+        return Inertia::render('IndikatorPeriode/FormIndikatorPeriode');
     }
 
     public function destroy() {
