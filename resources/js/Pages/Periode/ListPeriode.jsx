@@ -8,25 +8,54 @@ import { Card,
   DialogBody,
   DialogFooter,
   Input} from "@material-tailwind/react";
-import { React, useState } from 'react';
+import { React, useState, useEffect, usePrevious } from 'react';
 import FormPeriode from './FormPeriode';
 import Pagination from '@/Components/Pagination';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
+
 
 export default function ListPeriode({auth}){ 
     const { periodes } = usePage().props;
-    const {
-        data,
-        meta: { links }
-      } = periodes;
-    console.log(periodes);
+    const { filter } = usePage().props;
+    console.log(usePage().props);
     
     const TABLE_HEAD = ["ID", "Periode", "Status", "Action"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
-    const [objPeriode, setObjPeriode] = useState([]);
- 
+    const [values, setValues] = useState({
+        //role: filters.role || '', // role is used only on users page
+        //search: filter.search || '',
+        //trashed: filters.trashed || ''
+      });
+    const [term, setTerm] = useState('');
+        
+    function handleChange(e) {
+        //const key = e.target.name;
+        const value = e.target.value;
+
+        /*setValues(values => ({
+          ...values,
+          [key]: value
+        }));*/
+        setTerm(value);
+        console.log(key + ", " +value);
+      }
+      
+    useEffect( () => {
+        //if(term.length >= 2){
+            router.visit('/periode', {
+                method: 'get',
+                data: { search: term, page:periodes.current_page},
+                replace: true,
+                preserveState: true
+            });
+        //}
+        //Inertia.get(route(route().current()), query, {
+        //replace: true,
+        //preserveState: true
+      },[term]);
+    
     return (
         <AdminLayout 
         auth = {auth}
@@ -36,7 +65,7 @@ export default function ListPeriode({auth}){
                     <div className="flex justify-between">
                         <Typography variant="h3">Data Periode                            
                         </Typography>
-                        <span><Input variant="outlined" size="md" className="w-45" label="Search.." /></span>
+                        <span><Input variant="outlined" size="md" className="w-45" label="Search for periode" name="periode" onChange={handleChange}/></span>
                     </div>
                     <div className="flex my-2">
                         <Link href={route('periode.create')}>
@@ -62,7 +91,7 @@ export default function ListPeriode({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({Id, Periode, Status}) => (
+                                {periodes.data.map(({Id, Periode, Status}) => (
                                     <tr key={Id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -97,7 +126,7 @@ export default function ListPeriode({auth}){
                                       </td>
                                     </tr>
                                   ))}
-                            {data.length === 0 && (
+                            {periodes.data.length === 0 && (
                               <tr>
                                 <td className="px-6 py-4 border-t" colSpan="4">
                                   No contacts found.
@@ -106,7 +135,7 @@ export default function ListPeriode({auth}){
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={links} />
+                        <Pagination links={periodes.links} />
                     </Card>                    
                     
                 </div>

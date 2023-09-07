@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Button,
   Card,
@@ -8,7 +8,8 @@ import {
   Input,
   Textarea,
   Alert,
-  Typography  
+  Typography ,
+  Select, Option 
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
@@ -21,13 +22,19 @@ export default function FormPeriode() {
         Periode: '',
         Status: ''
     });
-    console.log(usePage().props);
+    const [option, setOption] = useState('');
+    
+    //console.log(usePage().props);
    
     const handleSave = (e) => {
         e.preventDefault();
         post(route('periode.store'));        
     };
-       
+    
+    function handleChange(e){
+        setOption({selectValue:e});
+        setData('Status', e);
+    }
     
     return (
     <AdminLayout 
@@ -46,29 +53,34 @@ export default function FormPeriode() {
                                     <form onSubmit={handleSave}>
                                         <CardBody>
                                 
-                                            <div className="flex flex-col gap-4">
+                                            <div className="flex flex-wrap flex-col place-content-center gap-4">
+                                            <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Periode" variant="outlined" id="Periode" 
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
                                                        
                                                        error={errors.Periode}/>                      
-                                
-                                                <Input label="Status" variant="outlined" id="Status" 
-                                                        onChange={e => {
-                                                            setData('Status', e.target.value)
-                                                        }} 
-                                                       
-                                                       error={errors.Status}/>
+                                            </div>
+                                                
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Select label="Select Status" onChange={handleChange}
+                                                    value={option.selectValue}
+                                                    error={errors.Status}>
+                                                      <Option value="Closed">Closed</Option>
+                                                      <Option value="Active">Active</Option>                                                      
+                                                    </Select>
+                                                </div>
                                             </div>
                                 
                                 
                                         </CardBody>
-                                        <CardFooter className="space-x-2">
-                                            
+                                        <CardFooter className="space-x-2 ">
+                                        <div className="flex place-content-center">
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                                 Save
                                             </Button>
+                                        </div>
                                         </CardFooter>
                                     </form>
                                     </Card>
