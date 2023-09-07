@@ -15,7 +15,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function EditPeriode() {
     const {periode, auth} = usePage().props;
-    const {data, setData, post, patch, delete:destroy, errors, processing, recentlySuccessful} = useForm({
+    const {data, setData, put, delete:destroy, errors, processing, recentlySuccessful} = useForm({
         Id: periode.data.Id || '',
         Periode: periode.data.Periode || '',
         Status: periode.data.Status || ''
@@ -26,7 +26,7 @@ export default function EditPeriode() {
 
     const handleSave = (e) => {
         e.preventDefault();
-        post(route('periode.update', periode.data.Id));
+        put(route('periode.update', periode.data.Id));
     }
 
     const handleDestroy = (e) => {
@@ -50,7 +50,7 @@ export default function EditPeriode() {
                                 
                                 
                                     <form onSubmit={handleSave}>
-                                        <CardBody divider>
+                                        <CardBody divider="true">
                                 
                                             <div className="flex flex-col gap-4">
                                                 <Input label="Periode" variant="outlined" id="Periode" 
@@ -62,8 +62,8 @@ export default function EditPeriode() {
                                 
                                                 <Input label="Status" variant="outlined" id="Status" 
                                                        onChange={e => {
-                                            setData('Status', e.target.value)
-                                        }} 
+                                                    setData('Status', e.target.value)
+                                                }} 
                                                        defaultValue={periode.data.Status}
                                                        error={errors.Status}/>
                                             </div>
