@@ -6,6 +6,18 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Input,
+  Textarea,
+  Alert,
+  Typography,
+  Select, Option 
+} from "@material-tailwind/react";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -37,6 +49,13 @@ export default function Login({ status, canResetPassword }) {
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>
+                <Card className="p-5 h-full w-45">
+                <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
+                    <Typography variant="h4" color="white">
+                        Login SI<span className="text-blue-400">CAKI</span>
+                    </Typography>
+                </CardHeader>
+                <CardBody>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -69,15 +88,16 @@ export default function Login({ status, canResetPassword }) {
 
                     <InputError message={errors.password} className="mt-2" />
                 </div>
-
+                
                 <div className="block mt-4">
                     <label className="flex items-center">
                         <Checkbox name="remember" value={data.remember} onChange={handleOnChange} />
                         <span className="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>
                 </div>
-
-                <div className="flex items-center justify-end mt-4">
+                </CardBody>
+                <CardFooter className="space-x-2">
+                    <div className="flex items-center justify-end mt-4">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
@@ -86,11 +106,13 @@ export default function Login({ status, canResetPassword }) {
                             Forgot your password?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ml-4" disabled={processing}>
+                    
+                    <Button variant="gradient" type="submit" color="blue" disabled={processing}>
                         Log in
-                    </PrimaryButton>
-                </div>
+                    </Button>
+                    </div>
+                </CardFooter>
+                </Card>
             </form>
         </GuestLayout>
     );

@@ -64,7 +64,11 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
-    Route::post('/pic', [PICController::class, 'create'])->name('pic.create');
+    Route::get('/pic/create', [PICController::class, 'create'])->name('pic.create');
+    Route::post('/pic/store', [PICController::class, 'store'])->name('pic.store');
+    Route::get('/pic/{pic}/edit', [PICController::class, 'edit'])->name('pic.edit');
+    Route::put('/pic/{pic}', [PICController::class, 'update'])->name('pic.update');
+    Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
 Route::middleware('auth')->group(function(){

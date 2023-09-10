@@ -11,8 +11,8 @@ use Illuminate\Http\RedirectResponse;
 class PICController extends Controller //implements ICrud
 {
     //
-    public function create(Request $request) {
-        
+    public function create() {
+        return Inertia::render('Pic/FormPic');
     }
 
     public function delete($id) {
