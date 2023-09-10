@@ -76,8 +76,7 @@ export default function FormIndikatorPeriode() {
                                 
                                 
                                         </CardBody>
-                                        <CardFooter className="space-x-2">
-                                            
+                                        <CardFooter className="space-x-2">                                            
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                                 Save
                                             </Button>

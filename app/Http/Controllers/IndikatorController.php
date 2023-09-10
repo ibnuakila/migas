@@ -12,7 +12,7 @@ class IndikatorController extends Controller //implements ICrud
 {
     //
     public function create(Request $request) {
-        
+        return Inertia::render('Indikator/FormIndikator');
     }
 
     public function delete($id) {

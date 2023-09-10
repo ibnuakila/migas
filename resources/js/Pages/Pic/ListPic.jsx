@@ -1,6 +1,14 @@
 import {React, useState} from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Card, Typography, Button } from "@material-tailwind/react";
+import { Card, 
+    Typography, 
+    Button,
+    Dialog,
+    DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Input} from "@material-tailwind/react";
+  import { Link, usePage, router } from '@inertiajs/react';
 
 export default function ListPic({auth, pics}){
     const TABLE_HEAD = ["ID", "Nama PIC", "Keterangan", "Action"];
@@ -40,15 +48,36 @@ export default function ListPic({auth, pics}){
         setOpen(!open);
         alert("OK");
     }
+    
+    const [term, setTerm] = useState('');
+        
+    function handleChange(e) {
+        //const key = e.target.name;
+        const value = e.target.value;
+
+        /*setValues(values => ({
+          ...values,
+          [key]: value
+        }));*/
+        setTerm(value);
+        console.log(key + ", " +value);
+      }
     return (
             <AdminLayout 
         auth = {auth}
         children={(
                 <div className="container mx-auto max-w-screen-lg py-12">
                     <Card className="p-5 h-full w-full overflow-scroll">
-                    <Typography variant="h2">Data PIC
-                        <Button size="sm" className="ml-2" onClick={handleOpen} color="blue">Add</Button>
-                    </Typography>
+                    <div className="flex justify-between">
+                        <Typography variant="h3">Data PIC                            
+                        </Typography>
+                        <span><Input variant="outlined" size="md" className="w-45" label="Search for periode" name="periode" onChange={handleChange}/></span>
+                    </div>
+                    <div className="flex my-2">
+                        <Link href={route('pic.create')}>
+                        <Button size="sm" className="ml-2" color="blue">Add</Button>
+                        </Link>
+                    </div>
                     
                         <table>
                             <thead>
