@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Satuan extends Model
 {
     use HasFactory;
+    
     protected $table = 'Satuan';
+    protected $primaryKey = 'Id';
+    public $timestamps = false;
+    protected $fillable = [
+        'NamaStatus'
+    ];
 }

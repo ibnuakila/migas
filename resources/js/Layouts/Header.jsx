@@ -79,7 +79,7 @@ export default function Header(auth) {
                             className="p-1 font-normal"
                             >
                             <a href="#" className="flex items-center hover:text-amber-700">
-                                AKIP
+                                SAKIP
                             </a>
                         </Typography>
                     </MenuHandler>
@@ -106,9 +106,9 @@ export default function Header(auth) {
                     <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>
                     <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
                     <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
-                        <MenuItem>Master Satuan</MenuItem>
-                        <MenuItem>Master Level</MenuItem>
-                        <MenuItem>Master Kategori Kinerja</MenuItem>
+                    <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
+                    <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
+                    <MenuItem><Link href={route('kategori-kinerja.index')}>Master Kategori Kinerja</Link></MenuItem>
                     </MenuList>
                 </Menu>
                 <Typography

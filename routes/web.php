@@ -9,6 +9,9 @@ use App\Http\Controllers\IndikatorController;
 use App\Http\Controllers\PICController;
 use App\Http\Controllers\IndikatorPeriodeController;
 use App\Http\Controllers\LaporanCapaianController;
+use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KategoriKinerjaController;
 use App\Models\Periode;
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +90,33 @@ Route::middleware('auth')->group(function(){
     Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
     Route::put('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/satuan', [SatuanController::class, 'index'])->name('satuan.index');
+    Route::get('/satuan/{satuan}/edit', [SatuanController::class, 'edit'])->name('satuan.edit');
+    Route::get('/satuan/create', [SatuanController::class, 'create'])->name('satuan.create');
+    Route::post('/satuan/store', [SatuanController::class, 'store'])->name('satuan.store');
+    Route::put('/satuan/{satuan}', [SatuanController::class, 'update'])->name('satuan.update');
+    Route::delete('/satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/level', [LevelController::class, 'index'])->name('level.index');
+    Route::get('/level/{level}/edit', [LevelController::class, 'edit'])->name('level.edit');
+    Route::get('/level/create', [LevelController::class, 'create'])->name('level.create');
+    Route::post('/level/store', [LevelController::class, 'store'])->name('level.store');
+    Route::put('/level/{level}', [LevelController::class, 'update'])->name('level.update');
+    Route::delete('/level/{level}', [LevelController::class, 'destroy'])->name('level.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/kategori-kinerja', [KategoriKinerjaController::class, 'index'])->name('kategori-kinerja.index');
+    Route::get('/kategori-kinerja/{KategoriKinerja}/edit', [KategoriKinerjaController::class, 'edit'])->name('kategori-kinerja.edit');
+    Route::get('/kategori-kinerja/create', [KategoriKinerjaController::class, 'create'])->name('kategori-kinerja.create');
+    Route::post('/kategori-kinerja/store', [KategoriKinerjaController::class, 'store'])->name('kategori-kinerja.store');
+    Route::put('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'update'])->name('kategori-kinerja.update');
+    Route::delete('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
 });
 
 Route::get('/test', function(){
