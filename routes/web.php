@@ -12,6 +12,10 @@ use App\Http\Controllers\LaporanCapaianController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\KategoriKinerjaController;
+use App\Http\Controllers\EvaluasiAkipController;
+use App\Http\Controllers\UploadFileController;
+use App\Http\Controllers\HasilEvaluasiController;
+use App\Http\Controllers\KategoriDokumenController;
 use App\Models\Periode;
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +121,42 @@ Route::middleware('auth')->group(function(){
     Route::post('/kategori-kinerja/store', [KategoriKinerjaController::class, 'store'])->name('kategori-kinerja.store');
     Route::put('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'update'])->name('kategori-kinerja.update');
     Route::delete('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/evaluasi-akip', [EvaluasiAkipController::class, 'index'])->name('evaluasi-akip.index');
+    Route::get('/evaluasi-akip/{EvaluasiAkip}/edit', [EvaluasiAkipController::class, 'edit'])->name('evaluasi-akip.edit');
+    Route::get('/evaluasi-akip/create', [EvaluasiAkipController::class, 'create'])->name('evaluasi-akip.create');
+    Route::post('/evaluasi-akip/store', [EvaluasiAkipController::class, 'store'])->name('evaluasi-akip.store');
+    Route::put('/evaluasi-akip/{EvaluasiAkip}', [EvaluasiAkipController::class, 'update'])->name('evaluasi-akip.update');
+    Route::delete('/evaluasi-akip/{EvaluasiAkip}', [EvaluasiAkipController::class, 'destroy'])->name('evaluasi-akip.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/upload-file', [UploadFileController::class, 'index'])->name('upload-file.index');
+    Route::get('/upload-file/{level}/edit', [UploadFileController::class, 'edit'])->name('upload-file.edit');
+    Route::get('/upload-file/create', [UploadFileController::class, 'create'])->name('upload-file.create');
+    Route::post('/upload-filep/store', [UploadFileController::class, 'store'])->name('upload-file.store');
+    Route::put('/upload-file/{level}', [UploadFileController::class, 'update'])->name('upload-file.update');
+    Route::delete('/upload-file/{level}', [UploadFileController::class, 'destroy'])->name('upload-file.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/hasil-evaluasi', [HasilEvaluasiController::class, 'index'])->name('hasil-evaluasi.index');
+    Route::get('/hasil-evaluasi/{level}/edit', [HasilEvaluasiController::class, 'edit'])->name('hasil-evaluasi.edit');
+    Route::get('/hasil-evaluasi/create', [HasilEvaluasiController::class, 'create'])->name('hasil-evaluasi.create');
+    Route::post('/hasil-evaluasi/store', [HasilEvaluasiController::class, 'store'])->name('hasil-evaluasi.store');
+    Route::put('/hasil-evaluasi/{level}', [HasilEvaluasiController::class, 'update'])->name('hasil-evaluasi.update');
+    Route::delete('/hasil-evaluasi/{level}', [HasilEvaluasiController::class, 'destroy'])->name('hasil-evaluasi.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'index'])->name('kategori-dokumen.index');
+    Route::get('/kategori-dokumen/{level}/edit', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
+    Route::get('/kategori-dokumen/create', [KategoriDokumenController::class, 'create'])->name('kategori-dokumen.create');
+    Route::post('/kategori-dokumen/store', [KategoriDokumenController::class, 'store'])->name('kategori-dokumen.store');
+    Route::put('/kategori-dokumen/{level}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
+    Route::delete('/kategori-dokumen/{level}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
 });
 
 Route::get('/test', function(){
