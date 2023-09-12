@@ -83,9 +83,9 @@ export default function Header(auth) {
                             </a>
                         </Typography>
                     </MenuHandler>
-                    <MenuList>
-                        <MenuItem><Link href="">Setup Penilaian Kinerja</Link></MenuItem>
-                        <MenuItem><Link href="">Evaluasi Penilaian Kinerja</Link></MenuItem>                        
+                    <MenuList>                        
+                        <MenuItem><Link href={route('evaluasi-akip.index')}>Evaluasi Penilaian Kinerja</Link></MenuItem> 
+                        <MenuItem><Link href={route('hasil-evaluasi.index')}>Hasil Evaluasi Penilaian Kinerja</Link></MenuItem>
                     </MenuList>
                 </Menu>
             
