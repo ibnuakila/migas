@@ -1,12 +1,12 @@
 import { a as jsx, j as jsxs } from "../app.mjs";
 import { useState } from "react";
-import { A as AdminLayout } from "./AdminLayout-cebd89e1.mjs";
-import { Card, Typography, Button } from "@material-tailwind/react";
+import { A as AdminLayout } from "./AdminLayout-fb3358ec.mjs";
+import { Card, Typography, Input, Button } from "@material-tailwind/react";
+import { Link } from "@inertiajs/react";
 import "react/jsx-runtime";
 import "lodash";
 import "axios";
 import "react-dom/client";
-import "@inertiajs/react";
 import "@heroicons/react/24/outline";
 import "./ApplicationLogo-42bf81ce.mjs";
 function ListPic({ auth, pics }) {
@@ -38,20 +38,23 @@ function ListPic({ auth, pics }) {
       keterangan: "Unit Kerja"
     }
   ];
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-    alert("OK");
-  };
+  useState(false);
+  const [term, setTerm] = useState("");
+  function handleChange(e) {
+    const value = e.target.value;
+    setTerm(value);
+    console.log(key + ", " + value);
+  }
   return /* @__PURE__ */ jsx(
     AdminLayout,
     {
       auth,
       children: /* @__PURE__ */ jsx("div", { className: "container mx-auto max-w-screen-lg py-12", children: /* @__PURE__ */ jsxs(Card, { className: "p-5 h-full w-full overflow-scroll", children: [
-        /* @__PURE__ */ jsxs(Typography, { variant: "h2", children: [
-          "Data PIC",
-          /* @__PURE__ */ jsx(Button, { size: "sm", className: "ml-2", onClick: handleOpen, color: "blue", children: "Add" })
+        /* @__PURE__ */ jsxs("div", { className: "flex justify-between", children: [
+          /* @__PURE__ */ jsx(Typography, { variant: "h3", children: "Data PIC" }),
+          /* @__PURE__ */ jsx("span", { children: /* @__PURE__ */ jsx(Input, { variant: "outlined", size: "md", className: "w-45", label: "Search for periode", name: "periode", onChange: handleChange }) })
         ] }),
+        /* @__PURE__ */ jsx("div", { className: "flex my-2", children: /* @__PURE__ */ jsx(Link, { href: route("pic.create"), children: /* @__PURE__ */ jsx(Button, { size: "sm", className: "ml-2", color: "blue", children: "Add" }) }) }),
         /* @__PURE__ */ jsxs("table", { children: [
           /* @__PURE__ */ jsx("thead", { children: /* @__PURE__ */ jsx("tr", { children: TABLE_HEAD.map((head) => /* @__PURE__ */ jsx("th", { className: "border-b border-blue-gray-100 bg-blue-gray-50 p-4", children: /* @__PURE__ */ jsx(
             Typography,

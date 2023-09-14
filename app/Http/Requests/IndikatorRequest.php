@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PeriodeStoreRequest extends FormRequest
+class IndikatorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class PeriodeStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'periode' => ['required'],
-            'status' => ['required']
+            'nama_indikator' => ['required'],
+            'satuan_id' => ['required']
         ];
     }
 }

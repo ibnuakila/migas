@@ -1,34 +1,34 @@
 import { j as jsxs, a as jsx } from "../app.mjs";
 import "react";
-import { A as AdminLayout } from "./AdminLayout-cebd89e1.mjs";
+import { A as AdminLayout } from "./AdminLayout-fb3358ec.mjs";
 import { Card, CardBody, Typography, CardFooter, Button, CardHeader } from "@material-tailwind/react";
+import { Link } from "@inertiajs/react";
 import "react/jsx-runtime";
 import "lodash";
 import "axios";
 import "react-dom/client";
-import "@inertiajs/react";
 import "@heroicons/react/24/outline";
 import "./ApplicationLogo-42bf81ce.mjs";
-function SimpleCard() {
-  return /* @__PURE__ */ jsxs(Card, { className: "mt-6 w-45 my-5", children: [
+function SimpleCard({ title, countIndikator, content, link }) {
+  return /* @__PURE__ */ jsxs(Card, { className: "mt-6 w-45", children: [
     /* @__PURE__ */ jsxs(CardBody, { children: [
       /* @__PURE__ */ jsxs(Typography, { variant: "h5", color: "blue-gray", className: "mb-2", children: [
-        "Jumlah Indikator ",
-        /* @__PURE__ */ jsx("span", { className: "text-lg text-blue-600", children: "15" })
+        title,
+        " ",
+        /* @__PURE__ */ jsx("span", { className: "text-lg text-blue-600", children: countIndikator })
       ] }),
-      /* @__PURE__ */ jsx(Typography, { className: "text-justify", children: "Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja antara target dan realisasi" })
+      /* @__PURE__ */ jsx(Typography, { className: "text-justify", children: content })
     ] }),
-    /* @__PURE__ */ jsx(CardFooter, { className: "pt-0", children: /* @__PURE__ */ jsx(Button, { color: "blue", children: "Detail" }) })
+    /* @__PURE__ */ jsx(CardFooter, { className: "pt-0", children: /* @__PURE__ */ jsx(Link, { href: link, children: /* @__PURE__ */ jsx(Button, { color: "blue", children: "Detail" }) }) })
   ] });
 }
 function Home({ props }) {
-  console.log(props);
   return /* @__PURE__ */ jsx(
     AdminLayout,
     {
       props,
-      children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto max-w-screen-lg py-12", children: [
-        /* @__PURE__ */ jsx("div", { className: "flex", children: /* @__PURE__ */ jsxs(Card, { className: "w-full flex-row", children: [
+      children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto", children: [
+        /* @__PURE__ */ jsx("div", { className: "sm:flex sm:mt-2", children: /* @__PURE__ */ jsxs(Card, { className: "w-full flex-row", children: [
           /* @__PURE__ */ jsx(
             CardHeader,
             {
@@ -76,10 +76,10 @@ function Home({ props }) {
             ] }) })
           ] })
         ] }) }),
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-row gap-4", children: [
-          /* @__PURE__ */ jsx(SimpleCard, {}),
-          /* @__PURE__ */ jsx(SimpleCard, {}),
-          /* @__PURE__ */ jsx(SimpleCard, {})
+        /* @__PURE__ */ jsxs("div", { className: "mt-8 sm:mt-0 sm:w-full sm:px-8 flex flex-col md:flex-row justify-between gap-4", children: [
+          /* @__PURE__ */ jsx("div", { className: "flex flex-col", children: /* @__PURE__ */ jsx(SimpleCard, { title: "Periode Active", countIndikator: "2023", content: "Periode ditentukan setiap awal tahun.", link: "/periode" }) }),
+          /* @__PURE__ */ jsx("div", { className: "flex flex-col", children: /* @__PURE__ */ jsx(SimpleCard, { title: "Jumlah Indikator", countIndikator: "15", content: "Indikator adalah satu set data yang digunakan untuk menilai capaian kinerja\r\n          antara target dan realisasi", link: "/indikator" }) }),
+          /* @__PURE__ */ jsx("div", { className: "flex flex-col", children: /* @__PURE__ */ jsx(SimpleCard, { title: "Indikator Periode", countIndikator: "2023", content: "Indikator pada Periode berjalan ditentukan setiap awal tahun." }) })
         ] })
       ] })
     }

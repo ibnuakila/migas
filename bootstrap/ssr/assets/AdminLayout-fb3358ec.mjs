@@ -1,4 +1,4 @@
-import { j as jsxs, a as jsx } from "../app.mjs";
+import { j as jsxs, a as jsx, F as Fragment } from "../app.mjs";
 import React, { useState, useEffect } from "react";
 import { Typography, Menu, MenuHandler, MenuList, MenuItem, Navbar, IconButton, Button, Avatar } from "@material-tailwind/react";
 import { ChevronDownIcon, UserCircleIcon, PowerIcon } from "@heroicons/react/24/outline";
@@ -35,8 +35,24 @@ function Header(auth) {
         }
       ) }),
       /* @__PURE__ */ jsxs(MenuList, { children: [
-        /* @__PURE__ */ jsx(MenuItem, { children: "Setup Indikator Periode" }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Realisasi Capaian Kinerja" })
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("indikator-periode.index"), children: "Setup Indikator Periode" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("laporan-capaian.index"), children: "Laporan Capaian Kinerja" }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs(Menu, { children: [
+      /* @__PURE__ */ jsx(MenuHandler, { children: /* @__PURE__ */ jsx(
+        Typography,
+        {
+          as: "li",
+          variant: "small",
+          color: "blue-gray",
+          className: "p-1 font-normal",
+          children: /* @__PURE__ */ jsx("a", { href: "#", className: "flex items-center hover:text-amber-700", children: "SAKIP" })
+        }
+      ) }),
+      /* @__PURE__ */ jsxs(MenuList, { children: [
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("evaluasi-akip.index"), children: "Evaluasi Penilaian Kinerja" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("hasil-evaluasi.index"), children: "Hasil Evaluasi Penilaian Kinerja" }) })
       ] })
     ] }),
     /* @__PURE__ */ jsxs(Menu, { children: [
@@ -54,9 +70,9 @@ function Header(auth) {
         /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("periode.index"), children: "Setup Periode" }) }),
         /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("indikator.index"), children: "Master Indikator" }) }),
         /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("pic.index"), children: "Master PIC" }) }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Master Satuan" }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Master Level" }),
-        /* @__PURE__ */ jsx(MenuItem, { children: "Master Kategori Kinerja" })
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("satuan.index"), children: "Master Satuan" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("level.index"), children: "Master Level" }) }),
+        /* @__PURE__ */ jsx(MenuItem, { children: /* @__PURE__ */ jsx(Link, { href: route("kategori-kinerja.index"), children: "Master Kategori Kinerja" }) })
       ] })
     ] }),
     /* @__PURE__ */ jsx(
@@ -140,7 +156,7 @@ function Header(auth) {
       }) })
     ] });
   }
-  return /* @__PURE__ */ jsx(Navbar, { className: "sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-0 lg:px-8 lg:py-4", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-blue-gray-900", children: [
+  return /* @__PURE__ */ jsx(Navbar, { className: "sticky top-0 z-10 h-max max-w-full rounded-none py-2 px-0 lg:px-8 lg:py-4", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto flex flex-wrap flex-col md:flex-row items-center justify-between text-blue-gray-900", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex items-center", children: [
       /* @__PURE__ */ jsx(ApplicationLogo, { width: "45", height: "45" }),
       /* @__PURE__ */ jsxs(
@@ -208,30 +224,25 @@ function Header(auth) {
   ] }) });
 }
 function AdminLayout({ auth, children }) {
-  return /* @__PURE__ */ jsxs("div", { className: "", children: [
+  var path = location.pathname.split("/");
+  console.log(path);
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(Header, { auth }),
-    /* @__PURE__ */ jsxs("div", { className: "flex flex-row max-h-full h-screen", children: [
-      /* @__PURE__ */ jsx("div", { className: "basis-1/6 bg-teal-50" }),
-      /* @__PURE__ */ jsxs("div", { className: "basis-2/3", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-row mt-4 rounded-r-lg p-2 w-40 items-center text-gray-500", children: [
-          /* @__PURE__ */ jsx("a", { href: "#", className: "opacity-60", children: /* @__PURE__ */ jsx(
-            "svg",
-            {
-              xmlns: "http://www.w3.org/2000/svg",
-              className: "h-4 w-4",
-              viewBox: "0 0 20 20",
-              fill: "currentColor",
-              children: /* @__PURE__ */ jsx("path", { d: "M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" })
-            }
-          ) }),
-          /* @__PURE__ */ jsx("a", { href: "#", className: "ml-2", children: /* @__PURE__ */ jsx("span", { children: "SICAKI " }) }),
-          /* @__PURE__ */ jsx("a", { href: location.pathname, className: "pl-2", children: location.pathname.toString().toUpperCase() })
-        ] }),
-        children
+    /* @__PURE__ */ jsx("section", { className: "max-h-full h-450 bg-teal-50", children: /* @__PURE__ */ jsxs("div", { className: "container px-5 pt-10 pb-20 mx-auto flex flex-wrap ", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex py-4", children: [
+        /* @__PURE__ */ jsx(Typography, { variant: "h6", children: /* @__PURE__ */ jsx(Link, { href: "/home", className: "text-gray-400", children: "APP  |  " }) }),
+        path.length <= 2 ? /* @__PURE__ */ jsxs(Typography, { variant: "h6", children: [
+          " ",
+          /* @__PURE__ */ jsx(Link, { href: "/" + path[1], className: "text-blue-300", children: path[1].toString().toLocaleUpperCase() })
+        ] }) : /* @__PURE__ */ jsxs(Typography, { variant: "h6", children: [
+          /* @__PURE__ */ jsx(Link, { href: "/" + path[1], className: "text-blue-300", children: path[1].toString().toLocaleUpperCase() }),
+          " |  ",
+          /* @__PURE__ */ jsx(Link, { href: "/" + path[2], className: "text-blue-300", children: path[2].toString().toLocaleUpperCase() })
+        ] })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: "basis-1/6 bg-teal-50" })
-    ] }),
-    /* @__PURE__ */ jsx("div", { className: "basis-1/4", children: /* @__PURE__ */ jsx("p", { className: "p-4 text-md text-blue-400 text-center", children: "Copyright © 2023 Dirjen Migas" }) })
+      children
+    ] }) }),
+    /* @__PURE__ */ jsx("section", { className: "w-1/1 p-4 h-auto", children: /* @__PURE__ */ jsx("footer", { className: "footer bg-white relative pt-1 border-b-2 border-blue-200", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto px-6", children: /* @__PURE__ */ jsx("p", { className: "p-4 text-md text-blue-400 text-center", children: "Copyright © 2023 Dirjen Migas" }) }) }) })
   ] });
 }
 export {

@@ -1,5 +1,5 @@
 import { j as jsxs, a as jsx } from "../app.mjs";
-import { G as Guest } from "./GuestLayout-668a3a96.mjs";
+import { G as Guest } from "./GuestLayout-ff3e73c7.mjs";
 import { P as PrimaryButton } from "./PrimaryButton-91405085.mjs";
 import { useForm, Head, Link } from "@inertiajs/react";
 import "react/jsx-runtime";

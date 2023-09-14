@@ -5,7 +5,7 @@ import "@inertiajs/react";
 import "./TextInput-790407fc.mjs";
 import UpdatePasswordForm from "./UpdatePasswordForm-5cc4aa87.mjs";
 import UpdateProfileInformation from "./UpdateProfileInformationForm-c1b41e5e.mjs";
-import { A as AdminLayout } from "./AdminLayout-cebd89e1.mjs";
+import { A as AdminLayout } from "./AdminLayout-fb3358ec.mjs";
 import "react/jsx-runtime";
 import "lodash";
 import "axios";

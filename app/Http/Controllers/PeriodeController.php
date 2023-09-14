@@ -47,14 +47,14 @@ class PeriodeController extends Controller //implements ICrud
         $periode->update(
             $request->validated()
         );
-
-        return Redirect::back()->with('success', 'Contact updated.');        
+        return Redirect::route('periode.index')->with('success', 'Periode updated.');      
     }
 
     
 
-    public function destroy() {
-        
+    public function destroy(Periode $periode) {
+        $periode->delete();
+        return Redirect::route('periode.index')->with('success', 'Periode deleted!');
     }
 
     public function store(PeriodeStoreRequest $request) {

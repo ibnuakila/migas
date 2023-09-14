@@ -17,30 +17,32 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function EditPeriode() {
     const {periode, auth} = usePage().props;
     const {data, setData, put, delete:destroy, errors, processing, recentlySuccessful} = useForm({
-        Id: periode.data.Id || '',
-        Periode: periode.data.Periode || '',
-        Status: periode.data.Status || ''
+        id: periode.data.id || '',
+        periode: periode.data.periode || '',
+        status: periode.data.status || ''
     });
+    //console.log(usePage().props);
+    
     const [option, setOption] = useState('');
 
     const [open, setOpen] = useState(false);
 
     const handleSave = (e) => {
         e.preventDefault();
-        put(route('periode.update', periode.data.Id));
+        put(route('periode.update', periode.data.id));
     }
 
     function handleChange(e){
         setOption({selectValue:e});
-        setData('Status', e);
+        setData('status', e);
     }
     
     const handleDestroy = (e) => {
         if (confirm('Apakah Anda yakin akan menghapus data periode?')) {
-          destroy(route('periode.destroy', periode.data.Id));
+          destroy(route('periode.destroy', periode.data.id));
         }
       }
-
+    const optStatus = ['Closed' , 'Active'];
     return (
             <AdminLayout 
                 auth = {auth}
@@ -61,19 +63,18 @@ export default function EditPeriode() {
                                             <div className="flex flex-col gap-4">
                                                 <Input label="Periode" variant="outlined" id="Periode" 
                                                        onChange={e => {
-                                                    setData('Periode', e.target.value)
+                                                    setData('periode', e.target.value)
                                                 }} 
-                                                       defaultValue={periode.data.Periode}
-                                                       error={errors.Periode}/>                      
-                                
+                                                       defaultValue={periode.data.periode}
+                                                       error={errors.periode}/>                      
+                                                       {errors.periode && <div className="text-red-400 mt-1">{errors.periode}</div>}
                                                 
                                                     <Select label="Select Status" onChange={handleChange}
-                                                    defaultValue={periode.data.Status}
-                                                    error={errors.Status}>
-                                                      <Option value="Closed">Closed</Option>
-                                                      <Option value="Active">Active</Option>                                                      
+                                                    value={periode.data.status}                                                    
+                                                    error={errors.status}>
+                                                    {optStatus.map( (opt) => <Option value={opt}>{opt}</Option> )}
                                                     </Select>
-                                                
+                                                    {errors.status && <div className="text-red-400 mt-1">{errors.status}</div>}
                                             </div>
                                 
                                 

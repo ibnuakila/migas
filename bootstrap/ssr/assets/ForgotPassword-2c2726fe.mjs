@@ -1,5 +1,5 @@
 import { j as jsxs, a as jsx } from "../app.mjs";
-import { G as Guest } from "./GuestLayout-668a3a96.mjs";
+import { G as Guest } from "./GuestLayout-ff3e73c7.mjs";
 import { T as TextInput, I as InputError } from "./TextInput-790407fc.mjs";
 import { P as PrimaryButton } from "./PrimaryButton-91405085.mjs";
 import { useForm, Head } from "@inertiajs/react";

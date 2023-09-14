@@ -53,7 +53,7 @@ Route::get('/home', function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
-    Route::get('/periode/{periode}/edit', [PeriodeController::class, 'edit'])->name('periode.edit');
+    Route::get('/periode/edit/{periode}', [PeriodeController::class, 'edit'])->name('periode.edit');
     Route::get('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
     Route::post('/periode/store', [PeriodeController::class, 'store'])->name('periode.store');
     Route::put('/periode/{periode}', [PeriodeController::class, 'update'])->name('periode.update');
@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/indikator', [IndikatorController::class, 'index'])->name('indikator.index');
     Route::get('/indikator/create', [IndikatorController::class, 'create'])->name('indikator.create');
     Route::post('/indikator/store', [IndikatorController::class, 'store'])->name('indikator.store');
-    Route::get('/indikator/{indikator}/edit', [IndikatorController::class, 'edit'])->name('indikator.edit');
+    Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
 });

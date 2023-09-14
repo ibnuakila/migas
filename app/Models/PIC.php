@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class PIC extends Model
 {
     use HasFactory;
-    protected $table = 'PIC';
+    protected $table = 'pic';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+    protected $fillable = [
+        'nama_pic',
+        'keterangan'
+    ];
 }

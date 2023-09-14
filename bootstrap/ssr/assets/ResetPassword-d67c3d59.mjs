@@ -1,20 +1,20 @@
 import { j as jsxs, a as jsx } from "../app.mjs";
 import { useEffect } from "react";
-import { G as Guest } from "./GuestLayout-668a3a96.mjs";
+import { G as Guest } from "./GuestLayout-ff3e73c7.mjs";
 import { T as TextInput, I as InputError } from "./TextInput-790407fc.mjs";
 import { I as InputLabel } from "./InputLabel-e0da9aff.mjs";
 import { P as PrimaryButton } from "./PrimaryButton-91405085.mjs";
-import { useForm, Head, Link } from "@inertiajs/react";
+import { useForm, Head } from "@inertiajs/react";
 import "react/jsx-runtime";
 import "lodash";
 import "axios";
 import "react-dom/client";
 import "@material-tailwind/react";
 import "./ApplicationLogo-42bf81ce.mjs";
-function Register() {
+function ResetPassword({ token, email }) {
   const { data, setData, post, processing, errors, reset } = useForm({
-    name: "",
-    email: "",
+    token,
+    email,
     password: "",
     password_confirmation: ""
   });
@@ -23,34 +23,17 @@ function Register() {
       reset("password", "password_confirmation");
     };
   }, []);
-  const handleOnChange = (event) => {
-    setData(event.target.name, event.target.type === "checkbox" ? event.target.checked : event.target.value);
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.value);
   };
   const submit = (e) => {
     e.preventDefault();
-    post(route("register"));
+    post(route("password.store"));
   };
   return /* @__PURE__ */ jsxs(Guest, { children: [
-    /* @__PURE__ */ jsx(Head, { title: "Register" }),
+    /* @__PURE__ */ jsx(Head, { title: "Reset Password" }),
     /* @__PURE__ */ jsxs("form", { onSubmit: submit, children: [
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx(InputLabel, { htmlFor: "name", value: "Name" }),
-        /* @__PURE__ */ jsx(
-          TextInput,
-          {
-            id: "name",
-            name: "name",
-            value: data.name,
-            className: "mt-1 block w-full",
-            autoComplete: "name",
-            isFocused: true,
-            onChange: handleOnChange,
-            required: true
-          }
-        ),
-        /* @__PURE__ */ jsx(InputError, { message: errors.name, className: "mt-2" })
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "mt-4", children: [
         /* @__PURE__ */ jsx(InputLabel, { htmlFor: "email", value: "Email" }),
         /* @__PURE__ */ jsx(
           TextInput,
@@ -61,8 +44,7 @@ function Register() {
             value: data.email,
             className: "mt-1 block w-full",
             autoComplete: "username",
-            onChange: handleOnChange,
-            required: true
+            onChange: onHandleChange
           }
         ),
         /* @__PURE__ */ jsx(InputError, { message: errors.email, className: "mt-2" })
@@ -78,8 +60,8 @@ function Register() {
             value: data.password,
             className: "mt-1 block w-full",
             autoComplete: "new-password",
-            onChange: handleOnChange,
-            required: true
+            isFocused: true,
+            onChange: onHandleChange
           }
         ),
         /* @__PURE__ */ jsx(InputError, { message: errors.password, className: "mt-2" })
@@ -89,32 +71,20 @@ function Register() {
         /* @__PURE__ */ jsx(
           TextInput,
           {
-            id: "password_confirmation",
             type: "password",
             name: "password_confirmation",
             value: data.password_confirmation,
             className: "mt-1 block w-full",
             autoComplete: "new-password",
-            onChange: handleOnChange,
-            required: true
+            onChange: onHandleChange
           }
         ),
         /* @__PURE__ */ jsx(InputError, { message: errors.password_confirmation, className: "mt-2" })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-end mt-4", children: [
-        /* @__PURE__ */ jsx(
-          Link,
-          {
-            href: route("login"),
-            className: "underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
-            children: "Already registered?"
-          }
-        ),
-        /* @__PURE__ */ jsx(PrimaryButton, { className: "ml-4", disabled: processing, children: "Register" })
-      ] })
+      /* @__PURE__ */ jsx("div", { className: "flex items-center justify-end mt-4", children: /* @__PURE__ */ jsx(PrimaryButton, { className: "ml-4", disabled: processing, children: "Reset Password" }) })
     ] })
   ] });
 }
 export {
-  Register as default
+  ResetPassword as default
 };

@@ -15,20 +15,20 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
-export default function FormIndikator() {
-    const {auth, satuans, levels} = usePage().props;
-    const { data, setData, post, errors, processing } = useForm({
-        id: '',
-        nama_indikator: '',
-        satuan_id: ''        
+export default function EditIndikator() {
+    const {auth, indikator, satuans} = usePage().props;
+    const { data, setData, put, errors, delete:destroy, processing } = useForm({
+        id: indikator.data.id || '',
+        nama_indikator: indikator.data.nama_indikator || '',
+        satuan_id: indikator.data.satuan_id || ''        
     });
     const [option, setOption] = useState('');
     
-    console.log(usePage().props);
+    //console.log(usePage().props);
    
     const handleSave = (e) => {
         e.preventDefault();
-        post(route('indikator.store'));        
+        put(route('indikator.update', indikator.data.id));        
     };
     
     function handleChangeSatuan(e){
@@ -36,6 +36,11 @@ export default function FormIndikator() {
         setData('satuan_id', e);
     }
     
+    const handleDestroy = (e) => {
+        if (confirm('Apakah Anda yakin akan menghapus data indikator?')) {
+          destroy(route('indikator.destroy', indikator.data.id));
+        }
+      }
     
     
     return (
@@ -47,7 +52,7 @@ export default function FormIndikator() {
 
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                         <Typography variant="h4" color="white">
-                            New Indikator
+                            Update Indikator
                         </Typography>
                     </CardHeader>
 
@@ -61,14 +66,14 @@ export default function FormIndikator() {
                                         onChange={e => {
                                             setData('nama_indikator', e.target.value)
                                         }} 
-
-                                       error={errors.NamaIndikator}/>                      
+                                        defaultValue={indikator.data.nama_indikator}
+                                       error={errors.nama_indikator}/>                      
                             </div>
 
                                 <div className="sm:w-full md:w-full lg:w-full">
                                     <Select label="Select Satuan" onChange={handleChangeSatuan}
-                                    value={option.selectValue}
-                                    error={errors.Status}>
+                                    value={indikator.data.satuan_id}
+                                    error={errors.satuan_id}>
                                     {satuans.map( ({id, nama_satuan}) => (
                                     <Option value={id.toString()} key={id}>{nama_satuan}</Option>
                                     ) )}
@@ -81,6 +86,9 @@ export default function FormIndikator() {
 
                         </CardBody>
                         <CardFooter className="space-x-2 ">                        
+                            <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
+                                Delete
+                            </Button>
                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                 Save
                             </Button>                        
