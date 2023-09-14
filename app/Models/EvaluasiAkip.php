@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class EvaluasiAkip extends Model
 {
     use HasFactory;
-    protected $table = 'EvaluasiAkip';
-    protected $primaryKey = 'Id';
+    protected $table = 'evaluasi_akip';
+    protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'TanggalAjuan',
-        'IdPeriode',
-        'Status',
-        'Keterangan'
+        'tanggal_ajuan',
+        'periode_id',
+        'status',
+        'keterangan'
     ];
 }

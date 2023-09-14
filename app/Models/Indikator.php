@@ -8,5 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Indikator extends Model
 {
     use HasFactory;
-    protected $table = 'Indikator';
+    protected $table = 'indikator';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
+    protected $fillable = [
+        'nama_indikator',
+        'satuan_id'
+    ];
+    
+    public function satuan()
+    {
+        return $this->hasMany(Satuan::class);
+    }
 }

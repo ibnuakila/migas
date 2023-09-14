@@ -1,14 +1,35 @@
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { Breadcrumbs } from "@material-tailwind/react";
+import { Breadcrumbs,
+Typography} from "@material-tailwind/react";
+import { Link, router } from '@inertiajs/react';
 
 export default function AdminLayout( {auth, children}){
-    //console.log(props);
+    var path = location.pathname.split("/");
+    console.log(path);
     return (
             <>                
                 <Header auth={auth}/>
-                <section className="max-h-full h-450 bg-teal-50">                    
-                    <div className="container px-5 py-24 mx-auto flex flex-wrap ">
+                <section className="max-h-full h-450 bg-teal-50">                     
+                    <div className="container px-5 pt-10 pb-20 mx-auto flex flex-wrap ">  
+                    <div className="flex py-4">
+                    <Typography variant="h6"><Link href="/home" className="text-gray-400">APP &nbsp;|
+                    &nbsp;</Link></Typography>
+                    {path.length <= 2 ? (
+                        <Typography variant="h6">&nbsp;
+                        <Link href={"/"+path[1]} className="text-blue-300">{path[1].toString().toLocaleUpperCase()}</Link>
+                        </Typography>
+                    ):(
+                        <Typography variant="h6">
+                        <Link href={"/"+path[1]} className="text-blue-300">{path[1].toString().toLocaleUpperCase()}</Link>
+                        &nbsp;|                        
+                        &nbsp;                        
+                        <Link href={"/"+path[2]} className="text-blue-300">{path[2].toString().toLocaleUpperCase()}</Link>
+                        </Typography>
+                    )}
+                        
+                    
+                    </div>
                         {children}
                     </div>                    
                 </section>

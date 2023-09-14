@@ -9,10 +9,15 @@ class Satuan extends Model
 {
     use HasFactory;
     
-    protected $table = 'Satuan';
-    protected $primaryKey = 'Id';
+    protected $table = 'satuan';
+     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'NamaStatus'
+        'nama_satuan'
     ];
+    
+    public function indikator()
+    {
+        return $this->belongsTo(Indikator::class);
+    }
 }

@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class UploadFile extends Model
 {
     use HasFactory;
-    protected $table = 'UploadFile';
-    protected $primaryKey = 'Id';
+    protected $table = 'upload_file';
+    protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'FilePath',
-        'NamaDokumen',
-        'IdKategoriDokumen',
-        'UploadDate',
-        'Deskripsi',
-        'IdEvaluasiAkip',
-        'Revisi'
+        'file_path',
+        'nama_dokumen',
+        'kategori_dokumen_id',
+        'upload_date',
+        'deskripsi',
+        'evaluasi_akip_id',
+        'revisi'
     ];
 }

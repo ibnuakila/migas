@@ -16,15 +16,16 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
 export default function FormPeriode() {
-    const {auth} = usePage().props;
-    const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        Periode: '',
-        Status: ''
+    const {auth, errors} = usePage().props;
+    const { data, setData, post,  processing } = useForm({
+        id: '',
+        periode: '',
+        status: ''
     });
     const [option, setOption] = useState('');
     
-    //console.log(usePage().props);
+    //console.log(errors);
+    
    
     const handleSave = (e) => {
         e.preventDefault();
@@ -33,9 +34,9 @@ export default function FormPeriode() {
     
     function handleChange(e){
         setOption({selectValue:e});
-        setData('Status', e);
+        setData('status', e);
     }
-    
+    const optStatus = ['Closed' , 'Active'];
     return (
     <AdminLayout 
                 auth = {auth}
@@ -57,30 +58,33 @@ export default function FormPeriode() {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Periode" variant="outlined" id="Periode" 
                                                         onChange={e => {
-                                                            setData('Periode', e.target.value)
+                                                            setData('periode', e.target.value)
                                                         }} 
                                                        
-                                                       error={errors.Periode}/>                      
+                                                       error={errors.periode}/> 
+                                                       {errors.periode && <div className="text-red-400 mt-1">{errors.periode}</div>}
                                             </div>
                                                 
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Select label="Select Status" onChange={handleChange}
                                                     value={option.selectValue}
-                                                    error={errors.Status}>
-                                                      <Option value="Closed">Closed</Option>
-                                                      <Option value="Active">Active</Option>                                                      
+                                                    error={errors.status}>
+                                                      {optStatus.map( (opt) => <Option value={opt}>{opt}</Option> )}                                                      
                                                     </Select>
+                                                    {errors.status && 
+                                                        <div className="text-red-400 mt-1">{errors.status}</div>
+                                                    }
                                                 </div>
                                             </div>
-                                
+                                            
                                 
                                         </CardBody>
                                         <CardFooter className="space-x-2 ">
-                                        <div className="flex place-content-center">
+                                        
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                                 Save
                                             </Button>
-                                        </div>
+                                        
                                         </CardFooter>
                                     </form>
                                     </Card>
