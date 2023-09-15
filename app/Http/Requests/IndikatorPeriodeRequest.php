@@ -13,7 +13,7 @@ class IndikatorPeriodeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class IndikatorPeriodeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'indikator_id' => ['required','integer'],
+            'periode_id' => ['required','integer'],
+            'target' => ['required','decimal:2'],
+            'pic_id' => ['required','integer']
         ];
     }
 }

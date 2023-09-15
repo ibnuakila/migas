@@ -73,14 +73,14 @@ Route::middleware('auth')->group(function(){
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
     Route::get('/pic/create', [PICController::class, 'create'])->name('pic.create');
     Route::post('/pic/store', [PICController::class, 'store'])->name('pic.store');
-    Route::get('/pic/{pic}/edit', [PICController::class, 'edit'])->name('pic.edit');
+    Route::get('/pic/edit/{pic}', [PICController::class, 'edit'])->name('pic.edit');
     Route::put('/pic/{pic}', [PICController::class, 'update'])->name('pic.update');
     Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
 Route::middleware('auth')->group(function(){
     Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
-    Route::get('/indikator-periode/{indikatorPeriode}/edit', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
+    Route::get('/indikator-periode/edit/{indikatorPeriode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
     Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
     Route::post('/indikator-periode/store', [IndikatorPeriodeController::class, 'store'])->name('indikator-periode.store');
     Route::put('/indikator-periode/{indikatorPeriode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
