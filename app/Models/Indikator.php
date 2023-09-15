@@ -13,7 +13,11 @@ class Indikator extends Model
     public $timestamps = false;
     protected $fillable = [
         'nama_indikator',
-        'satuan_id'
+        'satuan_id',
+        'level_id',
+        'parent_id',
+        'ordering',
+        'numbering'
     ];
     
     public function satuan()

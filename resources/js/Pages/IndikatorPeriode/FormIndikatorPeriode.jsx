@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Button,
   Card,
@@ -16,19 +16,43 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
 export default function FormIndikatorPeriode() {
-    const {auth} = usePage().props;
+    const {auth, periodes, indikators, pics} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        Periode: '',
-        Status: ''
+        id: '',
+        periode_id: '',
+        indikator_id: '',
+        target: '',
+        pic_id: '',
+        //level_id: ''
     });
     console.log(usePage().props);
    
+    const [optionPeriode, setOptionPeriode] = useState('');
+    const [optionIndikator, setOptionIndikator] = useState('');
+    const [optionPic, setOptionPic] = useState('');
+    const [optionLevel, setOptionLevel] = useState('');
+    
     const handleSave = (e) => {
         e.preventDefault();
         post(route('indikator-periode.store'));        
     };
        
+    const handlePeriodeChange = (e) => {
+        setOptionPeriode({selectValue:e});
+        setData('periode_id', e);
+    }
+    
+    const handleIndikatorChange = (e) => {
+        setOptionIndikator({selectValue:e});
+        setData('indikator_id', e);
+    }
+    
+    const handlePicChange = (e) => {
+        setOptionPic({selectValue:e});
+        setData('pic_id', e);
+    }
+    
+    
     
     return (
     <AdminLayout 
@@ -47,31 +71,40 @@ export default function FormIndikatorPeriode() {
                                         <CardBody>
                                 
                                             <div className="flex flex-col gap-4">
-                                                <Select label="Select Periode" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                      <Option value="Closed">2017</Option>
-                                                      <Option value="Active">2018</Option>                                                      
+                                                <Select label="Select Periode" onChange={handlePeriodeChange}
+                                                    value={optionPeriode.selectValue}
+                                                    error={errors.periode_id}>
+                                                    {periodes.map( ({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option> )}                                                                                                           
                                                 </Select>
-                                                <Select label="Select Indikator" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                      <Option value="Closed">Realisasi Produksi/Lifting Minyak</Option>
-                                                      <Option value="Active">Rekomendasi Ekspor Minyak Mentah</Option>                                                      
+                                                    {errors.periode_id && 
+                                                        <div className="text-red-400 mt-1">{errors.periode_id}</div>
+                                                    }
+                                                <Select label="Select Indikator" onChange={handleIndikatorChange}
+                                                    value={optionIndikator.selectValue}
+                                                    error={errors.indikator_id}>
+                                                    {indikators.map( ({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option> )}                                                     
                                                 </Select>
-                                                <Input label="Target" variant="outlined" id="Periode" 
+                                                    {errors.indikator_id && 
+                                                        <div className="text-red-400 mt-1">{errors.indikator_id}</div>
+                                                    }
+                                                <Input label="Target" variant="outlined" id="target" 
                                                         onChange={e => {
-                                                            setData('Periode', e.target.value)
+                                                            setData('target', e.target.value)
                                                         }} 
-                                                       
-                                                       error={errors.Periode}/>                      
-                                
-                                                <Select label="Select PIC" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                      <Option value="Closed">DMEP</Option>
-                                                      <Option value="Active">DMOO</Option>                                                      
+                                                       defaultValue=""
+                                                       error={errors.target}/>                      
+                                                    {errors.target && 
+                                                        <div className="text-red-400 mt-1">{errors.target}</div>
+                                                    }
+                                                
+                                                <Select label="Select PIC" onChange={handlePicChange}
+                                                    value={optionPic.selectValue}
+                                                    error={errors.pic}>
+                                                    {pics.map( ({id, nama_pic}) => <Option value={id.toString()} key={id}>{nama_pic}</Option> )}                                                     
                                                 </Select>
+                                                    {errors.pic_id && 
+                                                        <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                                    }
                                             </div>
                                 
                                 
