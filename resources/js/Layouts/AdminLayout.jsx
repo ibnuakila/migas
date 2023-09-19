@@ -6,7 +6,7 @@ import { Link, router } from '@inertiajs/react';
 
 export default function AdminLayout( {auth, children}){
     var path = location.pathname.split("/");
-    console.log(path);
+    //console.log(path);
     return (
             <>                
                 <Header auth={auth}/>

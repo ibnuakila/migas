@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Satuan;
 use App\Http\Resources\SatuanCollection;
+use App\Http\Requests\SatuanRequest;
+use App\Http\Resources\SatuanResource;
 
 class SatuanController extends Controller //implements ICrud
 {
@@ -15,12 +18,14 @@ class SatuanController extends Controller //implements ICrud
         return Inertia::render('Satuan/FormSatuan');
     }
 
-    public function destroy() {
-        
+    public function destroy(Satuan $satuan) {
+        $satuan->delete();
+        return Redirect::route('satuan.index');
     }
 
-    public function edit() {
-        
+    public function edit(Satuan $satuan) {
+        return Inertia::render('Satuan/EditSatuan', [
+            'satuan' => new SatuanResource($satuan)]);
     }
 
     public function index() {
@@ -35,11 +40,17 @@ class SatuanController extends Controller //implements ICrud
         ]);
     }
 
-    public function store() {
-        
+    public function store(SatuanRequest $request) {
+        $valid = $request->validated();
+        $obj = new Satuan();        
+        $obj->create($valid);
+        return Redirect::route('satuan.index');
     }
 
-    public function update() {
-        
+    public function update(Satuan $satuan, SatuanRequest $request) {
+        $satuan->update(
+            $request->validated()
+        );
+        return Redirect::route('satuan.index'); 
     }
 }

@@ -18,8 +18,8 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function FormSatuan() {
     const {auth} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        NamaSatuan: ''
+        id: '',
+        nama_satuan: ''
     });
     const [option, setOption] = useState('');
     
@@ -32,7 +32,7 @@ export default function FormSatuan() {
     
     function handleChange(e){
         setOption({selectValue:e});
-        setData('NamaSatuan', e);
+        setData('nama_satuan', e);
     }
     
     return (
@@ -56,10 +56,11 @@ export default function FormSatuan() {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Satuan" variant="outlined" id="Satuan" 
                                                         onChange={e => {
-                                                            setData('NamaSatuan', e.target.value)
+                                                            setData('nama_satuan', e.target.value)
                                                         }} 
                                                        
-                                                       error={errors.NamaSatuan}/>                      
+                                                       error={errors.nama_satuan}/>   
+                                                       {errors.nama_satuan && <div className="text-red-400 mt-1">{errors.nama_satuan}</div>}
                                             </div>
                                                 
                                                 

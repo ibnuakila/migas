@@ -14,22 +14,23 @@ import {
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
- 
+import FormUpload from './FormUpload';
+
 export default function FormEvaluasiAkip() {
     const {auth} = usePage().props;
     const { upload_files } = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        Periode: '',
-        TanggalAjuan: '',
-        Status: '',
-        Keterangan: ''
+        id: '',
+        periode: '',
+        tanggal_ajuan: '',
+        status: '',
+        keterangan: ''
     });
     
     const [option, setOption] = useState('');
     const TABLE_HEAD = ["ID", "Nama Dokumen", "Kategori/Komponen", "Tgl Upload", "Deskripsi", "Revisi","Action"];
-    
-    console.log(usePage().props);
+    const [open, setOpen] = useState(false);
+    //console.log(usePage().props);
    
     const handleSave = (e) => {
         e.preventDefault();
@@ -38,7 +39,7 @@ export default function FormEvaluasiAkip() {
     
     function handleChange(e){
         setOption({selectValue:e});
-        setData('Periode', e);
+        setData('periode', e);
     }
     
     return (
@@ -55,27 +56,28 @@ export default function FormEvaluasiAkip() {
                     </CardHeader>
 
 
-                    <form onSubmit={handleSave}>
+                    <form id="hasil-evaluasi" onSubmit={handleSave}>
                         <CardBody>
 
                             <div className="flex flex-wrap flex-col place-content-center gap-4">
 
                                 <Select label="Select Periode" onChange={handleChange}
+                                    id="opt-periode"
                                     value={option.selectValue}
-                                    error={errors.Status}>
+                                    error={errors.periode}>
                                       <Option value="Closed">2017</Option>
                                       <Option value="Active">2018</Option>                                                      
                                     </Select>
-                                <Input label="Tanggal" variant="outlined" id="Periode" 
+                                <Input label="Tanggal" variant="outlined" id="tanggal" 
                                         onChange={e => {
-                                            setData('TanggalAjuan', e.target.value)
+                                            setData('tanggal_ajuan', e.target.value)
                                         }}                                                        
-                                       error={errors.TanggalAjuan}/> 
-                                <Textarea label="Keterangan" variant="outlined" id="Periode" 
+                                       error={errors.tanggal_ajuan}/> 
+                                <Textarea label="Keterangan" variant="outlined" id="keterangan" 
                                         onChange={e => {
-                                            setData('TanggalAjuan', e.target.value)
+                                            setData('keterangan', e.target.value)
                                         }}                                                        
-                                       error={errors.TanggalAjuan}/>
+                                       error={errors.keterangan}/>
                             </div>
                             <div className="flex place-content-left mt-2">
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
@@ -86,10 +88,8 @@ export default function FormEvaluasiAkip() {
                             <div className="flex justify-between my-2">
                                 <Typography variant="h3">Dokumen Evaluasi Akip                            
                                 </Typography>
-                                <span>
-                                    <Link href={route('evaluasi-akip.create')}>
-                                        <Button size="sm" className="ml-2" color="blue">Add</Button>
-                                    </Link>
+                                <span>                                    
+                                    <Button size="sm" className="ml-2" color="blue" onClick={() => setOpen(true)}>Add</Button>                                    
                                 </span>                        
                             </div>
 
@@ -110,41 +110,41 @@ export default function FormEvaluasiAkip() {
                                         </tr>
                                     </thead>
                                     <tbody>                                                      
-                                        {upload_files.data.map(({Id, NamaDokumen, Komponen, UploadDate, Deskripsi, Revisi}) => (
-                                            <tr key={Id} className="even:bg-blue-gray-50/50">
+                                        {upload_files.data.map(({id, nama_dokumen, kategori_dokumen_id, upload_date, deskripsi, revisi}) => (
+                                            <tr key={id} className="even:bg-blue-gray-50/50">
                                               <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                  {Id}
+                                                  {id}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">
                                                 <Typography variant="small" color="blue-gray" className="font-normal">
-                                                  {NamaDokumen}
+                                                  {nama_dokumen}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">                                      
                                                 <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                                  {Komponen}
+                                                  {kategori_dokumen_id}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">                                      
                                                 <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                                  {UploadDate}
+                                                  {upload_date}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">                                      
                                                 <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                                  {Deskripsi}
+                                                  {deskripsi}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">                                      
                                                 <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                                  {Revisi}
+                                                  {revisi}
                                                 </Typography>
                                               </td>
                                               <td className="p-4">
                                                 <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal text-center">
-                                                <Link href={route('periode.edit', Id)}>
+                                                <Link href={route('periode.edit', id)}>
                                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                   </svg>
@@ -156,7 +156,7 @@ export default function FormEvaluasiAkip() {
                                     {upload_files.data.length === 0 && (
                                       <tr>
                                         <td className="px-6 py-4 border-t" colSpan="4">
-                                          No contacts found.
+                                          No data found.
                                         </td>
                                       </tr>
                                     )}
@@ -164,16 +164,12 @@ export default function FormEvaluasiAkip() {
                                 </table>
                         </CardBody>
                         <CardFooter>
-                            <Typography variant="h5">Instruksi</Typography>
-                            <Typography varian="small">
-                                Isikan data terlebih dahulu, kemudian klik "Save". Setelah itu klik "Add" untuk menambahkan dokumen.
-                            </Typography>
+                        <div></div>
                         </CardFooter>
                     </form>
-                    
-                    
                     </Card>
                     
+                    <FormUpload open={open} action={() => setOpen(!open)}/>
                 </div>
                     )}>
             

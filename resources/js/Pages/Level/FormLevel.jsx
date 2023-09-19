@@ -18,8 +18,8 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function FormLevel() {
     const {auth} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        NamaLevel: ''
+        id: '',
+        nama_level: ''
     });
     const [option, setOption] = useState('');
     
@@ -32,7 +32,7 @@ export default function FormLevel() {
     
     function handleChange(e){
         setOption({selectValue:e});
-        setData('NamaLevel', e);
+        setData('nama_level', e);
     }
     
     return (
@@ -56,10 +56,11 @@ export default function FormLevel() {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Level" variant="outlined" id="Level" 
                                                         onChange={e => {
-                                                            setData('NamaLevel', e.target.value)
+                                                            setData('nama_level', e.target.value)
                                                         }} 
                                                        
-                                                       error={errors.NamaLevel}/>                      
+                                                       error={errors.nama_level}/>
+                                                       {errors.nama_level && <div className="text-red-400 mt-1">{errors.nama_level}</div>}
                                             </div>
                                                 
                                                 
