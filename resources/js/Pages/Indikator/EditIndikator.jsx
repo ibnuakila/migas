@@ -16,11 +16,15 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
 export default function EditIndikator() {
-    const {auth, indikator, satuans} = usePage().props;
+    const {auth, indikator, satuans, levels, parents} = usePage().props;
     const { data, setData, put, errors, delete:destroy, processing } = useForm({
         id: indikator.data.id || '',
         nama_indikator: indikator.data.nama_indikator || '',
-        satuan_id: indikator.data.satuan_id || ''        
+        satuan_id: indikator.data.satuan_id || '' ,
+        level_id: indikator.data.level_id || '',
+        parent_id: indikator.data.parent_id || '0',
+        ordering: indikator.data.ordering || '',
+        numbering: indikator.data.numbering || ''
     });
     const [option, setOption] = useState('');
     
@@ -34,6 +38,16 @@ export default function EditIndikator() {
     function handleChangeSatuan(e){
         setOption({selectValue:e});
         setData('satuan_id', e);
+    }   
+        
+    function handleChangeLevel(e){
+        setOption({selectValue:e});
+        setData('level_id', e);
+    }
+    
+    function handleChangeParent(e){
+        setOption({selectValue:e});
+        setData('parent_id', e);
     }
     
     const handleDestroy = (e) => {
@@ -67,7 +81,8 @@ export default function EditIndikator() {
                                             setData('nama_indikator', e.target.value)
                                         }} 
                                         defaultValue={indikator.data.nama_indikator}
-                                       error={errors.nama_indikator}/>                      
+                                       error={errors.nama_indikator}/> 
+                                       {errors.nama_indikator && <div className="text-red-400 mt-1">{errors.nama_indikator}</div>}
                             </div>
 
                                 <div className="sm:w-full md:w-full lg:w-full">
@@ -77,10 +92,47 @@ export default function EditIndikator() {
                                     {satuans.map( ({id, nama_satuan}) => (
                                     <Option value={id.toString()} key={id}>{nama_satuan}</Option>
                                     ) )}
-
                                     </Select>
+                                    {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
                                 </div>
-                                
+                                <div className="sm:w-full md:w-full lg:w-full">
+                                    <Select label="Select Level" onChange={handleChangeLevel}
+                                    value={indikator.data.level_id}
+                                    error={errors.level_id}>
+                                    {levels.map( ({id, nama_level}) => (
+                                    <Option value={id.toString()} key={id}>{nama_level}</Option>
+                                    ) )}
+                                    </Select>
+                                    {errors.level_id && <div className="text-red-400 mt-1">{errors.level_id}</div>}
+                                </div>
+                                <div className="sm:w-full md:w-full lg:w-full">
+                                    <Select label="Select Parent" onChange={handleChangeParent}
+                                    value={indikator.data.parent_id}
+                                    error={errors.parent_id}>
+                                    {parents.map( ({id, nama_indikator}) => (
+                                    <Option value={id.toString()} key={id}>{nama_indikator}</Option>
+                                    ) )}
+                                    </Select>
+                                    {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
+                                </div>
+                                <div className="sm:w-full md:w-full lg:w-full">
+                                    <Input label="Ordering" variant="outlined" id="Ordering" 
+                                            onChange={e => {
+                                                setData('ordering', e.target.value)
+                                            }} 
+                                            defaultValue={indikator.data.ordering}
+                                           error={errors.ordering}/>    
+                                           {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                </div>
+                                <div className="sm:w-full md:w-full lg:w-full">
+                                    <Input label="Numbering" variant="outlined" id="Numbering" 
+                                            onChange={e => {
+                                                setData('numbering', e.target.value)
+                                            }} 
+                                            defaultValue={indikator.data.numbering}
+                                            error={errors.numbering}/>
+                                            {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
+                                </div>
                             </div>
 
 

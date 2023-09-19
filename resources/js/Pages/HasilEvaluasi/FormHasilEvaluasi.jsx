@@ -16,13 +16,16 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
 export default function FormHasilEvaluasi() {
-    const {auth} = usePage().props;
+    const {auth, status} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        Id: '',
-        Periode: '',
-        Status: ''
+        id: '',
+        evaluasi_akip_id: '',
+        file_path: '',
+        keterangan: '',
+        status: '',
+        evaluator: ''
     });
-    const [option, setOption] = useState('');
+    const [optionStatus, setOptionStatus] = useState('');
     
     //console.log(usePage().props);
    
@@ -32,8 +35,8 @@ export default function FormHasilEvaluasi() {
     };
     
     function handleChange(e){
-        setOption({selectValue:e});
-        setData('Status', e);
+        setOptionStatus({selectValue:e});
+        setData('status', e);
     }
     
     return (
@@ -56,17 +59,39 @@ export default function FormHasilEvaluasi() {
                                             <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input type="file" label="File Excel" variant="outlined" id="Periode"
-                                                       error={errors.Periode}/>                      
+                                                       error={errors.file_path}/>                      
                                             </div>
-                                                
-                                                <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Textarea label="Keterangan" variant="outlined" id="Periode" 
+                                            
+        
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Select label="Select Status" onChange={handleChange}
+                                                    value={optionStatus.selectValue}
+                                                    error={errors.status}>
+                                                      <Option value="">Perbaikan</Option>
+                                                      <Option value="">Disetujui</Option>
+                                                    </Select>
+                                                    {errors.status && 
+                                                        <div className="text-red-400 mt-1">{errors.status}</div>
+                                                    }
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Input label="Evaluator" variant="outlined" id="Periode" 
                                                         onChange={e => {
-                                                            setData('Keterangan', e.target.value)
+                                                            setData('evaluator', e.target.value)
                                                         }} 
                                                        
-                                                       error={errors.Periode}/> 
-                                                </div>
+                                                       error={errors.evaluator}/> 
+                                                       {errors.evaluator && <div className="text-red-400 mt-1">{errors.evaluator}</div>}
+                                            </div>
+                                                
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Textarea label="Keterangan" variant="outlined" id="Periode" 
+                                                    onChange={e => {
+                                                        setData('keterangan', e.target.value)
+                                                    }} 
+
+                                                   error={errors.keterangan}/> 
+                                            </div>
                                             </div>
                                 
                                 

@@ -12,7 +12,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListIndikator({auth}){
-    const TABLE_HEAD = ["ID", "Nama Indikator", "Satuan", "Action"];
+    const TABLE_HEAD = ["ID", "Numbering", "Nama Indikator", "Satuan", "Level", "Parent", "Ordering",  "Action"];
  
     const { indikators } = usePage().props;
     console.log(indikators);
@@ -84,12 +84,17 @@ export default function ListIndikator({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {indikators.data.map(({ id, nama_indikator, nama_satuan }) => (
+                                {indikators.data.map(({ id, nama_indikator, nama_satuan, nama_level, parent_id, ordering, numbering }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
                                           {id}
                                         </Typography>
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                          {numbering}
+                                        </Typography>                                                                                
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -100,7 +105,23 @@ export default function ListIndikator({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_satuan}
                                         </Typography>                                                                                
-                                      </td>                                      
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                          {nama_level}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                          {parent_id}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                          {ordering}
+                                        </Typography>                                                                                
+                                      </td>
+                                      
                                       <td className="p-4">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">
                                           <Link href={route('indikator.edit', id)}>
