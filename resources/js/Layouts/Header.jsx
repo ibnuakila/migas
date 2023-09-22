@@ -109,6 +109,25 @@ export default function Header(auth) {
                     <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
                     <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
                     <MenuItem><Link href={route('kategori-kinerja.index')}>Master Kategori Kinerja</Link></MenuItem>
+                    <MenuItem><Link href={route('kategori-dokumen.index')}>Kategori/Komponen LKE</Link></MenuItem>
+                    </MenuList>
+                </Menu>
+                <Menu>
+                    <MenuHandler>
+                        <Typography
+                            as="li"
+                            variant="small"
+                            color="blue-gray"
+                            className="p-1 font-normal"
+                            >
+                            <a href="#" className="flex items-center hover:text-amber-700">
+                                Settings
+                            </a>
+                        </Typography>
+                    </MenuHandler>
+                    <MenuList>
+                    <MenuItem><Link href="">Users</Link></MenuItem>
+                    <MenuItem><Link href="">Roles</Link></MenuItem>
                     </MenuList>
                 </Menu>
                 <Typography

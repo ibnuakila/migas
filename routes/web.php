@@ -17,6 +17,7 @@ use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Models\Periode;
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -160,7 +161,7 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::get('/test', function(){
-    $periode = Periode::findOrFail(9);
+    /*$periode = Periode::findOrFail(9);
     $data = [
         [
             'filter' => Request::all('search', 'trashed'),
@@ -170,15 +171,21 @@ Route::get('/test', function(){
                     paginate(10)
                     ->appends(Request::all())
             )*/
-            'periodes' => Periode::query()
+            /*'periodes' => Periode::query()
             ->when(\Illuminate\Support\Facades\Request::input('search'), function($query, $search){
                 $query->where('Periode','like', "{$search}%");
             })
             ->paginate(10)
                 ]
-    ];
-    
-    return ($data);
+    ];*/
+    $data = DB::table('SimpleDemo')
+            ->select(DB::raw('cast(level as nvarchar(100)) as LevelId,Location,LocationType'))
+            ->orderBy('LevelId')
+            ->get();
+    //var_dump($data);
+    //$json_data = json_encode($data);
+    return Inertia::render('Test',['data' => $data]);
+    //return ($data);
 });
 
 require __DIR__.'/auth.php';

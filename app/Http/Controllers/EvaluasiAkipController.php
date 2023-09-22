@@ -20,7 +20,8 @@ class EvaluasiAkipController extends Controller //implements ICrud
                     //->filter(Request::only('search', 'trashed'))
                     paginate()
                     ->appends(Request::all())
-            )
+            ),
+            'periodes' => \App\Models\Periode::all()
         ]);
     }
 
@@ -39,8 +40,9 @@ class EvaluasiAkipController extends Controller //implements ICrud
                     EvaluasiAkip::
                     //->filter(Request::only('search', 'trashed'))
                     paginate(10)
-                    ->appends(Request::all())
-            )
+                    ->appends(Request::all()),            
+            ),
+            
         ]);
     }
 
