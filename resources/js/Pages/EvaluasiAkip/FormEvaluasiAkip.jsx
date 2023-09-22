@@ -18,7 +18,7 @@ import FormUpload from './FormUpload';
 
 export default function FormEvaluasiAkip() {
     const {auth} = usePage().props;
-    const { upload_files } = usePage().props;
+    const { upload_files, periodes } = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
         id: '',
         periode: '',
@@ -30,7 +30,7 @@ export default function FormEvaluasiAkip() {
     const [option, setOption] = useState('');
     const TABLE_HEAD = ["ID", "Nama Dokumen", "Kategori/Komponen", "Tgl Upload", "Deskripsi", "Revisi","Action"];
     const [open, setOpen] = useState(false);
-    //console.log(usePage().props);
+    console.log(usePage().props);
    
     const handleSave = (e) => {
         e.preventDefault();
@@ -65,8 +65,8 @@ export default function FormEvaluasiAkip() {
                                     id="opt-periode"
                                     value={option.selectValue}
                                     error={errors.periode}>
-                                      <Option value="Closed">2017</Option>
-                                      <Option value="Active">2018</Option>                                                      
+                                    {periodes.map( ({id, periode, status}) => (<Option value={id}>{periode+" ("+status+")"}</Option>) )}                                      
+                                                                                          
                                     </Select>
                                 <Input label="Tanggal" variant="outlined" id="tanggal" 
                                         onChange={e => {
