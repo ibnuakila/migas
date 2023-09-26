@@ -10,8 +10,10 @@ class Indikator extends Model
     use HasFactory;
     protected $table = 'indikator';
     protected $primaryKey = 'id';
+    //protected $keyType = 'string';
     public $timestamps = false;
     protected $fillable = [
+        'id',
         'nama_indikator',
         'satuan_id',
         'level_id',

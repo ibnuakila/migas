@@ -24,6 +24,7 @@ class IndikatorRequest extends FormRequest
     public function rules()
     {
         return [
+            //'id' => ['required'],
             'nama_indikator' => ['required'],
             'satuan_id' => ['required'],
             'level_id' => ['required'],
