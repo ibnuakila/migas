@@ -17,6 +17,7 @@ use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Models\Periode;
+use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
@@ -81,20 +82,22 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
-    Route::get('/indikator-periode/edit/{indikatorPeriode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
+    Route::get('/indikator-periode/edit/{indikatorperiode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
     Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
     Route::post('/indikator-periode/store', [IndikatorPeriodeController::class, 'store'])->name('indikator-periode.store');
-    Route::put('/indikator-periode/{indikatorPeriode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
-    Route::delete('/indikator-periode/{indikatorPeriode}', [IndikatorPeriodeController::class, 'destroy'])->name('indikator-periode.destroy');
+    Route::put('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
+    Route::delete('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'destroy'])->name('indikator-periode.destroy');
+    Route::get('/indikator-periode/importindikator', [IndikatorPeriodeController::class, 'importIndikator'])->name('indikator-periode.importindikator');
 });
 
 Route::middleware('auth')->group(function(){
     Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
-    Route::get('/laporan-capaian/edit/{laporanCapaian}', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
+    Route::get('/laporan-capaian/edit/{laporancapaian}', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
     Route::get('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
     Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
-    Route::put('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
-    Route::delete('/laporan-capaian/{laporanCapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
+    Route::put('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
+    Route::delete('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
+    Route::get('/laporan-capaian/importtarget', [LaporanCapaianController::class, 'importTarget'])->name('laporan-capaian.importtarget');
 });
 
 Route::middleware('auth')->group(function(){
@@ -178,14 +181,115 @@ Route::get('/test', function(){
             ->paginate(10)
                 ]
     ];*/
-    $data = DB::table('SimpleDemo')
-            ->select(DB::raw('cast(level as nvarchar(100)) as LevelId,Location,LocationType'))
-            ->orderBy('LevelId')
+    $select = DB::table('laporan_capaian')
+            ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
+            ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
+            ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+            ->join('pic', 'indikator_periode.pic_id', '=', 'pic.id')
+            ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
+            ->select('laporan_capaian.id',
+                    'laporan_capaian.realisasi',
+                    'laporan_capaian.kinerja',
+                    'laporan_capaian.sumber_data',
+                    'indikator_periode.target',
+                    'indikator.*',
+                    'periode.periode',
+                    'pic.nama_pic',
+                    'triwulan.triwulan')
+            ->paginate(10);
+            
+            
+    return $select;
+    
+});
+
+Route::get('/test2', function(){
+   /*$periode = DB::table('periode')
+                ->where('status','=','Active')
+                ->get();
+   //echo($periode->first()->id);
+   //retrieve indikators data
+    $indikators = null;
+    if($periode->count()==1){
+        //loop through indikators
+        $indikators = DB::table('indikator')
+                ->select('indikator.*')
+                ->leftJoin('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                ->whereNull('indikator_periode.id')
+                ->get();
+        //print_r(DB::getQueryLog());
+        echo 'count: '.$indikators->count().'</br>';
+        //insert or update into indikator periode
+        if($indikators->count()>1){
+            for ($i=0;$i<$indikators->count();$i++){
+                $indikator = $indikators[$i];
+                $obj_ind_periode = new \App\Models\IndikatorPeriode();
+                $obj_ind_periode->indikator_id = $indikator->id;
+                $obj_ind_periode->periode_id = $periode->first()->id;
+
+                $res = $obj_ind_periode->save();
+                /*$res = DB::table('indikator_periode')->insert([
+                    'indikator_id' => $indikator->id,
+                    'periode_id' => $periode->first()->id
+                ]);*/
+                /*if($res){
+                    echo 'Indikator saved';
+                    echo '</br>';
+                }
+            }
+        }else{
+            echo 'No indikator left';
+        }
+    }else{
+        
+    }*/
+    
+    //check active periode
+    $periode = DB::table('periode')
+            ->where('status', '=', 'Active')
             ->get();
-    //var_dump($data);
-    //$json_data = json_encode($data);
-    return Inertia::render('Test',['data' => $data]);
-    //return ($data);
+
+    //retrieve indikators data
+    $indikators = null;
+    $data['message'] = 'Undefined message';
+    if ($periode->count() == 1) {
+        //loop through indikators
+        $indikators = DB::table('indikator')
+                ->select('indikator_periode.*')
+                ->leftJoin('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                ->leftJoin('laporan_capaian', 'indikator_periode.id', '=', 'laporan_capaian.indikator_periode_id')
+                ->whereNull('laporan_capaian.id')
+                ->get();
+        //$data['sql'] = DB::getQueryLog();
+        //insert or update into indikator periode
+        if ($indikators->count() > 0) {
+            for ($i = 0; $i < $indikators->count(); $i++) {
+                //looping for triwulan
+                $triwulans = DB::table('triwulan')->get();
+                if($triwulans->count() > 0){
+                    for($j = 0; $j < $triwulans->count(); $j++){
+                        $indikator_periode = $indikators[$i];
+                        $triwulan = $triwulans[$j];
+                        $obj_lap_capaian = new App\Models\LaporanCapaian();
+                        $obj_lap_capaian->indikator_periode_id = $indikator_periode->id;
+                        $obj_lap_capaian->periode_id = $periode->first()->id;
+                        $obj_lap_capaian->triwulan_id = $triwulan->id;
+                        $res = $obj_lap_capaian->save();
+                    }
+                }
+                if ($res) {
+                    $data['result'][$i] = 'Import '.$indikator_periode->id.' successfull';
+                    //echo 'imported</br>';
+                }
+            }
+        } else {
+            $data['message'] = 'No indikator left';
+        }
+    } else {
+        $data['message'] = 'No Active Periode Found';
+    }
+    return json_encode($data);
+    //return Redirect::back()->with($json_data);
 });
 
 require __DIR__.'/auth.php';

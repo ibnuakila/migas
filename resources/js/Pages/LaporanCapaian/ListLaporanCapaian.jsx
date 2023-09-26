@@ -13,19 +13,32 @@ import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
 
 export default function ListLaporanCapaian({auth}){ 
-    const { laporan_capaian } = usePage().props;
+    const { laporan_capaians } = usePage().props;
     const {
         data,
-        meta: { links }
-      } = laporan_capaian;
-    console.log(laporan_capaian);
+        //meta: { links }
+      } = laporan_capaians;
+    console.log(laporan_capaians);
     
-    const TABLE_HEAD = ["ID", "Nama Indikator", "PIC", "Target", "Realisasi", "Triwulan", "Periode", "Action"];
+    const TABLE_HEAD = ["ID", "Nama Indikator",  "Target", "Triwulan", "Realisasi", "Persentasi Kinerja" , "PIC", "Periode", "Action"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
  
+    function handleImport(){
+        if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
+            /*router.visit('/indikator-periode/importindikator', {
+                method: 'get',
+                data:{isImport:true},
+                onFinish: visit => {
+                    router.reload();
+                    console.log(visit)},
+            });*/
+            
+        }
+    }
+    
     return (
         <AdminLayout 
         auth = {auth}
@@ -40,7 +53,8 @@ export default function ListLaporanCapaian({auth}){
                     <div className="flex my-2">
                     <Link href={route('laporan-capaian.create')}>
                         <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
-                        </Link>
+                    </Link>
+                    <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Target Indikator</Button>
                     </div>
                     
                     
@@ -61,33 +75,51 @@ export default function ListLaporanCapaian({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({Id, Periode, Status}) => (
-                                    <tr key={Id} className="even:bg-blue-gray-50/50">
+                                {data.map(({id, nama_indikator, target, triwulan, realisasi, kinerja, nama_pic, periode}) => (
+                                    <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {Id}
+                                          {id}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {Periode}
-                                        </Typography>
-                                      </td>
-                                      <td className="p-4">
-                                      {Status=="Active" ? (
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                          {Status}
+                                          {nama_indikator}
                                         </Typography>
-                                        ):(
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {Status}
-                                        </Typography>
-                                        )}
-                                        
                                       </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
+                                          {target}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {triwulan}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {realisasi}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {kinerja}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {nama_pic}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {periode}
+                                        </Typography>
+                                      </td>                                      
                                       <td className="p-4">
                                         <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal text-center">
-                                        <Link href={route('periode.edit', Id)}>
+                                        <Link href={route('laporan-capaian.edit', id)}>
                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                           </svg>
@@ -105,7 +137,7 @@ export default function ListLaporanCapaian({auth}){
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={links} />
+                        <Pagination links={laporan_capaians.links} />
                     </Card>                    
                     
                 </div>

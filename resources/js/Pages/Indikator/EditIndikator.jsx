@@ -109,8 +109,8 @@ export default function EditIndikator() {
                                     <Select label="Select Parent" onChange={handleChangeParent}
                                     value={indikator.data.parent_id}
                                     error={errors.parent_id}>
-                                    {parents.map( ({id, nama_indikator}) => (
-                                    <Option value={id.toString()} key={id}>{nama_indikator}</Option>
+                                    {parents.map( ({id, numbering, nama_indikator}) => (
+                                    <Option value={id.toString()} key={id}>{numbering + " | " + nama_indikator}</Option>
                                     ) )}
                                     </Select>
                                     {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}

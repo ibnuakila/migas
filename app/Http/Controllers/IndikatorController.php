@@ -21,7 +21,7 @@ class IndikatorController extends Controller //implements ICrud
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
             'parents' => Indikator::query()
-                ->where('level_id','=','1')
+                ->whereIn('level_id',['1','2','3'])
                 ->get()
         ]);
     }
@@ -72,7 +72,7 @@ class IndikatorController extends Controller //implements ICrud
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
             'parents' => Indikator::query()
-                ->where('level_id','=','1')
+                ->whereIn('level_id',['1','2','3'])
                 ->get()
         ]);
     }

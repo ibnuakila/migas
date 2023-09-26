@@ -8,12 +8,14 @@ import { Card,
         DialogBody,
         DialogFooter,
         Input} from "@material-tailwind/react";
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, useForm } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 
 export default function ListIndikatorPeriode( {auth}){
     const {indikator_periodes} = usePage().props;
+    //const { get, put, errors, delete:destroy, processing } = useForm();
     const {
         data,
         meta: {links}
@@ -25,6 +27,20 @@ export default function ListIndikatorPeriode( {auth}){
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
+    
+    function handleImport(e) {
+        if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
+            router.visit('/indikator-periode/importindikator', {
+                method: 'get',
+                data:{isImport:true},
+                onFinish: visit => {
+                    router.reload();
+                    console.log(visit)},
+            });
+            
+            //put(route('indikator-periode.importIndikator'));
+        }
+      };
 
     return (
             <AdminLayout 
@@ -41,6 +57,9 @@ export default function ListIndikatorPeriode( {auth}){
                                             <Link href={route('indikator-periode.create')}>
                                                 <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
                                             </Link>
+                                            
+                                                <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator</Button>
+                                            
                                         </div>
                             
                             
