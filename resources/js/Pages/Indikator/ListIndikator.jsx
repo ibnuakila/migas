@@ -92,32 +92,32 @@ export default function ListIndikator({auth}){
                                         </Typography>
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-green-600">
                                           {numbering}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_indikator}
                                         </Typography>
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_satuan}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_level}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {parent_id}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {ordering}
                                         </Typography>                                                                                
                                       </td>

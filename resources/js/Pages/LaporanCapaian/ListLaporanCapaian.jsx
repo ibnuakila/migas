@@ -7,10 +7,12 @@ import { Card,
     DialogHeader,
   DialogBody,
   DialogFooter,
+  Select, Option, 
   Input} from "@material-tailwind/react";
 import { React, useState } from 'react';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 
 export default function ListLaporanCapaian({auth}){ 
     const { laporan_capaians } = usePage().props;
@@ -20,7 +22,7 @@ export default function ListLaporanCapaian({auth}){
       } = laporan_capaians;
     console.log(laporan_capaians);
     
-    const TABLE_HEAD = ["ID", "Nama Indikator",  "Target", "Triwulan", "Realisasi", "Persentasi Kinerja" , "PIC", "Periode", "Action"];
+    const TABLE_HEAD = ["ID", "No", "Nama Indikator", "Level", "Satuan","Target", "Triwulan", "Realisasi", "Persentasi Kinerja" , "PIC", "Periode", "Action"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -28,13 +30,13 @@ export default function ListLaporanCapaian({auth}){
  
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
-            /*router.visit('/indikator-periode/importindikator', {
+            router.visit('/laporan-capaian/importtarget', {
                 method: 'get',
                 data:{isImport:true},
                 onFinish: visit => {
                     router.reload();
                     console.log(visit)},
-            });*/
+            });
             
         }
     }
@@ -48,7 +50,18 @@ export default function ListLaporanCapaian({auth}){
                     <div className="flex justify-between">
                         <Typography variant="h3">Laporan Capaian Kinerja                            
                         </Typography>
-                        <span><Input variant="outlined" size="md" className="w-45" label="Search.." /></span>
+                        <div className="flex">
+                            <span className="mx-2">
+                                <Select label="Filter" onChange="">                                                      
+                                      <Option value="indikator">Nama Indikator</Option>
+                                      <Option value="pic">PIC</Option>  
+                                      <Option value="pic">Periode</Option>
+                                </Select>
+                            </span>
+                            <span>
+                                <Input variant="outlined" size="md" className="w-45" label="Search.." />
+                            </span>
+                        </div>
                     </div>
                     <div className="flex my-2">
                     <Link href={route('laporan-capaian.create')}>
@@ -56,7 +69,6 @@ export default function ListLaporanCapaian({auth}){
                     </Link>
                     <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Target Indikator</Button>
                     </div>
-                    
                     
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
@@ -75,16 +87,31 @@ export default function ListLaporanCapaian({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({id, nama_indikator, target, triwulan, realisasi, kinerja, nama_pic, periode}) => (
+                                {data.map(({id, numbering, nama_indikator, nama_level, nama_satuan, target, triwulan, realisasi, kinerja, nama_pic, periode}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
                                           {id}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-gray-600">
+                                          {numbering}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_indikator}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-400">
+                                          {nama_level}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-400">
+                                          {nama_satuan}
                                         </Typography>
                                       </td>
                                       <td className="p-4">                                      
