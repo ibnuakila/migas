@@ -7,6 +7,7 @@ import { Card,
         DialogHeader,
         DialogBody,
         DialogFooter,
+        Select, Option, 
         Input} from "@material-tailwind/react";
 import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
@@ -51,7 +52,18 @@ export default function ListIndikatorPeriode( {auth}){
                                         <div className="flex justify-between">
                                             <Typography variant="h3">Data Indikator Periode                            
                                             </Typography>
-                                            <span><Input variant="outlined" size="md" className="w-45" label="Search.." /></span>
+                                            <div className="flex">
+                                            <span className="mx-2">
+                                                <Select label="Filter" onChange="">                                                      
+                                                      <Option value="indikator">Nama Indikator</Option>
+                                                      <Option value="pic">PIC</Option>  
+                                                      <Option value="pic">Periode</Option>
+                                                </Select>
+                                            </span>
+                                            <span>
+                                                <Input variant="outlined" size="md" className="w-45" label="Search.." />
+                                            </span>
+                                            </div>
                                         </div>
                                         <div className="flex my-2">
                                             <Link href={route('indikator-periode.create')}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   Button,
   Card,
@@ -15,8 +15,8 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
-export default function FormIndikatorPeriode() {
-    const {auth, laporan_capaian} = usePage().props;
+export default function EditLaporanCapaian() {
+    const {auth, laporan_capaian, indikators, indikator_periode, periodes, triwulans, pics} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
         id: laporan_capaian.data.id || '',
         indikator_periode_id: laporan_capaian.data.indikator_periode_id || '',
@@ -29,11 +29,30 @@ export default function FormIndikatorPeriode() {
     });
     console.log(usePage().props);
    
+    const [optionPeriode, setOptionPeriode] = useState('');
+    const [optionIndikator, setOptionIndikator] = useState('');
+    const [optionPic, setOptionPic] = useState('');
+    //const [optionLevel, setOptionLevel] = useState('');
+    
     const handleSave = (e) => {
         e.preventDefault();
         post(route('laporan-capaian.update'));        
     };
-       
+    
+    const handlePeriodeChange = (e) => {
+        setOptionPeriode({selectValue:e});
+        setData('periode_id', e);
+    }
+    
+    const handleIndikatorChange = (e) => {
+        setOptionIndikator({selectValue:e});
+        setData('indikator_id', e);
+    }
+    
+    const handlePicChange = (e) => {
+        setOptionPic({selectValue:e});
+        setData('pic_id', e);
+    }
     
     return (
     <AdminLayout 
@@ -52,49 +71,62 @@ export default function FormIndikatorPeriode() {
                                         <CardBody>
                                 
                                             <div className="flex flex-col gap-4">
-                                                <Select label="Periode" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                        <Option value="Closed">Select</Option>
-                                                      <Option value="Closed">2017</Option>
-                                                      <Option value="Active">2018</Option>                                                      
+                                                <Select label="Select Periode" onChange={handlePeriodeChange}
+                                                    value={laporan_capaian.data.periode_id}
+                                                    error={errors.periode_id}>
+                                                    {periodes.map( ({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option> )}                                                                                                           
                                                 </Select>
-                                                <Select label="Indikator" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                    <Option value="Closed">Select</Option>
-                                                      <Option value="Closed">Realisasi Produksi/Lifting Minyak</Option>
-                                                      <Option value="Active">Rekomendasi Ekspor Minyak Mentah</Option>                                                      
+                                                    {errors.periode_id && 
+                                                        <div className="text-red-400 mt-1">{errors.periode_id}</div>
+                                                    }
+                                                <Select label="Select Indikator" onChange={handleIndikatorChange}
+                                                    value={indikator_periode.indikator_id}
+                                                    error={errors.indikator_id}>
+                                                    {indikators.map( ({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option> )}                                                     
                                                 </Select>
+                                                    {errors.indikator_id && 
+                                                        <div className="text-red-400 mt-1">{errors.indikator_id}</div>
+                                                    }
                                                 <Select label="Triwulan" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                    <Option value="Closed">Select</Option>
-                                                      <Option value="Closed">I</Option>
-                                                      <Option value="Active">II</Option>  
-                                                      <Option value="Active">III</Option> 
-                                                      <Option value="Active">IV</Option>
+                                                    value={laporan_capaian.data.triwulan_id}
+                                                    error={errors.triwulan_id}>
+                                                    {triwulans.map( ({id, triwulan}) => 
+                                                    <Option value={id.toString()} key={id}>{triwulan}</Option> )}                                                     
                                                 </Select>
+                                                <Select label="Select PIC" onChange={handlePicChange}
+                                                    value={indikator_periode.pic_id}>
+                                                    {pics.map( ({id, nama_pic}) => <Option value={id.toString()} key={id}>{nama_pic}</Option> )}                                                     
+                                                </Select>
+                                                    {errors.pic_id && 
+                                                        <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                                    }
                                                 <Input label="Target" variant="outlined" id="Periode" disabled
-                                                        onChange={e => {
-                                                            setData('Periode', e.target.value)
-                                                        }} 
-                                                       
-                                                       error={errors.Periode}/>
+                                                       defaultValue={indikator_periode.target}                                                      
+                                                       />
                                                 <Input label="Realisasi" variant="outlined" id="Periode" 
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
                                                        
                                                        error={errors.Periode}/>  
-                                                       
-                                                <Input label="Persentasi Kinerja" variant="outlined" id="Periode" 
+                                               <div className="relative flex w-full">
+                                                    <Input label="Persentasi Kinerja" variant="outlined" id="Periode" 
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
-                                                        }} 
-                                                       
-                                                       error={errors.Periode}/>  
-                                
+                                                        }}                                                       
+                                                        error={errors.Periode}
+                                                        className="pr-20"
+                                                        containerProps={{
+                                                          className: "min-w-0",
+                                                        }}/>
+                                                       <Button
+                                                            size="sm"
+                                                            color="blue"                                                            
+                                                            className="!absolute right-1 top-1 rounded"
+                                                          >
+                                                            Get
+                                                        </Button>
+                                                </div>
                                                 <Select label="Kategori Kinerja" onChange=""
                                                     defaultValue=""
                                                     error={errors.Status}>
@@ -109,6 +141,9 @@ export default function FormIndikatorPeriode() {
                                                         }} 
                                                        
                                                        error={errors.Periode}/>
+                                                <Input type="File" label="File" variant="outlined" id="Periode"
+                                                       defaultValue=""                                                      
+                                                       />
                                             </div>                                
                                 
                                         </CardBody>
