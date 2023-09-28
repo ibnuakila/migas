@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\LaporanCapaian;
@@ -31,10 +32,11 @@ class LaporanCapaianController extends Controller //implements ICrud
     public function edit(LaporanCapaian $laporancapaian) {
         return Inertia::render('LaporanCapaian/EditLaporanCapaian', [        
             'laporan_capaian' => new LaporanCapaianResource($laporancapaian),
+            'indikator_periode' => \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first(),
             'indikators' => \App\Models\Indikator::all(),
             'periodes' => \App\Models\Periode::all(),
             'pics' => \App\Models\PIC::all(),
-            'triwulan' => \App\Models\Triwulan::all()
+            'triwulans' => \App\Models\Triwulan::all()
         ]);
     }
 
@@ -45,6 +47,8 @@ class LaporanCapaianController extends Controller //implements ICrud
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
             ->join('pic', 'indikator_periode.pic_id', '=', 'pic.id')
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
+            ->join('level','indikator.level_id','=','level.id')
+            ->join('satuan','indikator.satuan_id', '=', 'satuan.id')
             ->select('laporan_capaian.id',
                     'laporan_capaian.realisasi',
                     'laporan_capaian.kinerja',
@@ -52,7 +56,9 @@ class LaporanCapaianController extends Controller //implements ICrud
                     'indikator_periode.target',
                     'indikator.nama_indikator',
                     'indikator.satuan_id',
+                    'satuan.nama_satuan',
                     'indikator.level_id',
+                    'level.nama_level',
                     'indikator.ordering',
                     'indikator.numbering',
                     'periode.periode',
@@ -107,7 +113,7 @@ class LaporanCapaianController extends Controller //implements ICrud
                         for($j = 0; $j < $triwulans->count(); $j++){
                             $indikator_periode = $indikators[$i];
                             $triwulan = $triwulans[$j];
-                            $obj_lap_capaian = new App\Models\LaporanCapaian();
+                            $obj_lap_capaian = new LaporanCapaian();
                             $obj_lap_capaian->indikator_periode_id = $indikator_periode->id;
                             $obj_lap_capaian->periode_id = $periode->first()->id;
                             $obj_lap_capaian->triwulan_id = $triwulan->id;

@@ -85,7 +85,7 @@ return [
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'sicaki'),
             'username' => env('DB_USERNAME', 'akila'),
-            'password' => env('DB_PASSWORD', '800115'),
+            'password' => env('DB_PASSWORD', 'Aksi2006'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
