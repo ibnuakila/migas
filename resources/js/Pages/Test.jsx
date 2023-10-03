@@ -3,6 +3,7 @@ import { Link, usePage } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 import { Card, Typography } from "@material-tailwind/react";
 
+
 const Test =()=>{
 
 const props = usePage().props;

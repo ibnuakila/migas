@@ -14,6 +14,9 @@ import {
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+//import {Select, initTE} from "tw-elements";
+
+//initTE({Select});
  
 export default function EditIndikatorPeriode() {
     const {auth, periodes, pics, indikators, indikator} = usePage().props;
