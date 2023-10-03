@@ -12,6 +12,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\IndikatorRequest;
 use App\Http\Resources\IndikatorResource;
+use App\Http\Requests\IndikatorKompositorRequest;
+use App\Models\IndikatorKompositor;
 
 class IndikatorController extends Controller //implements ICrud
 {
@@ -20,6 +22,7 @@ class IndikatorController extends Controller //implements ICrud
         return Inertia::render('Indikator/FormIndikator', [
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
+            //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
             'parents' => Indikator::query()
                 ->whereIn('level_id',['1','2','3'])
                 ->get()
@@ -73,7 +76,10 @@ class IndikatorController extends Controller //implements ICrud
             'levels' => \App\Models\Level::all(),
             'parents' => Indikator::query()
                 ->whereIn('level_id',['1','2','3'])
-                ->get()
+                ->get(),
+            'indikator_kompositors' => IndikatorKompositor::query()
+                ->where('indikator_id', '=', $indikator->id)
+                ->get(),
         ]);
     }
 
@@ -82,5 +88,13 @@ class IndikatorController extends Controller //implements ICrud
         $object = new Indikator();        
         $object->create($validIndikator);
         return Redirect::route('indikator.index')->with('success', 'Periode created.');
+    }
+    
+    public function storeIndikatorKompositor(IndikatorKompositorRequest $request){
+        $validated = $request->validated();
+        $object = new IndikatorKompositor();
+        $object->create($validated);
+        $indikator_kompositors = $object->query()->where('indikator_id', '=' ,$request->indikator_id)->get();
+        return Redirect::back()->with('indikator_kompositor', $indikator_kompositors);
     }
 }

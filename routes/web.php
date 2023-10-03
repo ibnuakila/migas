@@ -69,6 +69,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
+    Route::post('/indikator/store-indikator-kompositor', [IndikatorController::class, 'storeIndikatorKompositor'])
+            ->name('indikator.store-indikator-kompositor');
 });
 
 Route::middleware('auth')->group(function(){
@@ -185,7 +187,8 @@ Route::get('/test', function(){
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-            ->join('pic', 'indikator_periode.pic_id', '=', 'pic.id')
+             ->join('indikator_periode_pic','indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
+            ->join('pic', 'indikator_periode_pic.pic_id', '=', 'pic.id')
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
             ->select('laporan_capaian.id',
                     'laporan_capaian.realisasi',
@@ -290,6 +293,10 @@ Route::get('/test2', function(){
     }
     return json_encode($data);
     //return Redirect::back()->with($json_data);
+});
+
+Route::get('/test-component', function(){
+    return Inertia::render('Dashboard');
 });
 
 require __DIR__.'/auth.php';
