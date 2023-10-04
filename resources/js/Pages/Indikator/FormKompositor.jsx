@@ -1,104 +1,111 @@
 import React from "react";
 import {
 Button,
-        Dialog,
-        DialogHeader,
-        DialogBody,
-        DialogFooter,
+        Card,
+        CardHeader,
+        CardBody,
+        CardFooter,
         Input,
         Textarea,
         Alert,
+        Typography,
         Select, Option
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function FormKompositor(props) {
-    const action = props.action;
-    const open = props.open;
     
+    const auth = props.auth;
     const errors = props.errors;
-
+    const indikator = props.indikator;
+    console.log(props);
+    
     const handleSave = (e) => {
-        console.log("hell no");
+        
     }
-    const handleLoad = (e) => {
-        e.preventDefault();
-    }
+    
     return (
-            <>
-            <Dialog open={open} onLoad={handleLoad}>
-                <div className="flex items-center justify-between">
-                    <DialogHeader>Add Kompositor/Parameter Indikator</DialogHeader>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="mr-3 h-5 w-5"
-                        onClick={action}
-                        >
-                        <path
-                            fillRule="evenodd"
-                            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                            clipRule="evenodd"
-                            />
-                    </svg>
-                </div>
-                <DialogBody>
-                    <form action="">
-                        <div className="flex flex-wrap flex-col place-content-center gap-4">
-                            <div className="sm:w-full md:w-full lg:w-full">
-                                <Input label="Nama Kompositor" variant="outlined" id="Ordering" 
-                                       onChange=""
-                                       error=""/>  
-                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
-                            </div>
-                            <div className="sm:w-full md:w-full lg:w-full">
-                                <Select label="Select Indeks" onChange=""
-                                        value=""
-                                        error="">
-                                    
-                                        <Option value="" key="">Select Indeks</Option>
-                                                            
-                                </Select>
-                                {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
-                            </div>
-                            <div className="sm:w-full md:w-full lg:w-full">
-                                <Input label="Satuan" variant="outlined" id="Ordering" 
-                                       onChange=""
-                                       error=""/>  
-                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
-                            </div>
-                            <div className="sm:w-full md:w-full lg:w-full">
-                                <Input label="Sifat Kalkulasi" variant="outlined" id="Ordering" 
-                                       onChange=""
-                                       error=""/>  
-                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
-                            </div>
-                            <div className="sm:w-full md:w-full lg:w-full">
-                                <Select label="Select Jenis Kompositor" onChange=""
-                                        value=""
-                                        error="">
-                                    
-                                <Option value="" key="">Select Jenis Kompositor</Option>
-                                                    
-                                </Select>
-                                {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
-                            </div>
+            <AdminLayout 
+                auth = {auth}
+                children={(
+                        <div className="container mx-auto">
+                                <Card className="p-5 h-full w-45">                                    
+                                <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
+                                    <Typography variant="h4" color="white">
+                                        New Kompositor/Parameter
+                                    </Typography>
+                                </CardHeader>                                    
+                                <CardBody>
+                                    <form action="">
+                                        <div className="flex flex-wrap flex-col place-content-center gap-4">
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Input label="Nama Indikator" variant="outlined" id="Ordering" 
+                                                    defaultValue={indikator.data.nama_indikator} disabled
+                                                       error=""/>  
+                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Input label="Nama Kompositor" variant="outlined" id="Ordering"                                                        
+                                                       error=""/>  
+                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Select Indeks" 
+                                                        value=""
+                                                        error="">
                             
-                        </div>
-                    </form>
+                                                    <Option value="" key="">Select Indeks</Option>
+                            
+                                                </Select>
+                                                {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Input label="Satuan" variant="outlined" id="Ordering" 
+                                                       
+                                                       error=""/>  
+                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Sifat Kalkulasi" 
+                                                        value=""
+                                                        error="">                            
+                                                    <Option value="" key="">+</Option>
+                                                    <Option value="" key="">-</Option>
+                                                    <Option value="" key="">/</Option>
+                                                    <Option value="" key="">*</Option>
+                                                </Select>
+                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                            </div>
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Select Jenis Kompositor" 
+                                                        value=""
+                                                        error="">                            
+                                                    <Option value="" key="">Input</Option>
+                                                    <Option value="" key="">Agregator</Option>                            
+                                                </Select>
+                                                {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
+                                            </div>
+                                            <div className="flex">
+                                                <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
+                                                    Save
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        
+                                    </form>
+                            
+                                </CardBody>
+                                <CardFooter className="space-x-2">
+                                    
+                                    
+                                </CardFooter>
+                                </Card>
+                                </div>
+                                )}
+                >
             
-                </DialogBody>
-                <DialogFooter className="space-x-2">
-                    <Button variant="outlined" color="red" onClick={action}>
-                        Close
-                    </Button>
-                    <Button variant="gradient" color="green" onClick={(e) => handleSave(e)}>
-                        Save
-                    </Button>
-                </DialogFooter>
-            </Dialog>
-            </>
+            </AdminLayout>
             );
 }
