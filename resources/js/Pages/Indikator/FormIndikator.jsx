@@ -17,7 +17,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import FormKompositor from './FormKompositor';
 
 export default function FormIndikator() {
-    const {auth, satuans, levels, parents, indikator_kompositors} = usePage().props;
+    const {auth, satuans, levels, parents, indikator, indikator_kompositors, message} = usePage().props;
     const {data, setData, post, errors, processing} = useForm({
         id: '',
         nama_indikator: '',
@@ -38,6 +38,16 @@ export default function FormIndikator() {
     const handleSave = (e) => {
         e.preventDefault();
         post(route('indikator.store'));
+        /*router.visit('indikator.store',{
+            only:['indikator','message'],
+            method: 'post',
+        });*/
+        if(indikator !== ''){
+            alert(indikator.id + ', is saved');
+        }
+        //var btn = document.getElementById('save-indikator');
+        //btn.setAttribute('color','blue-gray');
+        //btn.value('Update');
     };
 
     function handleChangeSatuan(e) {
@@ -131,7 +141,7 @@ export default function FormIndikator() {
                                                     {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
                                                 </div>
                                                 <div className="flex">
-                                                    <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
+                                                    <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)} id="save-indikator">
                                                         Save
                                                     </Button> 
                                                 </div>
