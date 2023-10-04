@@ -85,9 +85,21 @@ class IndikatorController extends Controller //implements ICrud
 
     public function store(IndikatorRequest $request) {
         $validIndikator = $request->validated();
-        $object = new Indikator();        
-        $object->create($validIndikator);
-        return Redirect::route('indikator.index')->with('success', 'Periode created.');
+        $object = Indikator::create($validIndikator);        
+        //$object->create($validIndikator);
+        //return Redirect::route('indikator.index')->with('success', 'Periode created.');
+        /*return Inertia::render('Indikator/FormIndikator', [
+            'indikator' => new IndikatorResource($object),
+            'satuans' => \App\Models\Satuan::all(),
+            'levels' => \App\Models\Level::all(),
+            //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
+            'parents' => Indikator::query()
+                ->whereIn('level_id',['1','2','3'])
+                ->get(),
+            'message' => 'Indikator Created!'
+        ]);*/
+        return Redirect::back()->with('indikator', $object);
+        //return ['indikator' => new IndikatorResource($object)];
     }
     
     public function storeIndikatorKompositor(IndikatorKompositorRequest $request){

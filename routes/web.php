@@ -16,6 +16,7 @@ use App\Http\Controllers\EvaluasiAkipController;
 use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\KategoriDokumenController;
+use App\Http\Controllers\InstrumentKinerjaController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -163,6 +164,18 @@ Route::middleware('auth')->group(function(){
     Route::post('/kategori-dokumen/store', [KategoriDokumenController::class, 'store'])->name('kategori-dokumen.store');
     Route::put('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
     Route::delete('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/instrument-kinerja', [InstrumentKinerjaController::class, 'index'])->name('instrument-kinerja.index');
+    Route::get('/instrument-kinerja/create-komponen', [InstrumentKinerjaController::class, 'createKomponen'])->name('instrument-kinerja.create-komponen');
+    Route::post('/instrument-kinerja/store-komponen', [InstrumentKinerjaController::class, 'storeKomponen'])->name('instrument-kinerja.store-komponen');
+    Route::get('/instrument-kinerja/edit-komponen/{komponen}', [InstrumentKinerjaController::class, 'editKomponen'])->name('instrument-kinerja.edit-komponen');
+    Route::put('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'updateKomponen'])->name('instrument-kinerja.update-komponen');
+    Route::delete('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'destroyKomponen'])->name('instrument-kinerja.destroy-komponen');
+    
+    Route::get('/instrument-kinerja/create-sub-komponen/{komponen}', [InstrumentKinerjaController::class, 'createSubKomponen'])->name('instrument-kinerja.create-sub-komponen');
+    Route::post('/instrument-kinerja/store-sub-komponen', [InstrumentKinerjaController::class, 'storeSubKomponen'])->name('instrument-kinerja.store-sub-komponen');
 });
 
 Route::get('/test', function(){
