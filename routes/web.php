@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
     Route::post('/indikator/store-indikator-kompositor', [IndikatorController::class, 'storeIndikatorKompositor'])
             ->name('indikator.store-indikator-kompositor');
+    Route::get('/indikator/create-kompositor/{indikator}', [IndikatorController::class, 'createKompositor'])->name('indikator.create-kompositor');
 });
 
 Route::middleware('auth')->group(function(){

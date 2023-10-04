@@ -109,4 +109,11 @@ class IndikatorController extends Controller //implements ICrud
         $indikator_kompositors = $object->query()->where('indikator_id', '=' ,$request->indikator_id)->get();
         return Redirect::back()->with('indikator_kompositor', $indikator_kompositors);
     }
+    
+    public function createKompositor(Indikator $indikator)
+    {
+        return Inertia::render('Indikator/FormKompositor',[
+            'indikator' => new IndikatorResource($indikator)
+        ]);
+    }
 }

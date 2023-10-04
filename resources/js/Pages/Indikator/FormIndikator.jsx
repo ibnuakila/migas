@@ -144,51 +144,10 @@ export default function FormIndikator() {
                                                     <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)} id="save-indikator">
                                                         Save
                                                     </Button> 
-                                                </div>
-                            
+                                                </div>                            
                             
                                             </div>
-                                        </form>                                        
-                                    
-                                    <div className="flex justify-between my-2">
-                                        <Typography variant="h3">Kompositor/Parameter Indikator</Typography>
-                                        <span>                                    
-                                            <Button size="sm" className="ml-2" color="blue" onClick={() => setOpen(true)}>Add</Button>                                    
-                                        </span>                        
-                                    </div>
-                                    
-                                    <table className="w-full min-w-max table-auto text-left">
-                                        <thead>
-                                            <tr>
-                                                {TABLE_HEAD.map((head) => (
-                                                <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                                  <Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal leading-none opacity-70"
-                                                  >
-                                                    {head}
-                                                  </Typography>
-                                                </th>
-                                              ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody>                                                     
-                                            {indikator_kompositors ? 
-                                                (<Typography
-                                                    variant="small"
-                                                    color="blue-gray"
-                                                    className="font-normal leading-none opacity-70"
-                                                  >There is data</Typography>):
-                                                (<Typography
-                                                    variant="small"
-                                                    color="red"
-                                                    className="font-normal leading-none opacity-70 mt-2"
-                                                  >{msg}</Typography>)                                            
-                                            }
-                                        
-                                        </tbody>
-                                    </table>
+                                        </form> 
                                     
                                     </CardBody>
                                     <CardFooter className="space-x-2 ">                        
