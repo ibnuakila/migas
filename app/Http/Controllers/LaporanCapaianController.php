@@ -45,8 +45,8 @@ class LaporanCapaianController extends Controller //implements ICrud
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-            ->join('indikator_periode_pic','indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
-                ->join('pic', 'indikator_periode_pic.pic_id', '=', 'pic.id')
+            //->join('indikator_periode_pic','indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
+                //->join('pic', 'indikator_periode_pic.pic_id', '=', 'pic.id')
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
             ->join('level','indikator.level_id','=','level.id')
             ->join('satuan','indikator.satuan_id', '=', 'satuan.id')
@@ -63,7 +63,7 @@ class LaporanCapaianController extends Controller //implements ICrud
                     'indikator.ordering',
                     'indikator.numbering',
                     'periode.periode',
-                    'pic.nama_pic',
+                    //'pic.nama_pic',
                     'triwulan.triwulan')
             ->paginate(10);
         

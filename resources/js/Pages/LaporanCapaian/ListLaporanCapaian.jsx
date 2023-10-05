@@ -105,27 +105,27 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-400">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_level}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-400">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_satuan}
                                         </Typography>
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-400">
                                           {target}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {triwulan}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
                                           {realisasi}
                                         </Typography>
                                       </td>
@@ -135,12 +135,12 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_pic}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {periode}
                                         </Typography>
                                       </td>                                      
