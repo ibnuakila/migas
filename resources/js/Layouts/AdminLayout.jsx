@@ -10,7 +10,7 @@ export default function AdminLayout( {auth, children}){
     return (
             <>                
                 <Header auth={auth}/>
-                <section className="max-h-full h-450 bg-teal-50">                     
+                <section className="max-h-full h-450 bg-cyan-50">                     
                     <div className="container px-5 pt-10 pb-20 mx-auto flex flex-wrap ">  
                     <div className="flex py-4">
                     <Typography variant="h6"><Link href="/home" className="text-gray-400">APP &nbsp;|
