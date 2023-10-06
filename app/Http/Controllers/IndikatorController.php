@@ -113,7 +113,9 @@ class IndikatorController extends Controller //implements ICrud
     public function createKompositor(Indikator $indikator)
     {
         return Inertia::render('Indikator/FormKompositor',[
-            'indikator' => new IndikatorResource($indikator)
+            'indikator' => new IndikatorResource($indikator),
+            'indeks' => \App\Models\Indeks::all(),
+            'jenis_kompositor' => \App\Models\JenisKompositor::all()
         ]);
     }
 }
