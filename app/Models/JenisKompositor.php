@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class JenisKompositor extends Model
 {
     use HasFactory;
+    protected $table = 'jenis_kompositor';
+    protected $primaryKey = 'id';    
+    public $timestamps = false;
+    protected $fillable = [
+        'id',
+        'nama_jenis_kompositor'
+    ];
 }
