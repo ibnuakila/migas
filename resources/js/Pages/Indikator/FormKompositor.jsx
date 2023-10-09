@@ -108,17 +108,7 @@ export default function FormKompositor(props) {
                                                 </Select>
                                                 {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
                                             </div>
-                                            <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Sifat Kalkulasi" id="kalkulasi"
-                                                        value=""
-                                                        error="">                            
-                                                    <Option value="" key="">+</Option>
-                                                    <Option value="" key="">-</Option>
-                                                    <Option value="" key="">/</Option>
-                                                    <Option value="" key="">*</Option>
-                                                </Select>
-                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
-                                            </div>
+                                            
                                             
                                             <div className="flex">
                                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
