@@ -17,6 +17,9 @@ use App\Http\Controllers\UploadFileController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\InstrumentKinerjaController;
+use App\Http\Controllers\IndikatorKompositorController;
+use App\Http\Controllers\InputRealisasiController;
+use App\Http\Controllers\HitungKompositorController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -70,9 +73,35 @@ Route::middleware('auth')->group(function(){
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
-    Route::post('/indikator/store-indikator-kompositor', [IndikatorController::class, 'storeIndikatorKompositor'])
-            ->name('indikator.store-indikator-kompositor');
-    Route::get('/indikator/create-kompositor/{indikator}', [IndikatorController::class, 'createKompositor'])->name('indikator.create-kompositor');
+    
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/indikator-kompositor/{indikator}', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
+    Route::get('/indikator-kompositor/create/{indikator}', [IndikatorKompositorController::class, 'create'])->name('indikator-kompositor.create');
+    Route::post('/indikator-kompositor/store', [IndikatorKompositorController::class, 'store'])->name('indikator-kompositor.store');
+    Route::get('/indikator-kompositor/edit/{indikatorkompositor}', [IndikatorKompositorController::class, 'edit'])->name('indikator-kompositor.edit');
+    Route::put('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'update'])->name('indikator-kompositor.update');
+    Route::delete('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/hitung-kompositor/{indikatorkompositor}', [HitungKompositorController::class, 'index'])->name('hitung-kompositor.index');
+    Route::get('/hitung-kompositor/create/{indikatorkompositor}', [HitungKompositorController::class, 'create'])->name('hitung-kompositor.create');
+    Route::post('/hitung-kompositor/store', [HitungKompositorController::class, 'store'])->name('hitung-kompositor.store');
+    Route::get('/hitung-kompositor/edit/{hitungkompositor}', [HitungKompositorController::class, 'edit'])->name('hitung-kompositor.edit');
+    Route::put('/hitung-kompositor/{hitungkompositor}', [HitungKompositorController::class, 'update'])->name('hitung-kompositor.update');
+    Route::delete('/hitung-kompositor/{hitungkompositor}', [HitungKompositorController::class, 'destroy'])->name('hitung-kompositor.destroy');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/input-realisasi/{laporancapaian}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
+    Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
+    Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
+    Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
+    Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
+    Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
+    
 });
 
 Route::middleware('auth')->group(function(){
@@ -102,6 +131,15 @@ Route::middleware('auth')->group(function(){
     Route::put('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
     Route::get('/laporan-capaian/importtarget', [LaporanCapaianController::class, 'importTarget'])->name('laporan-capaian.importtarget');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/input-realisasi/{indikator}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
+    Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
+    Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
+    Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
+    Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
+    Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
 });
 
 Route::middleware('auth')->group(function(){

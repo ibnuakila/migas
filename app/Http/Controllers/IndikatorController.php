@@ -104,10 +104,10 @@ class IndikatorController extends Controller //implements ICrud
     
     public function storeIndikatorKompositor(IndikatorKompositorRequest $request){
         $validated = $request->validated();
-        $object = new IndikatorKompositor();
-        $object->create($validated);
-        $indikator_kompositors = $object->query()->where('indikator_id', '=' ,$request->indikator_id)->get();
-        return Redirect::back()->with('indikator_kompositor', $indikator_kompositors);
+        $object = IndikatorKompositor::create($validated);
+        //$object->create($validated);
+        //$indikator_kompositors = $object->query()->where('indikator_id', '=' ,$request->indikator_id)->get();
+        return Redirect::back()->with('indikator_kompositor', $object);
     }
     
     public function createKompositor(Indikator $indikator)

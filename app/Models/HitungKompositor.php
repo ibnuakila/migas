@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IndikatorKompositor extends Model
+class HitungKompositor extends Model
 {
     use HasFactory;
-    protected $table = 'indikator_kompositor';
+    protected $table = 'hitung_kompositor';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'indikator_id',
-        'nama_kompositor',        
-        'satuan',
-        'indeks_id',
-        'jenis_kompositor_id'
+        'field',
+        'f_type',
+        'p_field_id',
+        'indikator_kompositor_id'        
     ];
 }

@@ -22,9 +22,9 @@ export default function FormKompositor(props) {
     const indikator = props.indikator;
     const indeks = props.indeks;
     const {data, setData, post, errors, processing} = useForm({
-        indikator_id: '',
+        indikator_id: indikator.data.id || '',
         nama_kompositor: '',
-        kalkulasi: '',
+        //kalkulasi: '',
         satuan: '',
         indeks_id: '0',
         jenis_kompositor_id: ''       
@@ -35,19 +35,19 @@ export default function FormKompositor(props) {
     
     const handleSave = (e) => {
         e.preventDefault();
-        post(route('indikator.create-kompositor'));
+        post(route('indikator.store-indikator-kompositor'));
     }
     
     function handleChangeIndeks(e) {
         setOptionIndeks({selectValue: e});
         setData('indeks_id', e);
-        console.log(optionIndeks);
+        //console.log(optionIndeks);
     }
     
     function handleChangeJenisKompositor(e) {
         setOptionJenisKompositor({selectValue: e});
         setData('jenis_kompositor_id', e);
-        console.log(optionJenisKompositor);
+        //console.log(optionJenisKompositor);
     }
     
     return (
@@ -68,7 +68,7 @@ export default function FormKompositor(props) {
                                                 <Input label="Nama Indikator" variant="outlined" id="nama-indikator" 
                                                     defaultValue={indikator.data.nama_indikator} disabled
                                                        error=""/>  
-                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                                {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-kompositor" 
