@@ -95,16 +95,6 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('/input-realisasi/{laporancapaian}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
-    Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
-    Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
-    Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
-    Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
-    Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
-    
-});
-
-Route::middleware('auth')->group(function(){
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
     Route::get('/pic/create', [PICController::class, 'create'])->name('pic.create');
     Route::post('/pic/store', [PICController::class, 'store'])->name('pic.store');
@@ -134,7 +124,7 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('/input-realisasi/{indikator}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
+    Route::get('/input-realisasi/index/{laporancapaian}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
     Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
     Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');

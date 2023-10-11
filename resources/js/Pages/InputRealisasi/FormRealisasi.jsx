@@ -18,16 +18,16 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function FormRealisasi(props) {
     
     const auth = props.auth;
-    //const jenis_kompositor = props.jenis_kompositor;
-    //const indikator = props.indikator;
-    //const indeks = props.indeks;
+    const triwulan = props.triwulan;
+    const periode = props.periode;
+    const pic = props.pic;
     const {data, setData, post, errors, processing} = useForm({
-        indikator_id: indikator.data.id || '',
-        nama_kompositor: '',
-        //kalkulasi: '',
+        indikator_kompositor_id: '',
+        realisasi: '',
+        pic_id: '',
         satuan: '',
-        indeks_id: '0',
-        jenis_kompositor_id: ''       
+        triwulan_id: '',
+        periode_id: ''       
     });
     console.log(props);
     const [optionIndeks, setOptionIndeks] = useState('');
@@ -71,43 +71,35 @@ export default function FormRealisasi(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Nama Kompositor" id="indeks"
+                                                <Select label="Triwulan" id="indeks"
                                                             onChange={handleChangeIndeks}
                                                             value={optionIndeks.selectValue}
                                                             error={errors.indeks_id}>
-                                                        {indeks.map(({id, nama_indeks}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_indeks}</Option>
+                                                        {triwulan.map(({id, triwulan}) => (
+                                                            <Option value={id.toString()} key={id}>{triwulan}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Input label="Realisasi" variant="outlined" id="nama-kompositor" 
+                                                <Input label="Realisasi" variant="outlined" id="realisasi" 
                                                         onChange={e => {
-                                                                    setData('nama_kompositor', e.target.value)
+                                                                    setData('realisasi', e.target.value)
                                                                 }}
-                                                       error={errors.nama_kompositor}/>  
-                                                {errors.nama_kompositor && <div className="text-red-400 mt-1">{errors.nama_kompositor}</div>}
+                                                       error={errors.realisasi}/>  
+                                                {errors.realisasi && <div className="text-red-400 mt-1">{errors.realisasi}</div>}
                                             </div>
                                             
                                             
-                                            <Select label="Triwulan" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                <Option value="Closed">Select</Option>
-                                                  <Option value="Closed">I</Option>
-                                                  <Option value="Active">II</Option>  
-                                                  <Option value="Active">III</Option> 
-                                                  <Option value="Active">IV</Option>
-                                            </Select>
-                                            <Select label="Periode" onChange=""
-                                                    defaultValue=""
-                                                    error={errors.Status}>
-                                                        <Option value="Closed">Select</Option>
-                                                      <Option value="Closed">2017</Option>
-                                                      <Option value="Active">2018</Option>                                                      
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Periode" onChange=""
+                                                        defaultValue=""
+                                                        error={errors.Status}>
+                                                            {periode.map(({id, periode}) => (
+                                                                <Option value={id.toString()} key={id}>{periode}</Option>
+                                                                                ))}                                                      
                                                 </Select>
-                                            
+                                            </div>
                                             <div className="flex">
                                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                                     Save

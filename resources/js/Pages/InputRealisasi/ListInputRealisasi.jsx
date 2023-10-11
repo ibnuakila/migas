@@ -14,8 +14,8 @@ import Pagination from '@/Components/Pagination';
 export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Nama Kompositor", "Realisasi", "Satuan", "Triwulan", "PIC", "Periode", "Action"];
  
-    const { input_realisasis } = usePage().props;
-    console.log(usePage().props);
+    const { input_realisasis, indikator } = usePage().props;
+    console.log(indikator[0].nama_indikator);
     const [open, setOpen] = useState(false);
  
     
@@ -45,7 +45,7 @@ export default function ListInputRealisasi({auth}){
     
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
-            router.visit('/laporan-capaian/importtarget', {
+            router.visit('/input-realisasi/importkompositor', {
                 method: 'get',
                 data:{isImport:true},
                 onFinish: visit => {
@@ -62,7 +62,7 @@ export default function ListInputRealisasi({auth}){
                 <div className="container mx-auto">
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <div className="flex justify-between">
-                        <Typography variant="h4">Input Realisasi Kompositor/Parameter                            
+                        <Typography variant="h4">Input Realisasi Kompositor/Parameter {indikator[0].nama_indikator}                           
                         </Typography>
                         <span><Input variant="outlined" size="md" className="w-45" label="Search for Indikator" name="namaIndikator" onChange={handleChange}/></span>
                     </div>
