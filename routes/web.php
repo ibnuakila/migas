@@ -140,6 +140,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
+    Route::get('/input-realisasi/importkompositor', [InputRealisasiController::class, 'importIndikator'])->name('indikator-periode.importkompositor');
 });
 
 Route::middleware('auth')->group(function(){
@@ -345,6 +346,14 @@ Route::get('/test2', function(){
     }
     return json_encode($data);
     //return Redirect::back()->with($json_data);
+});
+
+Route::get('/test/{id}', function(){
+    //check active periode
+    $periode = DB::table('periode')
+            ->where('status', '=', 'Active')
+            ->get();
+    
 });
 
 Route::get('/test-component', function(){

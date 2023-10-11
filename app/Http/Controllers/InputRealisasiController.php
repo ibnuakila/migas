@@ -15,9 +15,8 @@ class InputRealisasiController extends Controller //implements ICrud
 {
     //
     public function create() {
-        return Inertia::render('',[
-            
-        ]);
+        //return Inertia::render('InputRealisasi/FormRealisasi');
+        return "Hello world";
     }
 
     public function destroy() {
@@ -47,6 +46,15 @@ class InputRealisasiController extends Controller //implements ICrud
     }
 
     public function update() {
+        
+    }
+    
+    public function importKompositor(){
+        //check active periode
+        $periode = DB::table('periode')
+                ->where('status', '=', 'Active')
+                ->get();
+
         
     }
 }
