@@ -44,7 +44,7 @@ export default function ListInputRealisasi({auth}){
       },[term]);
     
     function handleImport(){
-        /*if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
+        if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
             router.visit('/laporan-capaian/importtarget', {
                 method: 'get',
                 data:{isImport:true},
@@ -53,7 +53,7 @@ export default function ListInputRealisasi({auth}){
                     console.log(visit)},
             });
             
-        }*/
+        }
     }
     return (
             <AdminLayout 
@@ -68,7 +68,7 @@ export default function ListInputRealisasi({auth}){
                     </div>
                     <div className="flex my-2">
                         <Link href={route('input-realisasi.create')}>
-                        <Button size="sm" className="ml-2" color="blue">Add</Button>
+                            <Button size="sm" className="ml-2" color="blue">Add</Button>
                         </Link>
                         <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator Kompositor</Button>
                     </div>
