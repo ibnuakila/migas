@@ -35,7 +35,7 @@ export default function FormKompositor(props) {
     
     const handleSave = (e) => {
         e.preventDefault();
-        post(route('indikator.store-indikator-kompositor'));
+        post(route('indikator-kompositor.store',indikator.id));
     }
     
     function handleChangeIndeks(e) {
