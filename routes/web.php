@@ -77,7 +77,7 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('/indikator-kompositor/{indikator}', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
+    Route::get('/indikator-kompositor/index/{indikator}', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
     Route::get('/indikator-kompositor/create/{indikator}', [IndikatorKompositorController::class, 'create'])->name('indikator-kompositor.create');
     Route::post('/indikator-kompositor/store', [IndikatorKompositorController::class, 'store'])->name('indikator-kompositor.store');
     Route::get('/indikator-kompositor/edit/{indikatorkompositor}', [IndikatorKompositorController::class, 'edit'])->name('indikator-kompositor.edit');
@@ -124,7 +124,8 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
-    Route::get('/input-realisasi/index/{laporancapaian}', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
+    Route::get('/input-realisasi/index/', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
+    Route::get('/input-realisasi/indexindikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
     Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
     Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');

@@ -20,15 +20,24 @@ class IndikatorKompositorController extends Controller //implements ICrud
         ]);
     }
 
-    public function destroy() {
-        
+    public function destroy(IndikatorKompositor $indikator_kompositor) {
+        $indikator_kompositor->delete();
+        return Redirect::route('indikator-kompositor.index');
     }
 
-    public function edit() {
-        
+    public function edit(IndikatorKompositor $indikator_kompositor) {
+        return Inertia::render('IndikatorKompositor/EditKompositor',[
+             'indikator_kompositor' => $indikator_kompositor                
+         ]);
     }
 
-    public function index(\App\Models\Indikator $indikator) {
+    public function index() {
+         return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
+             'indikator_kompositors' => IndikatorKompositor::all()                
+         ]);
+    }
+    
+    public function indexIndikator(\App\Models\Indikator $indikator) {
          return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
              'indikator_kompositors' => IndikatorKompositor::query()
                 ->where('indikator_id', '=', $indikator->id)
@@ -45,13 +54,12 @@ class IndikatorKompositorController extends Controller //implements ICrud
 
     public function store(IndikatorKompositorRequest $request) {
         $validated = $request->validated();
-        $object = IndikatorKompositor::create($validated);
-        //$object->create($validated);
-        //$indikator_kompositors = $object->query()->where('indikator_id', '=' ,$request->indikator_id)->get();
-        return Redirect::route('indikator-kompositor.index')->with('indikator_kompositor', $object);
+        $object = IndikatorKompositor::create($validated);        
+        return Redirect::route('indikator-kompositor.index');
     }
 
-    public function update() {
-        
+    public function update(IndikatorKompositor $indikator, IndikatorKompositorRequest $request) {
+        $indikator->update($request->validated());
+        return Redirect::route('indikator-kompositor.index');
     }
 }
