@@ -18,6 +18,7 @@ class InputRealisasi extends Model
         'satuan',
         'triwulan_id',
         'pic_id',
-        'periode_id'
+        'periode_id',
+        'laporan_capaian_id'
     ];
 }

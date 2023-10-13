@@ -29,7 +29,8 @@ class InputRealisasiRequest extends FormRequest
             'satuan' => ['require'],
             'triwulan_id' => ['require','integer'],
             'pic_id' => ['require','integer'],
-            'periode_id' => ['require','integer']
+            'periode_id' => ['require','integer'],
+            'laporan_capaian_id' => ['require','integer']
         ];
     }
 }

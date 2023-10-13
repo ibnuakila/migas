@@ -26,4 +26,10 @@ class Indikator extends Model
     {
         return $this->hasMany(Satuan::class);
     }
+    
+    public function indikatorPeriode()
+    {
+        return $this->belongsTo(IndikatorPeriode::class);
+    }
+    
 }
