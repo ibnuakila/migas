@@ -21,6 +21,10 @@ class LaporanCapaian extends Model
         'sumber_data'
     ];
     
+    public function indikatorPeriode(){
+        $this->hasOne(IndikatorPeriode::class);
+    }
+    
     public function periode() {
         $this->hasOne(Periode::class);
     }

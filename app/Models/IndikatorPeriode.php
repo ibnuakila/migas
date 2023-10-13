@@ -38,4 +38,9 @@ class IndikatorPeriode extends Model
         return $this->hasOne(PIC::class);
     }
     
+    public function laporanCapaian()
+    {
+        return $this->belongsTo(LaporanCapaian::class);
+    }
+    
 }
