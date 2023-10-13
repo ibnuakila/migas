@@ -87,7 +87,7 @@ export default function ListLaporanCapaian({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({id, indikator_periode_id ,numbering, nama_indikator, nama_level, nama_satuan, target, triwulan, realisasi, kinerja, nama_pic, periode}) => (
+                                {data.map(({id, indikator_periode_id ,numbering, nama_indikator, nama_level, nama_satuan, target, triwulan_id, triwulan, realisasi, kinerja, nama_pic, periode}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
@@ -153,7 +153,7 @@ export default function ListLaporanCapaian({auth}){
                                           </Link>
                                         </Typography>
                                         <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal text-center">
-                                            <Link href={route('input-realisasi.index', id)} title="Realisasi Kompositor/Parameter">
+                                            <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
                                                 </svg>
