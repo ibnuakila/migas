@@ -24,13 +24,13 @@ class InputRealisasiRequest extends FormRequest
     public function rules()
     {
         return [
-            'indikator_kompositor_id' => ['require','integer'],
-            'realisasi' => ['require','decimal:2'],
-            'satuan' => ['require'],
-            'triwulan_id' => ['require','integer'],
-            'pic_id' => ['require','integer'],
-            'periode_id' => ['require','integer'],
-            'laporan_capaian_id' => ['require','integer']
+            'indikator_kompositor_id' => ['required','integer'],
+            'realisasi' => ['required','decimal:2'],
+            'satuan' => ['required'],
+            'triwulan_id' => ['required','integer'],
+            'pic_id' => ['required','integer'],
+            'periode_id' => ['required','integer'],
+            'laporan_capaian_id' => ['required','integer']
         ];
     }
 }

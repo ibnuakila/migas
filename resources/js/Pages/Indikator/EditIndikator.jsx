@@ -28,7 +28,7 @@ export default function EditIndikator() {
     });
     const [option, setOption] = useState('');
     
-    //console.log(usePage().props);
+    console.log(usePage().props);
    
     const handleSave = (e) => {
         e.preventDefault();

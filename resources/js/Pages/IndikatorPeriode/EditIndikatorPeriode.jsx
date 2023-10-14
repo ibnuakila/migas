@@ -79,7 +79,7 @@ export default function EditIndikatorPeriode() {
                                 
                                             <div className="flex flex-col gap-4">
                                                 <Select label="Select Periode" onChange={handlePeriodeChange}
-                                                    value={indikator.data.periode_id}
+                                                    
                                                     error={errors.periode_id}>
                                                     {periodes.map( ({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option> )}                                                                                                           
                                                 </Select>
@@ -87,7 +87,7 @@ export default function EditIndikatorPeriode() {
                                                         <div className="text-red-400 mt-1">{errors.periode_id}</div>
                                                     }
                                                 <Select label="Select Indikator" onChange={handleIndikatorChange}
-                                                    value={indikator.data.indikator_id}
+                                                    
                                                     error={errors.indikator_id}>
                                                     {indikators.map( ({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option> )}                                                     
                                                 </Select>
@@ -105,7 +105,7 @@ export default function EditIndikatorPeriode() {
                                                     }
                                                 
                                                 <Select label="Select PIC" onChange={handlePicChange}
-                                                    value={indikator.data.pic_id}
+                                                    
                                                     error={errors.pic}>
                                                     {pics.map( ({id, nama_pic}) => <Option value={id.toString()} key={id}>{nama_pic}</Option> )}                                                     
                                                 </Select>
