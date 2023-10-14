@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,9 +28,13 @@ class InputRealisasiController extends Controller //implements ICrud
         
     }
 
-    public function edit() {
-        return Inertia::render('',[
-            
+    public function edit(InputRealisasi $inputrealisasi) {
+        return Inertia::render('InputRealisasi/EditRealisasi',[
+            'input_realisasi' => new InputRealisasiResource($inputrealisasi),
+            'indikator_kompositor' => \App\Models\IndikatorKompositor::where('id', $inputrealisasi->indikator_kompositor_id)->first(),
+            'triwulans' => \App\Models\Triwulan::all(),
+            'periodes' => \App\Models\Periode::all(),
+            'pics' => \App\Models\PIC::all()
         ]);
     }
 
@@ -83,11 +87,15 @@ class InputRealisasiController extends Controller //implements ICrud
         return Redirect::back();
     }
 
-    public function update(InputRealisasi $input_realisasi, InputRealisasiRequest $request) {
-        return Redirect::route('input-realisasi.index');
+    public function update(InputRealisasi $inputrealisasi, InputRealisasiRequest $request) {
+        $inputrealisasi->update($request->validated());
+        $laporancapaian = \App\Models\LaporanCapaian::where('id', $inputrealisasi->laporan_capaian_id);
+        return Redirect::route('input-realisasi.index-indikator', $laporancapaian->id);
     }
     
-    public function importKompositor(\App\Models\LaporanCapaian $laporan_capaian){
+    public function importKompositor(\Illuminate\Http\Request $request){
+        $id = $request->input('laporan_capaian_id');
+        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $id)->first();
         //check active periode
         $periode = DB::table('periode')
                 ->where('status', '=', 'Active')
@@ -116,5 +124,10 @@ class InputRealisasiController extends Controller //implements ICrud
         }
         
         return Redirect::back()->with($data);
+    }
+    
+    public function calculateRealization(\App\Models\IndikatorKompositor $indikatorkompositor)
+    {
+        
     }
 }

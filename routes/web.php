@@ -131,7 +131,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
-    Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importIndikator'])->name('indikator-periode.import-kompositor');
+    Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
+    Route::get('/input-realisasi/calculate-realization/{indikatorkompositor}',[InputRealisasiController::class, 'calculateRealization'])
+            ->name('input-realisasi.calculate-realization');
 });
 
 Route::middleware('auth')->group(function(){
@@ -373,8 +375,8 @@ Route::get('/test-import/{id}', function($id){
     
 });
 
-Route::get('/test-component', function(){
-    return Inertia::render('Dashboard');
+Route::get('/test-calculation/{id}', function($id){
+    $hitung_kompositors = DB::query();
 });
 
 require __DIR__.'/auth.php';
