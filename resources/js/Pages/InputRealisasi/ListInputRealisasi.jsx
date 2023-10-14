@@ -14,7 +14,7 @@ import Pagination from '@/Components/Pagination';
 export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Nama Kompositor", "Realisasi", "Satuan", "Triwulan", "PIC", "Periode", "Action"];
  
-    const { input_realisasis, indikator } = usePage().props;
+    const { input_realisasis, indikator, laporan_capaian } = usePage().props;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
  
@@ -45,7 +45,7 @@ export default function ListInputRealisasi({auth}){
     
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
-            router.visit('/input-realisasi/import-kompositor/', {
+            router.visit('/input-realisasi/import-kompositor/' + laporan_capaian.id, {
                 method: 'get',
                 data:{isImport:true},
                 onFinish: visit => {
