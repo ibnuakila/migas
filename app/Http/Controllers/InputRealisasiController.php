@@ -83,8 +83,8 @@ class InputRealisasiController extends Controller //implements ICrud
         return Redirect::back();
     }
 
-    public function update() {
-        
+    public function update(InputRealisasi $input_realisasi, InputRealisasiRequest $request) {
+        return Redirect::route('input-realisasi.index');
     }
     
     public function importKompositor(\App\Models\LaporanCapaian $laporan_capaian){
@@ -92,8 +92,8 @@ class InputRealisasiController extends Controller //implements ICrud
         $periode = DB::table('periode')
                 ->where('status', '=', 'Active')
                 ->get();
-        $indikator_periode = $laporan_capaian->indikatorPeriode();
-        $indikator = $indikator_periode->indikator();
+        $indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporan_capaian->indikator_periode_id)->first();
+        $indikator = \App\Models\Indikator::where('id', $indikator_periode->indikator_id)->first();
         $data['message'] = 'Undefined message';
         if ($periode->count() == 1) {
             $result = DB::table('indikator_kompositor')
@@ -101,20 +101,14 @@ class InputRealisasiController extends Controller //implements ICrud
                         ->get();
             if($result->count() > 0){
                 foreach ($result as $row) {
-                    //looping for triwulan
-                    //$triwulans = DB::table('triwulan')
-                        //->where('id','=',$)
-                        //->get();
-                    //if($triwulans->count() > 0){
-                        //foreach ($triwulans as $trw) {
-                            $obj = new InputRealisasi();
-                            $obj->indikator_kompositor_id = $row->id;
-                            $obj->triwulan_id = $row->triwulan_id;
-                            $obj->periode_id = $row->periode_id;
-                            $obj->save();
-                        //}
+                    
+                            $object = new InputRealisasi();
+                            $object->indikator_kompositor_id = $row->id;
+                            $object->triwulan_id = $laporan_capaian->triwulan_id;
+                            $object->periode_id = $laporan_capaian->periode_id;
+                            $object->laporan_capaian_id = $laporan_capaian->id;
+                            $object->save();
                         
-                    //}
                     $data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
                     $data['message'] = 'Import successfull';
                 }
