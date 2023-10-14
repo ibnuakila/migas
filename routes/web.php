@@ -125,13 +125,13 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/input-realisasi/index/', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
-    Route::get('/input-realisasi/indexindikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
+    Route::get('/input-realisasi/index-indikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
     Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
     Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
-    Route::get('/input-realisasi/importkompositor', [InputRealisasiController::class, 'importIndikator'])->name('indikator-periode.importkompositor');
+    Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importIndikator'])->name('indikator-periode.import-kompositor');
 });
 
 Route::middleware('auth')->group(function(){
@@ -339,11 +339,37 @@ Route::get('/test2', function(){
     //return Redirect::back()->with($json_data);
 });
 
-Route::get('/test/{id}', function(){
+Route::get('/test-import/{id}', function($id){
     //check active periode
-    $periode = DB::table('periode')
-            ->where('status', '=', 'Active')
-            ->get();
+        $periode = DB::table('periode')
+                ->where('status', '=', 'Active')
+                ->get();
+        $data['message'] = 'Undefined message';
+        if ($periode->count() == 1) {
+            
+            $result = DB::table('indikator_kompositor')
+                        ->where('indikator_id', '=', $id)
+                        ->get();
+            if($result->count() > 0){
+                foreach ($result as $row) {
+                    //looping for triwulan
+                $triwulans = DB::table('triwulan')->get();
+                    if($triwulans->count() > 0){
+                        foreach ($triwulans as $trw) {
+                            $obj = new App\Models\InputRealisasi();
+                            $obj->indikator_kompositor_id = $row->id;
+                            $obj->triwulan_id = $trw->id;
+                            $obj->periode_id = $periode->first()->id;
+                            $obj->save();
+                        }
+                        
+                    }
+                    $data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
+                    $data['message'] = 'All Import successfull';
+                }
+            }
+        }
+        return $data;
     
 });
 
