@@ -15,6 +15,7 @@ class HitungKompositor extends Model
         'field',
         'f_type',
         'p_field_id',
-        'indikator_kompositor_id'        
+        'indikator_kompositor_id',
+        'lvl'        
     ];
 }

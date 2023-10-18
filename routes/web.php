@@ -23,16 +23,17 @@ use App\Http\Controllers\HitungKompositorController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
+
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | contains the "web" middleware group. Now create something great!
+  |
+ */
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
@@ -53,11 +54,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/home', function(){
+Route::get('/home', function () {
     return Inertia::render('Home');
 })->middleware(['auth', 'verified'])->name('home');
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
     Route::get('/periode/edit/{periode}', [PeriodeController::class, 'edit'])->name('periode.edit');
     Route::get('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
@@ -66,17 +67,16 @@ Route::middleware('auth')->group(function(){
     Route::delete('/periode/{periode}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/indikator', [IndikatorController::class, 'index'])->name('indikator.index');
     Route::get('/indikator/create', [IndikatorController::class, 'create'])->name('indikator.create');
     Route::post('/indikator/store', [IndikatorController::class, 'store'])->name('indikator.store');
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
-    
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/indikator-kompositor/index/{indikator}', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
     Route::get('/indikator-kompositor/create/{indikator}', [IndikatorKompositorController::class, 'create'])->name('indikator-kompositor.create');
     Route::post('/indikator-kompositor/store', [IndikatorKompositorController::class, 'store'])->name('indikator-kompositor.store');
@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/hitung-kompositor/{indikatorkompositor}', [HitungKompositorController::class, 'index'])->name('hitung-kompositor.index');
     Route::get('/hitung-kompositor/create/{indikatorkompositor}', [HitungKompositorController::class, 'create'])->name('hitung-kompositor.create');
     Route::post('/hitung-kompositor/store', [HitungKompositorController::class, 'store'])->name('hitung-kompositor.store');
@@ -94,7 +94,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/hitung-kompositor/{hitungkompositor}', [HitungKompositorController::class, 'destroy'])->name('hitung-kompositor.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
     Route::get('/pic/create', [PICController::class, 'create'])->name('pic.create');
     Route::post('/pic/store', [PICController::class, 'store'])->name('pic.store');
@@ -103,7 +103,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
     Route::get('/indikator-periode/edit/{indikatorperiode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
     Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
@@ -113,7 +113,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/indikator-periode/importindikator', [IndikatorPeriodeController::class, 'importIndikator'])->name('indikator-periode.importindikator');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
     Route::get('/laporan-capaian/edit/{laporancapaian}', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
     Route::get('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
@@ -123,7 +123,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/laporan-capaian/importtarget', [LaporanCapaianController::class, 'importTarget'])->name('laporan-capaian.importtarget');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/input-realisasi/index/', [InputRealisasiController::class, 'index'])->name('input-realisasi.index');
     Route::get('/input-realisasi/index-indikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
@@ -132,11 +132,11 @@ Route::middleware('auth')->group(function(){
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
-    Route::get('/input-realisasi/calculate-realization/{indikatorkompositor}',[InputRealisasiController::class, 'calculateRealization'])
+    Route::get('/input-realisasi/calculate-realization/{indikatorkompositor}', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/satuan', [SatuanController::class, 'index'])->name('satuan.index');
     Route::get('/satuan/edit/{satuan}', [SatuanController::class, 'edit'])->name('satuan.edit');
     Route::get('/satuan/create', [SatuanController::class, 'create'])->name('satuan.create');
@@ -145,7 +145,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/level', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/edit/{level}', [LevelController::class, 'edit'])->name('level.edit');
     Route::get('/level/create', [LevelController::class, 'create'])->name('level.create');
@@ -154,7 +154,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/level/{level}', [LevelController::class, 'destroy'])->name('level.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/kategori-kinerja', [KategoriKinerjaController::class, 'index'])->name('kategori-kinerja.index');
     Route::get('/kategori-kinerja/edit/{KategoriKinerja}', [KategoriKinerjaController::class, 'edit'])->name('kategori-kinerja.edit');
     Route::get('/kategori-kinerja/create', [KategoriKinerjaController::class, 'create'])->name('kategori-kinerja.create');
@@ -163,7 +163,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/evaluasi-akip', [EvaluasiAkipController::class, 'index'])->name('evaluasi-akip.index');
     Route::get('/evaluasi-akip/edit/{EvaluasiAkip}', [EvaluasiAkipController::class, 'edit'])->name('evaluasi-akip.edit');
     Route::get('/evaluasi-akip/create', [EvaluasiAkipController::class, 'create'])->name('evaluasi-akip.create');
@@ -172,7 +172,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/evaluasi-akip/{EvaluasiAkip}', [EvaluasiAkipController::class, 'destroy'])->name('evaluasi-akip.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/upload-file', [UploadFileController::class, 'index'])->name('upload-file.index');
     Route::get('/upload-file/edit/{level}', [UploadFileController::class, 'edit'])->name('upload-file.edit');
     Route::get('/upload-file/create', [UploadFileController::class, 'create'])->name('upload-file.create');
@@ -181,7 +181,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/upload-file/{level}', [UploadFileController::class, 'destroy'])->name('upload-file.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/hasil-evaluasi', [HasilEvaluasiController::class, 'index'])->name('hasil-evaluasi.index');
     Route::get('/hasil-evaluasi/edit{HasilEvalasi}/', [HasilEvaluasiController::class, 'edit'])->name('hasil-evaluasi.edit');
     Route::get('/hasil-evaluasi/create', [HasilEvaluasiController::class, 'create'])->name('hasil-evaluasi.create');
@@ -190,7 +190,7 @@ Route::middleware('auth')->group(function(){
     Route::delete('/hasil-evaluasi/{HasilEvaluasi}', [HasilEvaluasiController::class, 'destroy'])->name('hasil-evaluasi.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'index'])->name('kategori-dokumen.index');
     Route::get('/kategori-dokumen/edit/{KategoriDokumen}', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
     Route::get('/kategori-dokumen/create', [KategoriDokumenController::class, 'create'])->name('kategori-dokumen.create');
@@ -199,41 +199,41 @@ Route::middleware('auth')->group(function(){
     Route::delete('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::get('/instrument-kinerja', [InstrumentKinerjaController::class, 'index'])->name('instrument-kinerja.index');
     Route::get('/instrument-kinerja/create-komponen', [InstrumentKinerjaController::class, 'createKomponen'])->name('instrument-kinerja.create-komponen');
     Route::post('/instrument-kinerja/store-komponen', [InstrumentKinerjaController::class, 'storeKomponen'])->name('instrument-kinerja.store-komponen');
     Route::get('/instrument-kinerja/edit-komponen/{komponen}', [InstrumentKinerjaController::class, 'editKomponen'])->name('instrument-kinerja.edit-komponen');
     Route::put('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'updateKomponen'])->name('instrument-kinerja.update-komponen');
     Route::delete('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'destroyKomponen'])->name('instrument-kinerja.destroy-komponen');
-    
+
     Route::get('/instrument-kinerja/create-sub-komponen/{komponen}', [InstrumentKinerjaController::class, 'createSubKomponen'])->name('instrument-kinerja.create-sub-komponen');
     Route::post('/instrument-kinerja/store-sub-komponen', [InstrumentKinerjaController::class, 'storeSubKomponen'])->name('instrument-kinerja.store-sub-komponen');
 });
 
-Route::get('/test', function(){
-    /*$periode = Periode::findOrFail(9);
-    $data = [
-        [
-            'filter' => Request::all('search', 'trashed'),
-            /*'periodes' => new App\Http\Resources\PeriodeCollection(
-                    Periode::
-                    //filter(Request::only('search', 'trashed'))
-                    paginate(10)
-                    ->appends(Request::all())
-            )*/
-            /*'periodes' => Periode::query()
-            ->when(\Illuminate\Support\Facades\Request::input('search'), function($query, $search){
-                $query->where('Periode','like', "{$search}%");
-            })
-            ->paginate(10)
-                ]
-    ];*/
+Route::get('/test', function () {
+    /* $periode = Periode::findOrFail(9);
+      $data = [
+      [
+      'filter' => Request::all('search', 'trashed'),
+      /*'periodes' => new App\Http\Resources\PeriodeCollection(
+      Periode::
+      //filter(Request::only('search', 'trashed'))
+      paginate(10)
+      ->appends(Request::all())
+      ) */
+    /* 'periodes' => Periode::query()
+      ->when(\Illuminate\Support\Facades\Request::input('search'), function($query, $search){
+      $query->where('Periode','like', "{$search}%");
+      })
+      ->paginate(10)
+      ]
+      ]; */
     $select = DB::table('laporan_capaian')
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-             ->join('indikator_periode_pic','indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
+            ->join('indikator_periode_pic', 'indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
             ->join('pic', 'indikator_periode_pic.pic_id', '=', 'pic.id')
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
             ->select('laporan_capaian.id',
@@ -246,53 +246,51 @@ Route::get('/test', function(){
                     'pic.nama_pic',
                     'triwulan.triwulan')
             ->paginate(10);
-            
-            
+
     return $select;
-    
 });
 
-Route::get('/test2', function(){
-   /*$periode = DB::table('periode')
-                ->where('status','=','Active')
-                ->get();
-   //echo($periode->first()->id);
-   //retrieve indikators data
-    $indikators = null;
-    if($periode->count()==1){
-        //loop through indikators
-        $indikators = DB::table('indikator')
-                ->select('indikator.*')
-                ->leftJoin('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
-                ->whereNull('indikator_periode.id')
-                ->get();
-        //print_r(DB::getQueryLog());
-        echo 'count: '.$indikators->count().'</br>';
-        //insert or update into indikator periode
-        if($indikators->count()>1){
-            for ($i=0;$i<$indikators->count();$i++){
-                $indikator = $indikators[$i];
-                $obj_ind_periode = new \App\Models\IndikatorPeriode();
-                $obj_ind_periode->indikator_id = $indikator->id;
-                $obj_ind_periode->periode_id = $periode->first()->id;
+Route::get('/test2', function () {
+    /* $periode = DB::table('periode')
+      ->where('status','=','Active')
+      ->get();
+      //echo($periode->first()->id);
+      //retrieve indikators data
+      $indikators = null;
+      if($periode->count()==1){
+      //loop through indikators
+      $indikators = DB::table('indikator')
+      ->select('indikator.*')
+      ->leftJoin('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+      ->whereNull('indikator_periode.id')
+      ->get();
+      //print_r(DB::getQueryLog());
+      echo 'count: '.$indikators->count().'</br>';
+      //insert or update into indikator periode
+      if($indikators->count()>1){
+      for ($i=0;$i<$indikators->count();$i++){
+      $indikator = $indikators[$i];
+      $obj_ind_periode = new \App\Models\IndikatorPeriode();
+      $obj_ind_periode->indikator_id = $indikator->id;
+      $obj_ind_periode->periode_id = $periode->first()->id;
 
-                $res = $obj_ind_periode->save();
-                /*$res = DB::table('indikator_periode')->insert([
-                    'indikator_id' => $indikator->id,
-                    'periode_id' => $periode->first()->id
-                ]);*/
-                /*if($res){
-                    echo 'Indikator saved';
-                    echo '</br>';
-                }
-            }
-        }else{
-            echo 'No indikator left';
-        }
-    }else{
-        
-    }*/
-    
+      $res = $obj_ind_periode->save();
+      /*$res = DB::table('indikator_periode')->insert([
+      'indikator_id' => $indikator->id,
+      'periode_id' => $periode->first()->id
+      ]); */
+    /* if($res){
+      echo 'Indikator saved';
+      echo '</br>';
+      }
+      }
+      }else{
+      echo 'No indikator left';
+      }
+      }else{
+
+      } */
+
     //check active periode
     $periode = DB::table('periode')
             ->where('status', '=', 'Active')
@@ -315,8 +313,8 @@ Route::get('/test2', function(){
             for ($i = 0; $i < $indikators->count(); $i++) {
                 //looping for triwulan
                 $triwulans = DB::table('triwulan')->get();
-                if($triwulans->count() > 0){
-                    for($j = 0; $j < $triwulans->count(); $j++){
+                if ($triwulans->count() > 0) {
+                    for ($j = 0; $j < $triwulans->count(); $j++) {
                         $indikator_periode = $indikators[$i];
                         $triwulan = $triwulans[$j];
                         $obj_lap_capaian = new App\Models\LaporanCapaian();
@@ -327,7 +325,7 @@ Route::get('/test2', function(){
                     }
                 }
                 if ($res) {
-                    $data['result'][$i] = 'Import '.$indikator_periode->id.' successfull';
+                    $data['result'][$i] = 'Import ' . $indikator_periode->id . ' successfull';
                     //echo 'imported</br>';
                 }
             }
@@ -341,42 +339,195 @@ Route::get('/test2', function(){
     //return Redirect::back()->with($json_data);
 });
 
-Route::get('/test-import/{id}', function($id){
+Route::get('/test-import/{id}', function ($id) {
     //check active periode
-        $periode = DB::table('periode')
-                ->where('status', '=', 'Active')
+    $periode = DB::table('periode')
+            ->where('status', '=', 'Active')
+            ->get();
+    $data['message'] = 'Undefined message';
+    if ($periode->count() == 1) {
+
+        $result = DB::table('indikator_kompositor')
+                ->where('indikator_id', '=', $id)
                 ->get();
-        $data['message'] = 'Undefined message';
-        if ($periode->count() == 1) {
-            
-            $result = DB::table('indikator_kompositor')
-                        ->where('indikator_id', '=', $id)
-                        ->get();
-            if($result->count() > 0){
-                foreach ($result as $row) {
-                    //looping for triwulan
+        if ($result->count() > 0) {
+            foreach ($result as $row) {
+                //looping for triwulan
                 $triwulans = DB::table('triwulan')->get();
-                    if($triwulans->count() > 0){
-                        foreach ($triwulans as $trw) {
-                            $obj = new App\Models\InputRealisasi();
-                            $obj->indikator_kompositor_id = $row->id;
-                            $obj->triwulan_id = $trw->id;
-                            $obj->periode_id = $periode->first()->id;
-                            $obj->save();
-                        }
-                        
+                if ($triwulans->count() > 0) {
+                    foreach ($triwulans as $trw) {
+                        $obj = new App\Models\InputRealisasi();
+                        $obj->indikator_kompositor_id = $row->id;
+                        $obj->triwulan_id = $trw->id;
+                        $obj->periode_id = $periode->first()->id;
+                        $obj->save();
                     }
-                    $data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
-                    $data['message'] = 'All Import successfull';
                 }
+                $data['result'][$row->id] = 'Import ' . $row->nama_kompositor . ' successfull';
+                $data['message'] = 'All Import successfull';
             }
         }
-        return $data;
-    
+    }
+    return $data;
 });
 
-Route::get('/test-calculation/{id}', function($id){
-    $hitung_kompositors = DB::query();
+Route::get('/test-calculation/{id}', function ($id) {
+    /* $hitung_kompositors = DB::table('hitung_kompositor')
+      ->groupBy('lvl', 'indikator_kompositor_id')
+      ->having('indikator_kompositor_id', '=', $id)
+      ->select('hitung_kompositor.lvl', 'hitung_kompositor.indikator_kompositor_id')
+      ->get();
+      $data['group_by'] = $hitung_kompositors; */
+
+    $left_operand = 0;
+    $right_operand = 0;
+    $operator = '';
+    $result = 0;
+    $select_0 = getData(['p_field_id' => 0, 'indikator_kompositor_id' => $id]);
+    print_r($select_0);
+    if ($select_0->count() > 0) {
+        //looping level 0 ------------------------------------------------------------
+        foreach ($select_0 as $level_0) {
+            if ($level_0->f_type == 'Operator') {
+                $operator = $level_0->field;
+                $select_1 = getData(['p_field_id' => $level_0->id, 'indikator_kompositor_id' => $id]);
+                print_r($select_1);
+                if ($select_1->count() > 0) {
+                    $operator_1 = '';
+                    $left_operand_1 = 0;
+                    $right_operand_1 = 0;
+                    //looping level 1 -------------------------------------------------------
+                    foreach ($select_1 as $level_1) {
+                        if ($level_1->f_type == 'Operator') {
+                            $operator_1 = $level_1->field;
+                            if ($left_operand == 0) {
+                                $left_operand = $operator_1;
+                            } else {
+                                $right_operand = $operator_1;
+                            }
+                            $select_2 = getData(['p_field_id' => $level_1->id, 'indikator_kompositor_id' => $id]);
+                            print_r($select_2);
+                            if ($select_2->count() > 0) {
+                                $operator_2 = '';
+                                $left_operand_2 = 0;
+                                $right_operand_2 = 0;
+                                //looping level 2 -------------------------------------------
+                                foreach ($select_2 as $level_2) {
+                                    if ($level_2->f_type == 'Operator') {
+                                        $operator_2 = $level_2->field;
+                                        if ($left_operand_1 == 0) {
+                                            $left_operand_1 = $operator_2;
+                                        } else {
+                                            $right_operand_1 = $operator_2;
+                                        }
+                                        $select_3 = getData(['p_field_id' => $level_2->id, 'indikator_kompositor_id' => $id]);
+                                        print_r($select_3);
+                                        if ($select_3->count() > 0) {
+                                            $operator_3 = '';
+                                            $left_operand_3 = 0;
+                                            $right_operand_3 = 0;
+                                            //looping level 3 -------------------------------------------
+                                            foreach ($select_3 as $level_3) {
+                                                if ($level_3->f_type == 'Operator') {
+                                                    $operator_3 = $level_3->field;
+                                                    if ($left_operand_2 == 0) {
+                                                        $left_operand_2 = $operator_3;
+                                                    } else {
+                                                        $right_operand_2 = $operator_3;
+                                                    }
+                                                } elseif ($level_3->f_type == 'Input') {
+                                                    //$left_operand_3 = $level_3->field;
+                                                    if ($left_operand_3 == 0) {
+                                                        $left_operand_3 = $level_3->field;
+                                                    } else {
+                                                        $right_operand_3 = $level_3->field;
+                                                    }
+                                                    if ($operator_2 == '/') {
+                                                        $operator_2 = $left_operand_3 / $right_operand_3;
+                                                    } elseif ($operator_2 == '*') {
+                                                        $operator_2 = $left_operand_3 * $right_operand_3;
+                                                    } elseif ($operator_2 == '+') {
+                                                        $operator_2 = $left_operand_3 + $right_operand_3;
+                                                    } elseif ($operator_2 == '-') {
+                                                        $operator_2 = $left_operand_3 - $right_operand_3;
+                                                    }
+                                                } elseif ($level_3->f_type == 'Value') {
+                                                    
+                                                }
+                                            }// end looping level 3 -------------------------------------
+                                            echo 'operator_3: ' . $operator_3 . ', left_operand_3: ' . $left_operand_3 . ', right_operand_3: ' . $right_operand_3 . '</br>';
+                                        }
+                                    } elseif ($level_2->f_type == 'Input') {
+                                        if ($left_operand_2 == 0) {
+                                            $left_operand_2 = $level_2->field;
+                                        } else {
+                                            $right_operand_2 = $level_2->field;
+                                        }
+                                        if ($operator_1 == '/') {
+                                            $operator_1 = $left_operand_2 / $right_operand_2;
+                                        } elseif ($operator_1 == '*') {
+                                            $operator_1 = $left_operand_2 * $right_operand_2;
+                                        } elseif ($operator_2 == '+') {
+                                            $operator_1 = $left_operand_2 + $right_operand_2;
+                                        } elseif ($operator_2 == '-') {
+                                            $operator_1 = $left_operand_2 - $right_operand_2;
+                                        }
+                                    } elseif ($level_2->f_type == 'Value') {
+                                        
+                                    }
+                                }// end looping level 2 ------------------------------------
+                                echo 'operator_2: ' . $operator_2 . ', left_operand_2: ' . $left_operand_2 . ', right_operand_2: ' . $right_operand_2 . '</br>';
+                            }
+                        } elseif ($level_1->f_type == 'Input') {
+                            if ($left_operand == 0) {
+                                $left_operand = $level_1->field;
+                            } else {
+                                $right_operand = $level_1->field;
+                            }
+                            if ($operator == '/') {
+                                $operator = $left_operand_1 / $right_operand_1;
+                            } elseif ($operator_1 == '*') {
+                                $operator = $left_operand_1 * $right_operand_1;
+                            } elseif ($operator_2 == '+') {
+                                $operator = $left_operand_1 + $right_operand_1;
+                            } elseif ($operator_2 == '-') {
+                                $operator = $left_operand_1 - $right_operand_1;
+                            }
+                        } elseif ($level_1->f_type == 'Value') {
+                            
+                        }
+                    }//end looping level 1 --------------------------------------------------
+                    echo 'operator_1: ' . $operator_1 . ', left_operand_1: ' . $left_operand_1 . ', right_operand_1: ' . $right_operand_1 . '</br>';
+                }
+            } elseif ($level_1->f_type == 'Input') {
+                
+            } elseif ($level_1->f_type == 'Value') {
+                
+            }
+        }//end looping level 0 ------------------------------------------------------
+    }
+
+
+    echo 'operator: ' . $operator . ', left_operand: ' . $left_operand . ', right_operand: ' . $right_operand;
+
+    /* if ($operator == '/') {
+      $result = $left_operand / $right_operand;
+      } elseif ($operator == '*') {
+      $result = $left_operand * $right_operand;
+      } elseif ($operator == '+') {
+      $result = $left_operand + $right_operand;
+      } elseif ($operator == '-') {
+      $result = $left_operand - $right_operand;
+      } */
+    //echo 'Result: '.$result;
 });
 
-require __DIR__.'/auth.php';
+function getData($params) {
+    $select = DB::table('hitung_kompositor')
+            ->where('p_field_id', '=', $params['p_field_id'])
+            ->where('indikator_kompositor_id', '=', $params['indikator_kompositor_id'])
+            ->get();
+    return $select;
+}
+
+require __DIR__ . '/auth.php';
