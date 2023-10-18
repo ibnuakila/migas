@@ -24,7 +24,8 @@ class IndikatorPeriodePicRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'indikator_periode_id' => ['required'],
+            'pic_id' => ['required']
         ];
     }
 }

@@ -69,7 +69,19 @@ class IndikatorPeriodeController extends Controller //implements ICrud {
         $indikatorperiode->update(
             $request->validated()
         );
-        return Redirect::route('indikator-periode.index');
+        //$req = $request->input();
+        $pics = $request->input('pics');
+        if(is_array($pics)){
+            foreach($pics as $pic){
+                $data = ['indikator_periode_id' => $indikatorperiode->id,
+                    'pic_id' => $pic['value']];
+                DB::table('indikator_periode_pic')->insert($data);
+            }        
+        }else{
+            
+        }
+        return $pics;
+        //return Redirect::route('indikator-periode.index');
     }
 
     public function importIndikator() {

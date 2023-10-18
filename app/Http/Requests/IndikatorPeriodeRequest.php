@@ -27,7 +27,7 @@ class IndikatorPeriodeRequest extends FormRequest
             'indikator_id' => ['required','integer'],
             'periode_id' => ['required','integer'],
             'target' => ['required','decimal:2'],
-            'pic_id' => ['required','integer']
+            //'pic_id' => ['required','integer']
         ];
     }
 }
