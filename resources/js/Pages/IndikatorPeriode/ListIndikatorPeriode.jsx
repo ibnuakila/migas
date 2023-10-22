@@ -16,6 +16,7 @@ import { router } from '@inertiajs/react';
 
 export default function ListIndikatorPeriode( {auth}){
     const {indikator_periodes} = usePage().props;
+    
     //const { get, put, errors, delete:destroy, processing } = useForm();
     const {
         data,
@@ -28,6 +29,7 @@ export default function ListIndikatorPeriode( {auth}){
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
+    const [term, setTerm] = useState('');
     
     function handleImport(e) {
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
@@ -42,7 +44,28 @@ export default function ListIndikatorPeriode( {auth}){
             //put(route('indikator-periode.importIndikator'));
         }
       };
+    function handleChange(e) {
+        //const key = e.target.name;
+        const value = e.target.value;
 
+        /*setValues(values => ({
+          ...values,
+          [key]: value
+        }));*/
+        setTerm(value);
+        //console.log(key + ", " +value);
+    }
+      useEffect( () => {
+        //if(term.length >= 2){
+            router.visit('/indikator-periode', {
+                method: 'get',
+                data: { search: term, page:indikator_periodes.current_page},
+                replace: true,
+                preserveState: true
+            });
+        //}
+       
+      },[term]);
     return (
             <AdminLayout 
                 auth = {auth}
@@ -53,15 +76,9 @@ export default function ListIndikatorPeriode( {auth}){
                                             <Typography variant="h3">Data Indikator Periode                            
                                             </Typography>
                                             <div className="flex">
-                                            <span className="mx-2">
-                                                <Select label="Filter" onChange="">                                                      
-                                                      <Option value="indikator">Nama Indikator</Option>
-                                                      <Option value="pic">PIC</Option>  
-                                                      <Option value="pic">Periode</Option>
-                                                </Select>
-                                            </span>
+                                            
                                             <span>
-                                                <Input variant="outlined" size="md" className="w-45" label="Search.." />
+                                                <Input variant="outlined" size="md" className="w-45" label="Search.." onChange={handleChange}/>
                                             </span>
                                             </div>
                                         </div>
@@ -92,7 +109,7 @@ export default function ListIndikatorPeriode( {auth}){
                                                 </tr>
                                             </thead>
                                             <tbody>                                                      
-                                                {indikator_periodes.data.map(({id, nama_indikator, periode, target, nama_pic}) => (
+                                                {indikator_periodes.data.map(({id, nama_indikator, periode, target, indikator_periode_pic}) => (
                                                             <tr key={id} className="even:bg-blue-gray-50/50">
                                                                 <td className="p-4">
                                                                     <Typography variant="small" color="blue-gray" className="font-normal">
@@ -116,9 +133,12 @@ export default function ListIndikatorPeriode( {auth}){
                                         
                                                                 </td>
                                                                 <td>
-                                                                    <Typography variant="small" color="blue-gray" className="font-normal">
-                                                                        {nama_pic}
-                                                                    </Typography>                                        
+                                                                    <div className="flex">
+                                                                        {indikator_periode_pic.map( ({id, nama_pic}) => (
+                                                                            <Typography variant="small" color="blue-gray" className="font-normal ml-1">
+                                                                                {nama_pic}
+                                                                            </Typography>) )}
+                                                                    </div>
                                         
                                                                 </td>
                                                                 <td className="p-4">

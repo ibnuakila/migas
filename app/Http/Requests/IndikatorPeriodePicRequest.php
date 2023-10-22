@@ -25,7 +25,8 @@ class IndikatorPeriodePicRequest extends FormRequest
     {
         return [
             'indikator_periode_id' => ['required'],
-            'pic_id' => ['required']
+            'pic_id' => ['required'],
+            'nama_pic' => ['required']
         ];
     }
 }

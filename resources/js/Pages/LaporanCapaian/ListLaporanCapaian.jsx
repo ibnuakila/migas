@@ -9,7 +9,7 @@ import { Card,
   DialogFooter,
   Select, Option, 
   Input} from "@material-tailwind/react";
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
@@ -27,7 +27,8 @@ export default function ListLaporanCapaian({auth}){
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
- 
+    const [term, setTerm] = useState('');
+    
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
             router.visit('/laporan-capaian/importtarget', {
@@ -40,7 +41,28 @@ export default function ListLaporanCapaian({auth}){
             
         }
     }
-    
+    function handleChange(e) {
+        //const key = e.target.name;
+        const value = e.target.value;
+
+        /*setValues(values => ({
+          ...values,
+          [key]: value
+        }));*/
+        setTerm(value);
+        //console.log(key + ", " +value);
+    }
+      useEffect( () => {
+        //if(term.length >= 2){
+            router.visit('/laporan-capaian', {
+                method: 'get',
+                data: { search: term, page:laporan_capaians.current_page},
+                replace: true,
+                preserveState: true
+            });
+        //}
+        
+      },[term]);
     return (
         <AdminLayout 
         auth = {auth}
@@ -51,15 +73,9 @@ export default function ListLaporanCapaian({auth}){
                         <Typography variant="h3">Laporan Capaian Kinerja                            
                         </Typography>
                         <div className="flex">
-                            <span className="mx-2">
-                                <Select label="Filter" onChange="">                                                      
-                                      <Option value="indikator">Nama Indikator</Option>
-                                      <Option value="pic">PIC</Option>  
-                                      <Option value="pic">Periode</Option>
-                                </Select>
-                            </span>
+                            
                             <span>
-                                <Input variant="outlined" size="md" className="w-45" label="Search.." />
+                                <Input variant="outlined" size="md" className="w-45" label="Search.." onChange={handleChange}/>
                             </span>
                         </div>
                     </div>
@@ -154,7 +170,7 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                         <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal text-center">
                                             <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
                                                 </svg>
                                             </Link>

@@ -132,7 +132,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
-    Route::get('/input-realisasi/calculate-realization/{indikatorkompositor}', [InputRealisasiController::class, 'calculateRealization'])
+    Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
 });
 
@@ -529,5 +529,12 @@ function getData($params) {
             ->get();
     return $select;
 }
+
+Route::get('/test-formula', function(){
+    $select = DB::table('formula_table')
+            ->where('id', '=', 3)
+            ->get();
+    
+});
 
 require __DIR__ . '/auth.php';

@@ -15,7 +15,7 @@ class IndikatorPeriode extends Model
         'indikator_id',
         'periode_id',
         'target',
-        'pic_id',
+        //'pic_id',
         'level_id'
     ];
     
@@ -34,13 +34,17 @@ class IndikatorPeriode extends Model
         return $this->hasOne(Level::class);
     }
     
-    public function pic() {
-        return $this->hasOne(PIC::class);
+    public function indikatorPeriodePic() {
+        return $this->hasMany(IndikatorPeriodePic::class);
     }
     
     public function laporanCapaian()
     {
         return $this->belongsTo(LaporanCapaian::class);
     }
+    
+    /*public function pic(){
+        return $this->hasManyThrough(PIC::class, IndikatorPeriodePic::class);
+    }*/
     
 }

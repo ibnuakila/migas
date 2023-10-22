@@ -14,6 +14,15 @@ class IndikatorPeriodePic extends Model
     public $timestamps = false;
     protected $fillable = [
         'indikator_periode_id',        
-        'pic_id',        
+        'pic_id',      
+        'nama_pic'
     ];
+    
+    public function indikatorPeriode() {
+        return $this->belongsTo(IndikatorPeriode::class);
+    }
+    
+    public function pic(){
+        return $this->hasOne(PIC::class);
+    }
 }
