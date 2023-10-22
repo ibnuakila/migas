@@ -22,11 +22,11 @@ import MSelect from '../../Components/MSelect';
 export default function EditIndikatorPeriode() {
     const {auth, periodes, pics, indikators, indikator} = usePage().props;
     const {data, setData, put, errors, delete: destroy, processing} = useForm({
-        id: indikator.data.id || '',
-        periode_id: indikator.data.periode_id || '',
-        indikator_id: indikator.data.indikator_id || '',
-        target: indikator.data.target || '',
-        pics: indikator.data.pic_id || '',
+        id: indikator.data[0].id || '',
+        periode_id: indikator.data[0].periode_id || '',
+        indikator_id: indikator.data[0].indikator_id || '',
+        target: indikator.data[0].target || '',
+        //pics: indikator.data.pic_id || '',
         //level_id: ''
     });
     console.log(usePage().props);
@@ -40,7 +40,7 @@ export default function EditIndikatorPeriode() {
     const handleSave = (e) => {
         e.preventDefault();
         console.log(data);
-        put(route('indikator-periode.update', indikator.data.id));
+        put(route('indikator-periode.update', indikator.data[0].id));
     };
 
     const handlePeriodeChange = (e) => {
@@ -65,8 +65,10 @@ export default function EditIndikatorPeriode() {
             destroy(route('indikator-periode.destroy', indikator.data.id));
         }
     }
-
-    
+    const defPic = indikator.data[0].indikator_periode_pic.map(pic => {
+        return {value:pic.pic_id, label:pic.nama_pic};
+    })
+    console.log(defPic);
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
@@ -94,7 +96,7 @@ export default function EditIndikatorPeriode() {
                                             <div className="flex flex-col gap-4">
                                                 
                                                 <Select label="Select Periode" onChange={handlePeriodeChange}
-                                                        value={indikator.data.periode_id}
+                                                        value={indikator.data[0].periode_id}
                                                         error={errors.periode_id}>
                                                     {periodes.map(({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option>)}                                                                                                           
                                                 </Select>
@@ -102,7 +104,7 @@ export default function EditIndikatorPeriode() {
                                                         <div className="text-red-400 mt-1">{errors.periode_id}</div>
                                                 }
                                                 <Select label="Select Indikator" onChange={handleIndikatorChange}
-                                                        value={indikator.data.indikator_id}
+                                                        value={indikator.data[0].indikator_id}
                                                         error={errors.indikator_id}>
                                                     {indikators.map(({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option>)}                                                     
                                                 </Select>
@@ -113,13 +115,13 @@ export default function EditIndikatorPeriode() {
                                                        onChange={e => {
                                                                    setData('target', e.target.value)
                                                                }} 
-                                                       defaultValue={indikator.data.target}
+                                                       defaultValue={indikator.data[0].target}
                                                        error={errors.target}/>                      
                                                 {errors.target &&
                                                         <div className="text-red-400 mt-1">{errors.target}</div>
                                                 }
                                                 
-                                                <MSelect options={optPic} defaultValue={indikator.data.id} 
+                                                <MSelect options={optPic} defaultValue={defPic} 
                                                     onChange={(item) => {
                                                         setSelectedValue(item); 
                                                         setData('pics', item)

@@ -67,14 +67,23 @@ export default function EditRealisasi(props) {
     
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
-        
-            /*router.visit('/input-realisasi/import-kompositor/' , {
+            
+            /*router.visit('/input-realisasi/calculate-realization/' , {
                 method: 'get',
-                data:{laporan_capaian_id:laporan_capaian.id},
-                onFinish: visit => {
-                    router.reload();
-                    console.log(visit)},
+                data:{id:input_realisasi.data.id},
+                onSuccess: page => {
+                    //router.reload();
+                    console.log(page)},
             });*/
+            
+            axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.data.id})
+                    .then(res => {
+                        alert(res.data.result);
+                        let realisasi = document.getElementById('realisasi');
+                        realisasi.value = res.data.realisasi;
+                        //realisasi.setAttribute('value', res.data.result);
+                        setData('realisasi', res.data.result);
+            })
             
         }
     }
@@ -102,7 +111,7 @@ export default function EditRealisasi(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Input label="Satuan" variant="outlined" id="realisasi" 
+                                                <Input label="Satuan" variant="outlined" id="satuan" 
                                                         defaultValue={indikator_kompositor.satuan}
                                                         disabled ={true}
                                                         error={errors.satuan}/>  
@@ -141,7 +150,7 @@ export default function EditRealisasi(props) {
                                             </div>
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Select PIC" 
+                                                <Select label="Select PIC" id="pic"
                                                     onChange={handleChangePic}
                                                     value={input_realisasi.data.pic_id}
                                                     error={errors.pic_id}>
@@ -153,7 +162,7 @@ export default function EditRealisasi(props) {
                                             </div>
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Periode" onChange={handleChangePeriode}
+                                                <Select label="Periode" id="periode" onChange={handleChangePeriode}
                                                     value={input_realisasi.data.periode_id}
                                                     error={errors.periode_id}>
                                                         {periodes.map(({id, periode}) => (

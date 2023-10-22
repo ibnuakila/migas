@@ -12,7 +12,7 @@ use Inertia\Response;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 
-class IndikatorPeriodeController extends Controller //implements ICrud {
+class IndikatorPeriodeController extends Controller //implements ICrud 
 {
     //
     public function create() {
@@ -30,7 +30,10 @@ class IndikatorPeriodeController extends Controller //implements ICrud {
 
     public function edit(IndikatorPeriode $indikatorperiode) {//perhatikan format penulisan case
     return Inertia::render('IndikatorPeriode/EditIndikatorPeriode', [        
-        'indikator' => new IndikatorPeriodeResource($indikatorperiode),
+        'indikator' => new IndikatorPeriodeCollection($indikatorperiode
+                ->with('indikatorPeriodePic')
+                ->where('indikator_periode.id', '=', $indikatorperiode->id)
+                ->get()),
         'indikators' => \App\Models\Indikator::all(),
         'periodes' => \App\Models\Periode::all(),
         'pics' => \App\Models\PIC::all(),
@@ -39,18 +42,19 @@ class IndikatorPeriodeController extends Controller //implements ICrud {
 
     public function index() {
         return Inertia::render('IndikatorPeriode/ListIndikatorPeriode', [
-                    'filter' => Request::all('search', 'trashed'),
+                    'filter' => Request::all('search'),
                     'indikator_periodes' => new IndikatorPeriodeCollection(
                             IndikatorPeriode::query()
                                     ->when(Request::input('search'), function ($query, $search) {
-                                        $query->where('nama_indikator', 'like', "%{$search}%");
+                                        $query->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                                        ->where('indikator.nama_indikator', 'like', "%{$search}%");
                                     })
                                     ->addSelect(['periode' => \App\Models\Periode::select('periode')
                                         ->whereColumn('id', 'indikator_periode.periode_id')])
                                     ->addSelect(['nama_indikator' => \App\Models\Indikator::select('nama_indikator')
-                                        ->whereColumn('id', 'indikator_periode.indikator_id')])
-                                    //->addSelect(['nama_pic' => \App\Models\PIC::select('nama_pic')
-                                        //->whereColumn('id', 'indikator_periode.pic_id')])
+                                        ->whereColumn('id', 'indikator_periode.indikator_id')])                                    
+                                    ->with('indikatorPeriodePic')//relationship ----------
+                                            //->with('pic')
                                     ->paginate(10)
                                     ->withQueryString()
                     )
@@ -74,14 +78,15 @@ class IndikatorPeriodeController extends Controller //implements ICrud {
         if(is_array($pics)){
             foreach($pics as $pic){
                 $data = ['indikator_periode_id' => $indikatorperiode->id,
-                    'pic_id' => $pic['value']];
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
                 DB::table('indikator_periode_pic')->insert($data);
             }        
         }else{
             
         }
-        return $pics;
-        //return Redirect::route('indikator-periode.index');
+        //return $pics;
+        return Redirect::route('indikator-periode.index');
     }
 
     public function importIndikator() {

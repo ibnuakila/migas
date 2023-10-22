@@ -42,6 +42,7 @@ class LaporanCapaianController extends Controller //implements ICrud
 
     public function index() {
         $select = DB::table('laporan_capaian')
+                
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
@@ -50,6 +51,11 @@ class LaporanCapaianController extends Controller //implements ICrud
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
             ->join('level','indikator.level_id','=','level.id')
             ->join('satuan','indikator.satuan_id', '=', 'satuan.id')
+                ->when(Request::input('search'), function ($query, $search) {
+                                        //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+                                        //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                                    })
             ->select('laporan_capaian.id',
                     'laporan_capaian.realisasi',
                     'laporan_capaian.kinerja',
@@ -69,7 +75,26 @@ class LaporanCapaianController extends Controller //implements ICrud
         
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
             'filter' => Request::all('search', 'trashed'),
-            'laporan_capaians' => new \Illuminate\Support\Collection($select)
+            'laporan_capaians' => 
+                    new \Illuminate\Database\Eloquent\Collection($select)
+                    /*LaporanCapaian::query()
+                    ->when(Request::input('search'), function ($query, $search) {
+                                        $query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+                                        ->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                                        ->where('indikator.nama_indikator', 'like', "%{$search}%");
+                                    })
+                    ->addSelect(['target' => \App\Models\IndikatorPeriode::select('target')
+                                        ->whereColumn('id', 'laporan_capaian.indikator_periode_id')])
+                    ->addSelect(['periode' => \App\Models\Periode::select('periode')
+                                        ->whereColumn('id', 'laporan_capaian.periode_id')])
+                    ->addSelect(['triwulan' => \App\Models\Triwulan::select('triwulan')
+                                        ->whereColumn('id', 'laporan_capaian.triwulan_id')])
+                    ->addSelect(['level' => \App\Models\Triwulan::select('triwulan')
+                                        ->whereColumn('id', 'laporan_capaian.triwulan_id')])
+                    //->with('periode')
+                    ->paginate(10)   
+                    ->withQueryString()*/
+            
                 ]);
     }
 

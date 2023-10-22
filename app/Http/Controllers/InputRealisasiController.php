@@ -126,8 +126,50 @@ class InputRealisasiController extends Controller //implements ICrud
         return Redirect::back()->with($data);
     }
     
-    public function calculateRealization(\App\Models\IndikatorKompositor $indikatorkompositor)
+    public function calculateRealization(\Illuminate\Http\Request $request)
     {
-        
+        $id = $request->input('input_realisasi_id');
+        $input_realisasi = InputRealisasi::where('id', $id)->first();
+        $indikator_kompositor = \App\Models\IndikatorKompositor::where('id', $input_realisasi->indikator_kompositor_id)->first();
+        $nama_kompositor = $indikator_kompositor->nama_kompositor;
+        $realisasi = 0;
+        switch ($nama_kompositor){
+            case 'Indeks Ketersediaan Hulu Minyak':
+                break;
+            case 'Indeks Ketersediaan Hulu Gas':
+                break;
+            case 'Indeks Ketersediaan Hulu Migas':
+                break;            
+            case 'Indeks Ketersediaan BBM':
+                $res_realisasi = InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->where('indeks_id', '=', 5)
+                    ->select('input_realisasi.*', 'indikator_kompositor.nama_kompositor')->get();
+                //$data['result'] = $res_realisasi;
+                $realisasi_produksi_bbm = ''; $kuota_impor_bbm = ''; $kuota_ekspor_bbm = '';
+                $realisasi_impor_bbm = ''; $realisasi_ekspor_bbm = '';
+                foreach($res_realisasi as $realisasi){
+                    if($realisasi->nama_kompositor == 'Realisasi Produksi BBM'){                        
+                        $realisasi_produksi_bbm = $realisasi->realisasi;
+                    }elseif($realisasi->nama_kompositor == 'Kuota Impor BBM'){
+                        $kuota_impor_bbm = $realisasi->realisasi;
+                    }elseif($realisasi->nama_kompositor == 'Kuota Ekspor BBM'){
+                        $kuota_ekspor_bbm = $realisasi->realisasi;
+                    }elseif($realisasi->nama_kompositor == 'Realisasi Impor BBM'){
+                        $realisasi_impor_bbm = $realisasi->realisasi;
+                    }elseif($realisasi->nama_kompositor == 'Realisasi Ekspor BBM'){
+                        $realisasi_ekspor_bbm =$realisasi->realisasi;
+                    }                    
+                }
+                $realisasi = (($realisasi_produksi_bbm + $kuota_impor_bbm) - $kuota_ekspor_bbm) / (($realisasi_produksi_bbm + $realisasi_impor_bbm) - $realisasi_ekspor_bbm);
+                break;
+            case 'Indeks Ketersediaan LPG':
+                break;
+            case 'Indeks Ketersediaan LNG':
+                break;
+        }
+        $data['realisasi'] = round($realisasi, 2);
+        return json_encode($data);
     }
 }
