@@ -34,7 +34,22 @@ class InputRealisasiController extends Controller //implements ICrud
             'indikator_kompositor' => \App\Models\IndikatorKompositor::where('id', $inputrealisasi->indikator_kompositor_id)->first(),
             'triwulans' => \App\Models\Triwulan::all(),
             'periodes' => \App\Models\Periode::all(),
-            'pics' => \App\Models\PIC::all()
+            'pics' => \App\Models\PIC::all(),
+            'def_pics' => function () {
+                $temp_res = DB::table('input_realisasi')
+                        ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                        ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                        ->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                        ->join('indikator_periode_pic', 'indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
+                        ->select('indikator_periode_pic.*')
+                        ->get();
+                $def_pics = []; $i=0;
+                foreach ($temp_res as $row) {
+                    $def_pics[$i] = ['value' => $row->pic_id, 'label' => $row->nama_pic];
+                    $i++;
+                }
+                return $def_pics;
+            }
         ]);
     }
 
@@ -108,15 +123,13 @@ class InputRealisasiController extends Controller //implements ICrud
                         ->where('indikator_id', '=', $indikator->id)
                         ->get();
             if($result->count() > 0){
-                foreach ($result as $row) {
-                    
+                foreach ($result as $row) {                    
                             $object = new InputRealisasi();
                             $object->indikator_kompositor_id = $row->id;
                             $object->triwulan_id = $laporan_capaian->triwulan_id;
                             $object->periode_id = $laporan_capaian->periode_id;
                             $object->laporan_capaian_id = $laporan_capaian->id;
-                            $object->save();
-                        
+                            $object->save();                        
                     $data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
                     $data['message'] = 'Import successfull';
                 }

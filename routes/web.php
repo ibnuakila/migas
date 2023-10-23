@@ -77,12 +77,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/indikator-kompositor/index/{indikator}', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
+    Route::get('/indikator-kompositor/index/', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
     Route::get('/indikator-kompositor/create/{indikator}', [IndikatorKompositorController::class, 'create'])->name('indikator-kompositor.create');
     Route::post('/indikator-kompositor/store', [IndikatorKompositorController::class, 'store'])->name('indikator-kompositor.store');
     Route::get('/indikator-kompositor/edit/{indikatorkompositor}', [IndikatorKompositorController::class, 'edit'])->name('indikator-kompositor.edit');
     Route::put('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'update'])->name('indikator-kompositor.update');
     Route::delete('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
+    Route::get('/indikator-kompositor/index-indikator/{indikator}', [IndikatorKompositorController::class, 'indexIndikator'])->name('indikator-kompositor.index-indikator');
 });
 
 Route::middleware('auth')->group(function () {

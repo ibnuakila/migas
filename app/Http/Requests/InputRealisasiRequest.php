@@ -28,7 +28,7 @@ class InputRealisasiRequest extends FormRequest
             'realisasi' => ['required','decimal:2'],
             'satuan' => ['required'],
             'triwulan_id' => ['required','integer'],
-            'pic_id' => ['required','integer'],
+            //'pic_id' => ['required','integer'],
             'periode_id' => ['required','integer'],
             'laporan_capaian_id' => ['required','integer']
         ];
