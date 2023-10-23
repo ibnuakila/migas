@@ -125,7 +125,8 @@ export default function EditIndikatorPeriode() {
                                                     onChange={(item) => {
                                                         setSelectedValue(item); 
                                                         setData('pics', item)
-                                                        console.log(selectedValue)}}
+                                                        console.log(selectedValue)
+                                                    }}
                                                  />
                                                 {errors.pic_id &&
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>

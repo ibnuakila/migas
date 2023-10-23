@@ -14,21 +14,22 @@ Button,
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import MSelect from '../../Components/MSelect';
 
 export default function EditRealisasi(props) {
     
-    const auth = props.auth;
-    
+    const auth = props.auth;    
     const input_realisasi = props.input_realisasi;
     const indikator_kompositor = props.indikator_kompositor;
     const triwulans = props.triwulans;
     const periodes = props.periodes;
     const pics = props.pics;
+    const defPics = props.def_pic;
     const {data, setData, put, errors, processing} = useForm({
         id: input_realisasi.data.id || '',
         indikator_kompositor_id: input_realisasi.data.indikator_kompositor_id || '',
         realisasi: input_realisasi.data.realisasi || '',
-        pic_id: input_realisasi.data.pic_id || '',
+        //pic_id: input_realisasi.data.pic_id || '',
         satuan: indikator_kompositor.satuan || '',
         triwulan_id: input_realisasi.data.triwulan_id || '',
         periode_id: input_realisasi.data.periode_id || '',
@@ -38,7 +39,7 @@ export default function EditRealisasi(props) {
     const [optionTriwulan, setOptionTriwulan] = useState('');
     const [optionPic, setOptionPic] = useState('');
     const [optionPeriode, setOptionPeriode] = useState('');
-    
+    const [selectedValue, setSelectedValue] = useState([]);
     const handleSave = (e) => {
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.data.id));        
@@ -87,7 +88,19 @@ export default function EditRealisasi(props) {
             
         }
     }
+    /*const defPic = (defPics) => {
+        if(defPics.length > 0){
+            defPics.map(pic => {
+                return {value:pic.pic_id, label:pic.nama_pic};
+            })
+        }else{
+            return {value:0, label:'-'}
+        }
+    }*/
     
+    const optPic = pics.map(pic => {
+        return {value:pic.id, label:pic.nama_pic};
+    })
     return (
             <AdminLayout 
                 auth = {auth}
@@ -150,12 +163,13 @@ export default function EditRealisasi(props) {
                                             </div>
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Select PIC" id="pic"
-                                                    onChange={handleChangePic}
-                                                    value={input_realisasi.data.pic_id}
-                                                    error={errors.pic_id}>
-                                                    {pics.map( ({id, nama_pic}) => <Option value={id.toString()} key={id}>{nama_pic}</Option> )}                                                     
-                                                </Select>
+                                                 <MSelect options={optPic} defaultValue={defPics} 
+                                                    onChange={(item) => {
+                                                        setSelectedValue(item); 
+                                                        setData('pics', item)
+                                                        console.log(selectedValue)
+                                                    }}
+                                                 />
                                                     {errors.pic_id && 
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                     }
