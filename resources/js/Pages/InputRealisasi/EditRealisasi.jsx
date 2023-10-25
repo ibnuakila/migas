@@ -88,12 +88,24 @@ export default function EditRealisasi(props) {
             
             axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.data.id})
                     .then(res => {
-                        //alert(res.data.result);
-                        let realisasi = document.getElementById('realisasi');
-                        realisasi.value = res.data.realisasi;
-                        //realisasi.setAttribute('value', res.data.result);
-                        //setData('realisasi', res.data.result);
-            })
+                        if(res.message != ''){
+                            alert(res.message);
+                        }else{
+                            let realisasi = document.getElementById('realisasi');
+                            realisasi.value = res.data.realisasi;
+                            //realisasi.setAttribute('value', res.data.result);
+                            //setData('realisasi', res.data.result);
+                        }
+                    })
+                    .catch((err) => {
+                        if(err.response){
+                            alert("Error: " + err.response.data.message);
+                        }else if(err.request){
+                            alert(err.request);
+                        }else{
+                            alert(err.message);
+                        }
+                    })
             
         }
     }

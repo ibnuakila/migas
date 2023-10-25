@@ -14,4 +14,12 @@ class Triwulan extends Model
     protected $fillable = [
         'triwulan'
     ];
+    
+    public function laporanCapaian(){
+        return $this->hasMany(LaporanCapaian::class);
+    }
+    
+    public function inputRealisasi(){
+        return $this->hasMany(InputRealisasi::class);
+    }
 }
