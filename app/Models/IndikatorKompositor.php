@@ -18,4 +18,8 @@ class IndikatorKompositor extends Model
         'indeks_id',
         'jenis_kompositor_id'
     ];
+    
+    public function inputRealisasi(){
+        return $this->hasOne(InputRealisasi::class);
+    }
 }

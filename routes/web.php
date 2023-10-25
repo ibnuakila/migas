@@ -532,9 +532,18 @@ function getData($params) {
 }
 
 Route::get('/test-formula', function(){
-    $select = DB::table('formula_table')
+    /*$select = DB::table('formula_table')
             ->where('id', '=', 3)
+            ->get();*/
+    $result = \App\Models\InputRealisasi::query()
+            ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+            ->with('periode')
+            ->with('triwulan')
+            ->with('inputRealisasiPic')
+            ->with('indikatorKompositor')
+            ->where('indikator_kompositor.id','=','2')
             ->get();
+    return $result;
     
 });
 

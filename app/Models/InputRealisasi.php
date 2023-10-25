@@ -21,4 +21,20 @@ class InputRealisasi extends Model
         'periode_id',
         'laporan_capaian_id'
     ];
+    
+    public function periode(){
+        return $this->belongsTo(Periode::class);
+    }
+    
+    public function triwulan(){
+        return $this->belongsTo(Triwulan::class);
+    }
+    
+    public function inputRealisasiPic(){
+        return $this->hasMany(InputRealisasiPic::class);
+    }
+    
+    public function indikatorKompositor(){
+        return $this->belongsTo(IndikatorKompositor::class);
+    }
 }

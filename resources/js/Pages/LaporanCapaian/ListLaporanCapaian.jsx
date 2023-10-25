@@ -132,7 +132,7 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-400">
-                                          {target}
+                                          {target ? ((parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
@@ -142,7 +142,7 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
-                                          {realisasi}
+                                          {realisasi ? ((parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
                                         </Typography>
                                       </td>
                                       <td className="p-4">

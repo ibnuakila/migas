@@ -103,8 +103,8 @@ export default function ListInputRealisasi({auth}){
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-green-600">
-                                            {realisasi ? (realisasi.toLocaleString('pl-PL',{ style: 'percent' })):(0)}
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-600 text-right">
+                                            {realisasi ? ((parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      

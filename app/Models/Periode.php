@@ -28,7 +28,7 @@ class Periode extends Model
         return $this->belongsTo(EvaluasiAkip::class);
     }
     
-    /*public function indikatorPeriodes() {
-        return $this->hasMany(IndikatorPeriode::class);
-    }*/
+    public function inputRealisasi() {
+        return $this->hasMany(InputRealisasi::class);
+    }
 }
