@@ -21,12 +21,16 @@ import MSelect from '../../Components/MSelect';
 
 export default function EditIndikatorPeriode() {
     const {auth, periodes, pics, indikators, indikator} = usePage().props;
+    const defPic = indikator.data[0].indikator_periode_pic.map(pic => {
+        return {value:pic.pic_id, label:pic.nama_pic};
+    })
+    console.log(defPic);
     const {data, setData, put, errors, delete: destroy, processing} = useForm({
         id: indikator.data[0].id || '',
         periode_id: indikator.data[0].periode_id || '',
         indikator_id: indikator.data[0].indikator_id || '',
         target: indikator.data[0].target || '',
-        //pics: indikator.data.pic_id || '',
+        pics: defPic,
         //level_id: ''
     });
     console.log(usePage().props);
@@ -65,10 +69,7 @@ export default function EditIndikatorPeriode() {
             destroy(route('indikator-periode.destroy', indikator.data.id));
         }
     }
-    const defPic = indikator.data[0].indikator_periode_pic.map(pic => {
-        return {value:pic.pic_id, label:pic.nama_pic};
-    })
-    console.log(defPic);
+    
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })

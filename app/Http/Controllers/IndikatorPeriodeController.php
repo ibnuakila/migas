@@ -76,6 +76,9 @@ class IndikatorPeriodeController extends Controller //implements ICrud
         //$req = $request->input();
         $pics = $request->input('pics');
         if(is_array($pics)){
+            DB::table('indikator_periode_pic')
+                    ->where('indikator_periode_id', '=', $indikatorperiode->id)
+                    ->delete();
             foreach($pics as $pic){
                 $data = ['indikator_periode_id' => $indikatorperiode->id,
                     'pic_id' => $pic['value'],

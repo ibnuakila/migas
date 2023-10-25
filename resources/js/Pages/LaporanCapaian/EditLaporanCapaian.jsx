@@ -14,6 +14,7 @@ import {
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import MSelect from '../../Components/MSelect';
  
 export default function EditLaporanCapaian() {
     const {auth, laporan_capaian, indikators, indikator_periode, periodes, triwulans, pics} = usePage().props;
@@ -28,7 +29,7 @@ export default function EditLaporanCapaian() {
         sumber_data: laporan_capaian.data.sumber_data || ''
     });
     console.log(usePage().props);
-   
+    const defPics = usePage().props.def_pics;
     const [optionPeriode, setOptionPeriode] = useState('');
     const [optionIndikator, setOptionIndikator] = useState('');
     const [optionPic, setOptionPic] = useState('');
@@ -53,7 +54,9 @@ export default function EditLaporanCapaian() {
         setOptionPic({selectValue:e});
         setData('pic_id', e);
     }
-    
+    const optPic = pics.map(pic => {
+        return {value:pic.id, label:pic.nama_pic};
+    })
     return (
     <AdminLayout 
                 auth = {auth}
@@ -71,7 +74,7 @@ export default function EditLaporanCapaian() {
                                         <CardBody>
                                 
                                             <div className="flex flex-col gap-4">
-                                                <Select label="Select Periode" onChange={handlePeriodeChange}
+                                                <Select label="Select Periode" id="periode" onChange={handlePeriodeChange}
                                                     value={laporan_capaian.data.periode_id}
                                                     error={errors.periode_id}>
                                                     {periodes.map( ({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option> )}                                                                                                           
@@ -79,7 +82,7 @@ export default function EditLaporanCapaian() {
                                                     {errors.periode_id && 
                                                         <div className="text-red-400 mt-1">{errors.periode_id}</div>
                                                     }
-                                                <Select label="Select Indikator" onChange={handleIndikatorChange}
+                                                <Select label="Select Indikator" id="indikator" onChange={handleIndikatorChange}
                                                     value={indikator_periode.indikator_id}
                                                     error={errors.indikator_id}>
                                                     {indikators.map( ({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option> )}                                                     
@@ -87,30 +90,34 @@ export default function EditLaporanCapaian() {
                                                     {errors.indikator_id && 
                                                         <div className="text-red-400 mt-1">{errors.indikator_id}</div>
                                                     }
-                                                <Select label="Triwulan" onChange=""
+                                                <Select label="Triwulan" id="triwulan" onChange=""
                                                     value={laporan_capaian.data.triwulan_id}
                                                     error={errors.triwulan_id}>
                                                     {triwulans.map( ({id, triwulan}) => 
                                                     <Option value={id.toString()} key={id}>{triwulan}</Option> )}                                                     
                                                 </Select>
-                                                <Select label="Select PIC" onChange={handlePicChange}
-                                                    value={indikator_periode.pic_id}>
-                                                    {pics.map( ({id, nama_pic}) => <Option value={id.toString()} key={id}>{nama_pic}</Option> )}                                                     
-                                                </Select>
+                                                <MSelect options={optPic} defaultValue={defPic} 
+                                                    onChange={(item) => {
+                                                        setSelectedValue(item); 
+                                                        setData('pics', item)
+                                                        console.log(selectedValue)
+                                                    }}
+                                                 />
                                                     {errors.pic_id && 
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                     }
-                                                <Input label="Target" variant="outlined" id="Periode" disabled
+                                                <Input label="Target" variant="outlined" id="target" disabled
                                                        defaultValue={indikator_periode.target}                                                      
                                                        />
-                                                <Input label="Realisasi" variant="outlined" id="Periode" 
+                                                <Input label="Realisasi" variant="outlined" id="realisasi"
+                                                        defaultValue={laporan_capaian.data.realisasi}
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
                                                        
                                                        error={errors.Periode}/>  
                                                <div className="relative flex w-full">
-                                                    <Input label="Persentasi Kinerja" variant="outlined" id="Periode" 
+                                                    <Input label="Persentasi Kinerja" variant="outlined" id="persentasi" 
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }}                                                       
@@ -135,19 +142,22 @@ export default function EditLaporanCapaian() {
                                                       <Option value="Active">Maximize</Option>                                                      
                                                 </Select>
                                                 
-                                                <Input label="Sumber Data" variant="outlined" id="Periode" 
+                                                <Input label="Sumber Data" variant="outlined" id="periode" 
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
                                                        
                                                        error={errors.Periode}/>
-                                                <Input type="File" label="File" variant="outlined" id="Periode"
+                                                <Input type="File" label="File" variant="outlined" id="file"
                                                        defaultValue=""                                                      
                                                        />
                                             </div>                                
                                 
                                         </CardBody>
-                                        <CardFooter className="space-x-2">                                            
+                                        <CardFooter className="space-x-2">  
+                                        <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
+                                                Delete
+                                            </Button>
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                                 Save
                                             </Button>

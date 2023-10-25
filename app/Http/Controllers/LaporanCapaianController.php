@@ -31,7 +31,7 @@ class LaporanCapaianController extends Controller //implements ICrud
 
     public function edit(LaporanCapaian $laporancapaian) {
         return Inertia::render('LaporanCapaian/EditLaporanCapaian', [        
-            'laporan_capaian' => new LaporanCapaianResource($laporancapaian),
+            'laporan_capaian' => new LaporanCapaianResource($laporancapaian->with($relations)),
             'indikator_periode' => \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first(),
             'indikators' => \App\Models\Indikator::all(),
             'periodes' => \App\Models\Periode::all(),
