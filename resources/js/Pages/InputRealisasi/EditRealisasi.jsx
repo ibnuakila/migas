@@ -24,7 +24,7 @@ export default function EditRealisasi(props) {
     const triwulans = props.triwulans;
     const periodes = props.periodes;
     const pics = props.pics;
-    const defPics = props.def_pic;
+    const defPics = props.def_pics;
     const {data, setData, put, errors, processing} = useForm({
         id: input_realisasi.data.id || '',
         indikator_kompositor_id: input_realisasi.data.indikator_kompositor_id || '',
@@ -33,7 +33,8 @@ export default function EditRealisasi(props) {
         satuan: indikator_kompositor.satuan || '',
         triwulan_id: input_realisasi.data.triwulan_id || '',
         periode_id: input_realisasi.data.periode_id || '',
-        laporan_capaian_id: input_realisasi.data.laporan_capaian_id || ''
+        laporan_capaian_id: input_realisasi.data.laporan_capaian_id || '',
+        pics: defPics
     });
     console.log(props);
     const [optionTriwulan, setOptionTriwulan] = useState('');
@@ -41,6 +42,9 @@ export default function EditRealisasi(props) {
     const [optionPeriode, setOptionPeriode] = useState('');
     const [selectedValue, setSelectedValue] = useState([]);
     const handleSave = (e) => {
+        let realisasi = document.getElementById('realisasi');
+            //alert(realisasi.value);
+            setData('realisasi', realisasi.value)
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.data.id));        
         //history.back();
@@ -66,6 +70,11 @@ export default function EditRealisasi(props) {
         console.log(optionPeriode);
     }
     
+    function handleChangeRealisasi(e){
+        setData('realisasi', e.target.value);
+    }
+    
+    
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
             
@@ -79,28 +88,26 @@ export default function EditRealisasi(props) {
             
             axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.data.id})
                     .then(res => {
-                        alert(res.data.result);
+                        //alert(res.data.result);
                         let realisasi = document.getElementById('realisasi');
                         realisasi.value = res.data.realisasi;
                         //realisasi.setAttribute('value', res.data.result);
-                        setData('realisasi', res.data.result);
+                        //setData('realisasi', res.data.result);
             })
             
         }
     }
-    /*const defPic = (defPics) => {
-        if(defPics.length > 0){
-            defPics.map(pic => {
-                return {value:pic.pic_id, label:pic.nama_pic};
-            })
-        }else{
-            return {value:0, label:'-'}
-        }
-    }*/
+    /*const defPic = 
+            defPics[].map(pic => {
+                return {value:pic.value, label:pic.label};
+            })*/
+        
     
+    console.log(defPics);
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
+    console.log(optPic);
     return (
             <AdminLayout 
                 auth = {auth}
@@ -144,9 +151,7 @@ export default function EditRealisasi(props) {
                                             <div className="relative flex w-full">
                                                 <Input label="Realisasi" variant="outlined" id="realisasi"                                                         
                                                         defaultValue={input_realisasi.data.realisasi}
-                                                        onChange={e => {
-                                                                    setData('realisasi', e.target.value)
-                                                                }}
+                                                        onChange={handleChangeRealisasi}
                                                         error={errors.realisasi}
                                                         className="pr-20"
                                                         containerProps={{
@@ -163,7 +168,7 @@ export default function EditRealisasi(props) {
                                             </div>
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                 <MSelect options={optPic} defaultValue={defPics} 
+                                                 <MSelect id="pic" options={optPic} defaultValue={defPics} 
                                                     onChange={(item) => {
                                                         setSelectedValue(item); 
                                                         setData('pics', item)
