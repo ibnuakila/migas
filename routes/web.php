@@ -535,7 +535,7 @@ Route::get('/test-formula', function(){
     /*$select = DB::table('formula_table')
             ->where('id', '=', 3)
             ->get();*/
-    $result = \App\Models\InputRealisasi::query()
+    $result1 = \App\Models\InputRealisasi::query()
             ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
             ->with('periode')
             ->with('triwulan')
@@ -543,7 +543,21 @@ Route::get('/test-formula', function(){
             ->with('indikatorKompositor')
             ->where('indikator_kompositor.id','=','2')
             ->get();
-    return $result;
+    $result2 = Indikator::query()
+            ->with('level')
+            ->with('satuan')
+            ->with('indikatorKompositor')
+            ->with('indikatorPeriode')
+            ->get();
+    $result3 = App\Models\LaporanCapaian::query()
+            ->with('triwulan')
+            ->with('periode')
+            ->with('laporanCapaianPic')
+            ->with('indikatorPeriode')
+            ->get();
+            
+    $all_result = ['inputRealisasi' => $result1, 'laporanCapaian' => $result3];
+    return $all_result;
     
 });
 

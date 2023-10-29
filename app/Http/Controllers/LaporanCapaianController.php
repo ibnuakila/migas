@@ -76,8 +76,8 @@ class LaporanCapaianController extends Controller //implements ICrud
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
             'filter' => Request::all('search', 'trashed'),
             'laporan_capaians' => 
-                    new \Illuminate\Database\Eloquent\Collection($select)
-                    /*LaporanCapaian::query()
+                    new \Illuminate\Database\Eloquent\Collection(
+                    LaporanCapaian::query()
                     ->when(Request::input('search'), function ($query, $search) {
                                         $query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
                                         ->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
@@ -93,8 +93,8 @@ class LaporanCapaianController extends Controller //implements ICrud
                                         ->whereColumn('id', 'laporan_capaian.triwulan_id')])
                     //->with('periode')
                     ->paginate(10)   
-                    ->withQueryString()*/
-            
+                    ->withQueryString()
+                    )
                 ]);
     }
 

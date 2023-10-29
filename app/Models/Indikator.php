@@ -24,12 +24,22 @@ class Indikator extends Model
     
     public function satuan()
     {
-        return $this->hasMany(Satuan::class);
+        return $this->belongsTo(Satuan::class);
     }
     
     public function indikatorPeriode()
     {
-        return $this->belongsTo(IndikatorPeriode::class);
+        return $this->hasMany(IndikatorPeriode::class);
+    }
+    
+    public function level()
+    {
+        return $this->belongsTo(Level::class);        
+    }
+    
+    public function indikatorKompositor()
+    {
+        return $this->hasMany(IndikatorKompositor::class);
     }
     
 }

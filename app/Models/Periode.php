@@ -21,7 +21,7 @@ class Periode extends Model
     }
     
     public function laporanCapaian() {
-        return $this->belongsTo(LaporanCapaian::class);
+        return $this->hasMany(LaporanCapaian::class);
     }
     
     public function evaluasiAkip() {
