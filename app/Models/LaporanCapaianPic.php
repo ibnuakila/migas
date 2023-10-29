@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Level extends Model
+class LaporanCapaianPic extends Model
 {
     use HasFactory;
-    protected $table = 'level';
+    protected $table = 'laporan_capaian_pic';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'nama_level'
+        'laporan_capaian_id',
+        'pic_id',
+        'nama_pic'
     ];
-    
-    public function indikator(){
-        return $this->hasMany(Indikator::class);
-    }
 }

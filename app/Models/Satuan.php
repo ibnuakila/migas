@@ -18,6 +18,6 @@ class Satuan extends Model
     
     public function indikator()
     {
-        return $this->belongsTo(Indikator::class);
+        return $this->hasMany(Indikator::class);
     }
 }

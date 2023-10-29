@@ -21,7 +21,7 @@ class IndikatorPeriode extends Model
     
     public function periode()
     {
-        return $this->hasOne(Periode::class);
+        return $this->belongsTo(Periode::class);
     }
     
     public function indikator()
@@ -40,7 +40,7 @@ class IndikatorPeriode extends Model
     
     public function laporanCapaian()
     {
-        return $this->belongsTo(LaporanCapaian::class);
+        return $this->hasMany(LaporanCapaian::class);
     }
     
     /*public function pic(){

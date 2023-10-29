@@ -22,18 +22,22 @@ class LaporanCapaian extends Model
     ];
     
     public function indikatorPeriode(){
-        $this->hasOne(IndikatorPeriode::class);
+        return $this->belongsTo(IndikatorPeriode::class);
     }
     
     public function periode() {
-        $this->hasOne(Periode::class);
+        return $this->belongsTo(Periode::class);
     }
     
     public function triwulan() {
-        $this->hasOne(Triwulan::class);
+        return $this->belongsTo(Triwulan::class);
     }
     
     public function kategoriKinerja() {
-        $this->hasOne(KategoriKinerja::class);
+        return $this->hasOne(KategoriKinerja::class);
+    }
+    
+    public function laporanCapaianPic() {
+        return $this->hasMany(LaporanCapaianPic::class);
     }
 }

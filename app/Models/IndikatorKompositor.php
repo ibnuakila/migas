@@ -22,4 +22,8 @@ class IndikatorKompositor extends Model
     public function inputRealisasi(){
         return $this->hasOne(InputRealisasi::class);
     }
+    
+    public function indikator() {
+        return $this->belongsTo(Indikator::class);
+    }
 }
