@@ -64,8 +64,7 @@ export default function Header(auth) {
                             </a>
                         </Typography>
                     </MenuHandler>
-                    <MenuList>
-                        <MenuItem><Link href={route('indikator-periode.index')}>Setup Indikator Periode</Link></MenuItem>
+                    <MenuList>               
                         <MenuItem><Link href={route('laporan-capaian.index')}>Laporan Capaian Kinerja</Link></MenuItem>                        
                     </MenuList>
                 </Menu>

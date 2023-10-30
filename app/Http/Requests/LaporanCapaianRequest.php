@@ -13,7 +13,7 @@ class LaporanCapaianRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class LaporanCapaianRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'triwulan_id' => ['required', 'integer'],
+            'realisasi' => ['required', 'decimal:2'],
+            'kinerja' => ['required'],
+            'periode_id' => ['required', 'integer'],
+            //'kategori_kinerja_id', [''],
+            'indikator_id', ['required', 'integer'],
+            'terget', ['required', 'decimal:2']
         ];
     }
 }
