@@ -121,7 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
     Route::put('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
-    Route::get('/laporan-capaian/importtarget', [LaporanCapaianController::class, 'importTarget'])->name('laporan-capaian.importtarget');
+    Route::get('/laporan-capaian/importindikator', [LaporanCapaianController::class, 'importIndikator'])->name('laporan-capaian.importindikator');
 });
 
 Route::middleware('auth')->group(function () {
@@ -549,12 +549,52 @@ Route::get('/test-formula', function(){
             ->with('indikatorKompositor')
             ->with('indikatorPeriode')
             ->get();
-    $result3 = App\Models\LaporanCapaian::query()
+    $select = DB::table('laporan_capaian')                
+            ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
+            ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
+            ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')            
+            ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
+            ->join('level','indikator.level_id','=','level.id')
+            ->join('satuan','indikator.satuan_id', '=', 'satuan.id')
+                ->when(Request::input('search'), function ($query, $search) {
+                                        //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+                                        //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                                    })
+            ->select('laporan_capaian.id',
+                    'laporan_capaian.realisasi',
+                    'laporan_capaian.kinerja',
+                    'laporan_capaian.sumber_data',
+                    'indikator_periode.target',
+                    'indikator.nama_indikator',
+                    'indikator.satuan_id',
+                    'satuan.nama_satuan',
+                    'indikator.level_id',
+                    'level.nama_level',
+                    'indikator.ordering',
+                    'indikator.numbering',
+                    'periode.periode',
+                    //'pic.nama_pic',
+                    'triwulan.triwulan')
+            ->paginate(10);
+    //$result3 = new  \Illuminate\Database\Eloquent\Collection(App\Models\LaporanCapaian::query($select));
+            /*->when(Request::input('search'), function ($query, $search) {
+                        //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+                        //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                    })     
+            ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
+            ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
+            ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+            ->join('level', 'indikator.level_id', '=', 'level.id')            
             ->with('triwulan')
             ->with('periode')
             ->with('laporanCapaianPic')
             ->with('indikatorPeriode')
-            ->get();
+                       
+            ->paginate(10)   
+            ->withQueryString();*/
+    $result3 = new \Illuminate\Database\Eloquent\Collection($select->appends(['pics'=> \App\Models\LaporanCapaian::with('laporanCapaianPic')]));
             
     $all_result = ['inputRealisasi' => $result1, 'laporanCapaian' => $result3];
     return $all_result;
