@@ -32,8 +32,11 @@ export default function EditLaporanCapaian() {
     const defPics = usePage().props.laporan_capaian.data[0].laporan_capaian_pic;
     const [optionPeriode, setOptionPeriode] = useState('');
     const [optionIndikator, setOptionIndikator] = useState('');
-    const [optionPic, setOptionPic] = useState('');
-    //const [optionLevel, setOptionLevel] = useState('');
+    const [optionPic, setOptionPic] = useState([]);
+    const [selectedValue, setSelectedValue] = useState([]);
+    const defPic = defPics.map( (pic) => {
+        return {value:pic.pic_id, label:pic.nama_pic};
+    })
     
     const handleSave = (e) => {
         e.preventDefault();
@@ -74,7 +77,7 @@ export default function EditLaporanCapaian() {
                                         <CardBody>                                
                                             <div className="flex flex-col gap-4">
                                                 <Select label="Select Periode" id="periode" onChange={handlePeriodeChange}
-                                                    value={laporan_capaian.data.periode_id}
+                                                    value={laporan_capaian.data[0].periode_id}
                                                     error={errors.periode_id}>
                                                     {periodes.map( ({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option> )}                                                                                                           
                                                 </Select>
@@ -93,7 +96,7 @@ export default function EditLaporanCapaian() {
                                                     {triwulans.map( ({id, triwulan}) => 
                                                     <Option value={id.toString()} key={id}>{triwulan}</Option> )}                                                     
                                                 </Select>
-                                                <MSelect options={optPic} defaultValue={defPics} 
+                                                <MSelect options={optPic} defaultValue={defPic} 
                                                     onChange={(item) => {
                                                         setSelectedValue(item); 
                                                         setData('pics', item)
@@ -103,18 +106,19 @@ export default function EditLaporanCapaian() {
                                                     {errors.pic_id && 
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                     }
-                                                <Input label="Target" variant="outlined" id="target" disabled
-                                                       defaultValue={laporan_capaian.data.target}                                                      
+                                                <Input label="Target" variant="outlined" id="target" 
+                                                       defaultValue={laporan_capaian.data[0].target}                                                      
                                                        />
                                                 <Input label="Realisasi" variant="outlined" id="realisasi"
-                                                        defaultValue={laporan_capaian.data.realisasi}
+                                                        defaultValue={laporan_capaian.data[0].realisasi}
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
                                                        
                                                        error={errors.Periode}/>  
                                                <div className="relative flex w-full">
-                                                    <Input label="Persentasi Kinerja" variant="outlined" id="persentasi" 
+                                                    <Input label="Persentasi Kinerja" variant="outlined" id="persentasi"
+                                                        defaultValue={laporan_capaian.data[0].realisasi}
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }}                                                       

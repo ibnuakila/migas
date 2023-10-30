@@ -19,7 +19,9 @@ class LaporanCapaian extends Model
         'kinerja',
         'periode_id',
         'kategori_kinerja_id',
-        'sumber_data'
+        'sumber_data',
+        'indikator_id',
+        'target'
     ];
     
     public function indikator(){
