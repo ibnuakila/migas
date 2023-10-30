@@ -29,7 +29,7 @@ export default function EditLaporanCapaian() {
         sumber_data: laporan_capaian.data.sumber_data || ''
     });
     console.log(usePage().props);
-    const defPics = usePage().props.def_pics;
+    const defPics = usePage().props.laporan_capaian.data[0].laporan_capaian_pic;
     const [optionPeriode, setOptionPeriode] = useState('');
     const [optionIndikator, setOptionIndikator] = useState('');
     const [optionPic, setOptionPic] = useState('');
@@ -71,8 +71,7 @@ export default function EditLaporanCapaian() {
                                     </CardHeader>                                
                                 
                                     <form onSubmit={handleSave}>
-                                        <CardBody>
-                                
+                                        <CardBody>                                
                                             <div className="flex flex-col gap-4">
                                                 <Select label="Select Periode" id="periode" onChange={handlePeriodeChange}
                                                     value={laporan_capaian.data.periode_id}
@@ -82,21 +81,19 @@ export default function EditLaporanCapaian() {
                                                     {errors.periode_id && 
                                                         <div className="text-red-400 mt-1">{errors.periode_id}</div>
                                                     }
-                                                <Select label="Select Indikator" id="indikator" onChange={handleIndikatorChange}
-                                                    value={indikator_periode.indikator_id}
-                                                    error={errors.indikator_id}>
-                                                    {indikators.map( ({id, nama_indikator}) => <Option value={id.toString()} key={id}>{nama_indikator}</Option> )}                                                     
-                                                </Select>
+                                                <Input label="Indikator" variant="outlined" id="indikator" onChange={handleIndikatorChange}
+                                                    value={laporan_capaian.data[0].indikator.nama_indikator}
+                                                    />                                                    
                                                     {errors.indikator_id && 
                                                         <div className="text-red-400 mt-1">{errors.indikator_id}</div>
                                                     }
                                                 <Select label="Triwulan" id="triwulan" onChange=""
-                                                    value={laporan_capaian.data.triwulan_id}
+                                                    value={laporan_capaian.data[0].triwulan_id}
                                                     error={errors.triwulan_id}>
                                                     {triwulans.map( ({id, triwulan}) => 
                                                     <Option value={id.toString()} key={id}>{triwulan}</Option> )}                                                     
                                                 </Select>
-                                                <MSelect options={optPic} defaultValue={defPic} 
+                                                <MSelect options={optPic} defaultValue={defPics} 
                                                     onChange={(item) => {
                                                         setSelectedValue(item); 
                                                         setData('pics', item)
@@ -107,7 +104,7 @@ export default function EditLaporanCapaian() {
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                     }
                                                 <Input label="Target" variant="outlined" id="target" disabled
-                                                       defaultValue={indikator_periode.target}                                                      
+                                                       defaultValue={laporan_capaian.data.target}                                                      
                                                        />
                                                 <Input label="Realisasi" variant="outlined" id="realisasi"
                                                         defaultValue={laporan_capaian.data.realisasi}

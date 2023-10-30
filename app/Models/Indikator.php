@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Indikator extends Model
 {
@@ -40,6 +41,11 @@ class Indikator extends Model
     public function indikatorKompositor()
     {
         return $this->hasMany(IndikatorKompositor::class);
+    }
+    
+    public function laporanCapaians()
+    {
+        return $this->hasMany(LaporanCapaian::class);
     }
     
 }

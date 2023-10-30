@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class LaporanCapaian extends Model
 {
@@ -21,8 +22,8 @@ class LaporanCapaian extends Model
         'sumber_data'
     ];
     
-    public function indikatorPeriode(){
-        return $this->belongsTo(IndikatorPeriode::class);
+    public function indikator(){
+        return $this->belongsTo(Indikator::class);
     }
     
     public function periode() {
@@ -40,4 +41,6 @@ class LaporanCapaian extends Model
     public function laporanCapaianPic() {
         return $this->hasMany(LaporanCapaianPic::class);
     }
+    
+    
 }

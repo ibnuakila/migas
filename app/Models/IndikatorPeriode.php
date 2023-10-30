@@ -26,7 +26,7 @@ class IndikatorPeriode extends Model
     
     public function indikator()
     {
-        return $this->hasOne(Indikator::class);
+        return $this->belongsTo(Indikator::class);
     }
     
     public function level()
