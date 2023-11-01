@@ -213,11 +213,10 @@ class InputRealisasiController extends Controller //implements ICrud
                 $res_realisasi = InputRealisasi::query()
                     ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
                     ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'like', 'Indeks Ketersediaan BBM')
+                    //->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indikator', 'Like', 'Indeks Ketersediaan BBM')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor',
-                            'indeks.nama_indeks')->get();
+                            'indikator_kompositor.nama_kompositor')->get();
                 //$data['result'] = $res_realisasi;
                 $realisasi_produksi_bbm = 0; $kuota_impor_bbm = 0; $kuota_ekspor_bbm = 0;
                 $realisasi_impor_bbm = 0; $realisasi_ekspor_bbm = 0;
