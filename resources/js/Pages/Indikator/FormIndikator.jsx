@@ -14,10 +14,11 @@ Button,
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import FormKompositor from './FormKompositor';
+//import FormKompositor from './FormKompositor';
+import MSelect from '../../Components/MSelect';
 
 export default function FormIndikator() {
-    const {auth, satuans, levels, parents, indikator, indikator_kompositors, message} = usePage().props;
+    const {auth, satuans, levels, pics, parents, indikator, indikator_kompositors, message} = usePage().props;
     const {data, setData, post, errors, processing} = useForm({
         id: '',
         nama_indikator: '',
@@ -25,16 +26,18 @@ export default function FormIndikator() {
         level_id: '',
         parent_id: '0',
         ordering: '',
-        numbering: ''
+        numbering: '',
+        pics: ''
     });
     const [optionSatuan, setOptionSatuan] = useState('');
     const [optionLevel, setOptionLevel] = useState('');
     const [optionParent, setOptionParent] = useState('');
     const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState([]);
     const TABLE_HEAD = ["ID", "Nama Kompositor", "Indeks", "Satuan", "Sifat Kalkulasi", "Jenis Kompositor", "Action"];
     console.log(usePage().props);
     const msg = 'No Data Found!';
-
+    
     const handleSave = (e) => {
         e.preventDefault();
         post(route('indikator.store'));
@@ -42,9 +45,9 @@ export default function FormIndikator() {
             only:['indikator','message'],
             method: 'post',
         });*/
-        if(indikator !== ''){
+        /*if(indikator !== ''){
             alert(indikator.id + ', is saved');
-        }
+        }*/
         //var btn = document.getElementById('save-indikator');
         //btn.setAttribute('color','blue-gray');
         //btn.value('Update');
@@ -67,6 +70,9 @@ export default function FormIndikator() {
         setData('parent_id', e);
         console.log(optionParent);
     }
+    const optPic = pics.map(pic => {
+        return {value:pic.id, label:pic.nama_pic};
+    })
     
     return (
             <AdminLayout 
@@ -140,6 +146,18 @@ export default function FormIndikator() {
                                                            error={errors.numbering}/>    
                                                     {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
                                                 </div>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <MSelect options={optPic}  
+                                                        onChange={(item) => {
+                                                            setSelectedValue(item); 
+                                                            setData('pics', item)
+                                                            console.log(selectedValue)
+                                                        }}
+                                                     />
+                                                    {errors.pics &&
+                                                            <div className="text-red-400 mt-1">{errors.pics}</div>
+                                                    }
+                                                </div>
                                                 <div className="flex">
                                                     <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)} id="save-indikator">
                                                         Save
@@ -155,7 +173,7 @@ export default function FormIndikator() {
                                     </CardFooter>
                             
                                     </Card>
-                                    <FormKompositor open={open} action={() => setOpen(!open)} errors={errors}/>
+                                    
                                 </div>
                                 )}
                 >

@@ -107,6 +107,7 @@ export default function Header(auth) {
                     <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
                     <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
                     <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
+                    <MenuItem><Link href={route('indeks.index')}>Master Indeks</Link></MenuItem>
                     <MenuItem><Link href={route('kategori-kinerja.index')}>Master Kategori Kinerja</Link></MenuItem>
                     <MenuItem><Link href={route('instrument-kinerja.index')}>Kategori/Komponen Instrument</Link></MenuItem>
                     </MenuList>

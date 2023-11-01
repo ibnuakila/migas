@@ -38,7 +38,7 @@ class Indikator extends Model
         return $this->belongsTo(Level::class);        
     }
     
-    public function indikatorKompositor()
+    public function indikatorKompositors()
     {
         return $this->hasMany(IndikatorKompositor::class);
     }
@@ -46,6 +46,11 @@ class Indikator extends Model
     public function laporanCapaians()
     {
         return $this->hasMany(LaporanCapaian::class);
+    }
+    
+    public function indikatorPics()
+    {
+        return $this->hasMany(IndikatorPic::class);
     }
     
 }

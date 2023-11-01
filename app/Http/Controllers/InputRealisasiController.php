@@ -73,16 +73,16 @@ class InputRealisasiController extends Controller //implements ICrud
     }
     
     public function indexIndikator(\App\Models\LaporanCapaian $laporancapaian) {
-        $indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first();
-        $indikator = \App\Models\Indikator::where('id',$indikator_periode->indikator_id)->first();
+        //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first();
+        $indikator = \App\Models\Indikator::where('id',$laporancapaian->indikator_id)->first();
         return Inertia::render('InputRealisasi/ListInputRealisasi',[
             'laporan_capaian' => $laporancapaian,
             'indikator' => $indikator,                
             'input_realisasis' => InputRealisasi::query()
                 ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
-                ->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
-                ->join('laporan_capaian','indikator_periode.id', '=', 'laporan_capaian.indikator_periode_id')
+                //->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
                 ->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
                 ->where('laporan_capaian.id', $laporancapaian->id)
@@ -135,8 +135,8 @@ class InputRealisasiController extends Controller //implements ICrud
         $periode = DB::table('periode')
                 ->where('status', '=', 'Active')
                 ->get();
-        $indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporan_capaian->indikator_periode_id)->first();
-        $indikator = \App\Models\Indikator::where('id', $indikator_periode->indikator_id)->first();
+        //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporan_capaian->indikator_periode_id)->first();
+        $indikator = \App\Models\Indikator::where('id', $laporan_capaian->indikator_id)->first();
         $data['message'] = 'Undefined message';
         if ($periode->count() == 1) {
             $result = DB::table('indikator_kompositor')
@@ -177,6 +177,9 @@ class InputRealisasiController extends Controller //implements ICrud
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
                 
+                foreach($res_realisasi as $realisasi){
+                    
+                }
                 break;
             case 'Indeks Ketersediaan Hulu Gas':
                 $res_realisasi = InputRealisasi::query()
@@ -187,6 +190,10 @@ class InputRealisasiController extends Controller //implements ICrud
                     ->select('input_realisasi.*', 
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
                 break;
             case 'Indeks Ketersediaan Hulu Migas':
                 $res_realisasi = InputRealisasi::query()
@@ -197,29 +204,33 @@ class InputRealisasiController extends Controller //implements ICrud
                     ->select('input_realisasi.*', 
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
                 break;            
             case 'Indeks Ketersediaan BBM':
                 $res_realisasi = InputRealisasi::query()
                     ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
                     ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
                     ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan BBM')
+                    ->where('nama_indeks', 'like', 'Indeks Ketersediaan BBM')
                     ->select('input_realisasi.*', 
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
                 //$data['result'] = $res_realisasi;
-                $realisasi_produksi_bbm = ''; $kuota_impor_bbm = ''; $kuota_ekspor_bbm = '';
-                $realisasi_impor_bbm = ''; $realisasi_ekspor_bbm = '';
+                $realisasi_produksi_bbm = 0; $kuota_impor_bbm = 0; $kuota_ekspor_bbm = 0;
+                $realisasi_impor_bbm = 0; $realisasi_ekspor_bbm = 0;
                 foreach($res_realisasi as $realisasi){
-                    if($realisasi->nama_kompositor == 'Realisasi Produksi BBM'){                        
+                    if(trim($realisasi->nama_kompositor) == 'Realisasi Produksi BBM'){                        
                         $realisasi_produksi_bbm = $realisasi->realisasi;
-                    }elseif($realisasi->nama_kompositor == 'Kuota Impor BBM'){
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Impor BBM'){
                         $kuota_impor_bbm = $realisasi->realisasi;
-                    }elseif($realisasi->nama_kompositor == 'Kuota Ekspor BBM'){
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Ekspor BBM'){
                         $kuota_ekspor_bbm = $realisasi->realisasi;
-                    }elseif($realisasi->nama_kompositor == 'Realisasi Impor BBM'){
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Impor BBM'){
                         $realisasi_impor_bbm = $realisasi->realisasi;
-                    }elseif($realisasi->nama_kompositor == 'Realisasi Ekspor BBM'){
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Ekspor BBM'){
                         $realisasi_ekspor_bbm =$realisasi->realisasi;
                     }                    
                 }
@@ -234,6 +245,10 @@ class InputRealisasiController extends Controller //implements ICrud
                     ->select('input_realisasi.*', 
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
                 break;
             case 'Indeks Ketersediaan LNG':
                 $res_realisasi = InputRealisasi::query()
@@ -244,6 +259,20 @@ class InputRealisasiController extends Controller //implements ICrud
                     ->select('input_realisasi.*', 
                             'indikator_kompositor.nama_kompositor',
                             'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
+                break;
+            case 'Indeks Fasilitas Niaga Migas':
+                break;
+            case 'Indeks Fasilitas Pengolahan Migas':
+                break;
+            case 'Fasilitasi Peningkatan Infrastruktur Kilang Minyak Bumi':
+                break;
+            case 'Indeks Fasilitas Penyimpanan Migas':
+                break;
+            case 'Indeks Aksesibilitas Migas':
                 break;
         }
         $data['realisasi'] = round($realisasi, 2);

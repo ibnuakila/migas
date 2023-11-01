@@ -20,14 +20,18 @@ class IndikatorKompositorController extends Controller //implements ICrud
         ]);
     }
 
-    public function destroy(IndikatorKompositor $indikator_kompositor) {
+    public function destroy(IndikatorKompositor $indikatorkompositor) {
         $indikator_kompositor->delete();
         return Redirect::route('indikator-kompositor.index');
     }
 
-    public function edit(IndikatorKompositor $indikator_kompositor) {
+    public function edit(IndikatorKompositor $indikatorkompositor) {
+        //return new \App\Http\Resources\IndikatorKompositorResource($indikatorkompositor);
         return Inertia::render('IndikatorKompositor/EditKompositor',[
-             'indikator_kompositor' => $indikator_kompositor                
+            'indikator_kompositor' => new \App\Http\Resources\IndikatorKompositorResource($indikatorkompositor),
+            'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikatorkompositor->indikator_id)->get()),
+            'indeks' => \App\Models\Indeks::all(),
+            'jenis_kompositor' => \App\Models\JenisKompositor::all()
          ]);
     }
 
@@ -60,6 +64,6 @@ class IndikatorKompositorController extends Controller //implements ICrud
 
     public function update(IndikatorKompositor $indikator, IndikatorKompositorRequest $request) {
         $indikator->update($request->validated());
-        return Redirect::route('indikator-kompositor.index');
+        return Redirect::route('indikator-kompositor.index-indikator', $indikator);
     }
 }

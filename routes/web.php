@@ -20,6 +20,7 @@ use App\Http\Controllers\InstrumentKinerjaController;
 use App\Http\Controllers\IndikatorKompositorController;
 use App\Http\Controllers\InputRealisasiController;
 use App\Http\Controllers\HitungKompositorController;
+use App\Http\Controllers\IndeksController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -72,8 +73,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/indikator/create', [IndikatorController::class, 'create'])->name('indikator.create');
     Route::post('/indikator/store', [IndikatorController::class, 'store'])->name('indikator.store');
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
-    Route::put('/indikator/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
-    Route::delete('/indikator/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
+    Route::put('/indikator/update/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
+    Route::delete('/indikator/delete/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -153,6 +154,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/level/store', [LevelController::class, 'store'])->name('level.store');
     Route::put('/level/{level}', [LevelController::class, 'update'])->name('level.update');
     Route::delete('/level/{level}', [LevelController::class, 'destroy'])->name('level.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/indeks', [IndeksController::class, 'index'])->name('indeks.index');
+    Route::get('/indeks/edit/{indeks}', [IndeksController::class, 'edit'])->name('indeks.edit');
+    Route::get('/indeks/create', [IndeksController::class, 'create'])->name('indeks.create');
+    Route::post('/indeks/store', [IndeksController::class, 'store'])->name('indeks.store');
+    Route::put('/indeks/{indeks}', [IndeksController::class, 'update'])->name('indeks.update');
+    Route::delete('/indeks/{indeks}', [IndeksController::class, 'destroy'])->name('indeks.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -531,17 +541,17 @@ function getData($params) {
     return $select;
 }
 
-Route::get('/test-formula', function(){
-    /*$select = DB::table('formula_table')
-            ->where('id', '=', 3)
-            ->get();*/
+Route::get('/test-formula', function () {
+    /* $select = DB::table('formula_table')
+      ->where('id', '=', 3)
+      ->get(); */
     $result1 = \App\Models\InputRealisasi::query()
             ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
             ->with('periode')
             ->with('triwulan')
             ->with('inputRealisasiPic')
             ->with('indikatorKompositor')
-            ->where('indikator_kompositor.id','=','2')
+            ->where('indikator_kompositor.id', '=', '2')
             ->get();
     $result2 = Indikator::query()
             ->with('level')
@@ -549,18 +559,18 @@ Route::get('/test-formula', function(){
             ->with('indikatorKompositor')
             ->with('indikatorPeriode')
             ->get();
-    $select = DB::table('laporan_capaian')                
+    $select = DB::table('laporan_capaian')
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
-            ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')            
+            ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
             ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
-            ->join('level','indikator.level_id','=','level.id')
-            ->join('satuan','indikator.satuan_id', '=', 'satuan.id')
-                ->when(Request::input('search'), function ($query, $search) {
-                                        //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
-                                        //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
-                                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
-                                    })
+            ->join('level', 'indikator.level_id', '=', 'level.id')
+            ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+            ->when(Request::input('search'), function ($query, $search) {
+                //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+                //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+                $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+            })
             ->select('laporan_capaian.id',
                     'laporan_capaian.realisasi',
                     'laporan_capaian.kinerja',
@@ -578,27 +588,43 @@ Route::get('/test-formula', function(){
                     'triwulan.triwulan')
             ->paginate(10);
     //$result3 = new  \Illuminate\Database\Eloquent\Collection(App\Models\LaporanCapaian::query($select));
-            /*->when(Request::input('search'), function ($query, $search) {
-                        //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
-                        //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
-                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
-                    })     
-            ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
-            ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
-            ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
-            ->join('level', 'indikator.level_id', '=', 'level.id')            
-            ->with('triwulan')
-            ->with('periode')
-            ->with('laporanCapaianPic')
-            ->with('indikatorPeriode')
-                       
-            ->paginate(10)   
-            ->withQueryString();*/
-    $result3 = new \Illuminate\Database\Eloquent\Collection($select->appends(['pics'=> \App\Models\LaporanCapaian::with('laporanCapaianPic')]));
-            
+    /* ->when(Request::input('search'), function ($query, $search) {
+      //$query->join('indikator_periode', 'laporan_capaian.indikator_periode_id','=', 'indikator_periode.id')
+      //->join('indikator', 'indikator_periode.indikator_id','=', 'indikator.id')
+      $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+      })
+      ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
+      ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
+      ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+      ->join('level', 'indikator.level_id', '=', 'level.id')
+      ->with('triwulan')
+      ->with('periode')
+      ->with('laporanCapaianPic')
+      ->with('indikatorPeriode')
+
+      ->paginate(10)
+      ->withQueryString(); */
+    $result3 = new \Illuminate\Database\Eloquent\Collection($select->appends(['pics' => \App\Models\LaporanCapaian::with('laporanCapaianPic')]));
+
     $all_result = ['inputRealisasi' => $result1, 'laporanCapaian' => $result3];
     return $all_result;
-    
 });
-
+Route::get('/testing', function () {
+    $indikator = \App\Models\Indikator::find(7);//->with('indikatorPics')->first();
+    $pics = $indikator->indikatorPics;
+    //var_dump($indikator);
+    foreach ($indikator as $key => $value) {
+        if ($key == 'indikator_pics') {
+            $pics = $value;
+            foreach($pics as $pic){
+                return $pic->nama_pic.'/ ';
+            }
+            //echo '</br>';
+        } else {
+            //echo $key . ':' . '-' . '</br>';
+        }
+    }
+    //echo($objId->nama_indikator.'</br>');
+    return ['indikator'=>$indikator, 'pics'=>$pics];
+});
 require __DIR__ . '/auth.php';
