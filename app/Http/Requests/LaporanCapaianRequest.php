@@ -29,8 +29,10 @@ class LaporanCapaianRequest extends FormRequest
             'kinerja' => ['required'],
             'periode_id' => ['required', 'integer'],
             //'kategori_kinerja_id', [''],
-            'indikator_id', ['required', 'integer'],
-            'terget', ['required', 'decimal:2']
+            'indikator_id' => ['required', 'integer'],
+            'target' => ['required', 'decimal:2'],
+            'persentasi_kinerja' => ['required'],
+            //'sumber_data' => ['']
         ];
     }
 }

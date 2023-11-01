@@ -113,7 +113,6 @@ export default function ListIndikatorKompositor({auth}){
                                         </Typography>                                                                                
                                       </td>
                                       
-                                      
                                                                             
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">
