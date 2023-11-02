@@ -110,7 +110,8 @@ export default function EditLaporanCapaian() {
                                                        defaultValue={laporan_capaian.data[0].target}                                                      
                                                        />
                                                 <Input label="Realisasi" variant="outlined" id="realisasi"
-                                                        defaultValue={laporan_capaian.data[0].realisasi}
+                                                        defaultValue={
+                                                        (parseFloat(laporan_capaian.data[0].realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})}
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }} 
@@ -118,7 +119,7 @@ export default function EditLaporanCapaian() {
                                                        error={errors.Periode}/>  
                                                <div className="relative flex w-full">
                                                     <Input label="Persentasi Kinerja" variant="outlined" id="persentasi"
-                                                        defaultValue={laporan_capaian.data[0].realisasi}
+                                                        defaultValue={laporan_capaian.data[0].persentasi_kinerja}
                                                         onChange={e => {
                                                             setData('Periode', e.target.value)
                                                         }}                                                       

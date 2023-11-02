@@ -71,14 +71,12 @@ export default function EditIndikator() {
                 auth = {auth}
                 children={(
                                 <div className="container mx-auto">
-                                    <Card className="p-5 h-full w-45">
-                            
+                                    <Card className="p-5 h-full w-45">                            
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
                                             Update Indikator
                                         </Typography>
-                                    </CardHeader>
-                            
+                                    </CardHeader>                           
                             
                                     <form onSubmit={handleSave}>
                                         <CardBody>
@@ -143,7 +141,7 @@ export default function EditIndikator() {
                                                     {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <MSelect options={optPic} defaultValue={defPic} 
+                                                    <MSelect options={optPic} defaultValue={def_pics} 
                                                              onChange={(item) => {
                                                                          setSelectedValue(item);
                                                                          setData('pics', item)

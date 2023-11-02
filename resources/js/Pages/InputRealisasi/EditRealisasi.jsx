@@ -44,7 +44,7 @@ export default function EditRealisasi(props) {
     const handleSave = (e) => {
         let realisasi = document.getElementById('realisasi');
             //alert(realisasi.value);
-            setData('realisasi', realisasi.value)
+        setData('realisasi', realisasi.value)
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.data.id));        
         //history.back();
@@ -95,7 +95,7 @@ export default function EditRealisasi(props) {
                             let realisasi = document.getElementById('realisasi');
                             realisasi.value = res.data.realisasi;
                             //realisasi.setAttribute('value', res.data.result);
-                            setData('realisasi', res.data.result);
+                            setData('realisasi', res.data.realisasi);
                         }
                     })
                     .catch((err) => {
