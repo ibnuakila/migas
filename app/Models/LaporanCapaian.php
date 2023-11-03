@@ -13,7 +13,7 @@ class LaporanCapaian extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'indikator_periode_id',
+        //'indikator_periode_id',
         'triwulan_id',
         'realisasi',
         'kinerja',
