@@ -68,26 +68,7 @@ export default function Header(auth) {
                         <MenuItem><Link href={route('laporan-capaian.index')}>Laporan Capaian Kinerja</Link></MenuItem>                        
                     </MenuList>
                 </Menu>
-                
-                <Menu>
-                    <MenuHandler>
-                        <Typography
-                            as="li"
-                            variant="small"
-                            color="blue-gray"
-                            className="p-1 font-normal"
-                            >
-                            <a href="#" className="flex items-center hover:text-amber-700">
-                                SAKIP
-                            </a>
-                        </Typography>
-                    </MenuHandler>
-                    <MenuList>                        
-                        <MenuItem><Link href={route('evaluasi-akip.index')}>Evaluasi Penilaian Kinerja</Link></MenuItem> 
-                        <MenuItem><Link href={route('hasil-evaluasi.index')}>Hasil Evaluasi Penilaian Kinerja</Link></MenuItem>
-                    </MenuList>
-                </Menu>
-            
+                                            
                 <Menu>
                     <MenuHandler>
                         <Typography
@@ -109,7 +90,7 @@ export default function Header(auth) {
                     <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
                     <MenuItem><Link href={route('indeks.index')}>Master Indeks</Link></MenuItem>
                     <MenuItem><Link href={route('kategori-kinerja.index')}>Master Kategori Kinerja</Link></MenuItem>
-                    <MenuItem><Link href={route('instrument-kinerja.index')}>Kategori/Komponen Instrument</Link></MenuItem>
+                    
                     </MenuList>
                 </Menu>
                 <Menu>

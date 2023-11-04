@@ -165,7 +165,6 @@ class LaporanCapaianController extends Controller //implements ICrud {
     }
 
     public function importIndikator() {
-
         //check active periode
         $periode = DB::table('periode')
                 ->where('status', '=', 'Active')
@@ -222,5 +221,11 @@ class LaporanCapaianController extends Controller //implements ICrud {
         }
         $json_data = json_encode($data);
         return Redirect::route('laporan-capaian.index');
+    }
+    
+    public function calculateKinerja(\Illuminate\Http\Request $request){
+        $id = $request->input('id_laporan_capaian');
+        $laporan_capaian = LaporanCapaian::find($id);
+        
     }
 }
