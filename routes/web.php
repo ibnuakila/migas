@@ -123,6 +123,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
     Route::get('/laporan-capaian/importindikator', [LaporanCapaianController::class, 'importIndikator'])->name('laporan-capaian.importindikator');
+    Route::get('/laporan-capaian/calculatekinerja', [LaporanCapaianController::class, 'calculateKinerja'])->name('laporan-capaian.calculatekinerja');
 });
 
 Route::middleware('auth')->group(function () {
@@ -174,43 +175,43 @@ Route::middleware('auth')->group(function () {
     Route::delete('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/evaluasi-akip', [EvaluasiAkipController::class, 'index'])->name('evaluasi-akip.index');
     Route::get('/evaluasi-akip/edit/{EvaluasiAkip}', [EvaluasiAkipController::class, 'edit'])->name('evaluasi-akip.edit');
     Route::get('/evaluasi-akip/create', [EvaluasiAkipController::class, 'create'])->name('evaluasi-akip.create');
     Route::post('/evaluasi-akip/store', [EvaluasiAkipController::class, 'store'])->name('evaluasi-akip.store');
     Route::put('/evaluasi-akip/{EvaluasiAkip}', [EvaluasiAkipController::class, 'update'])->name('evaluasi-akip.update');
     Route::delete('/evaluasi-akip/{EvaluasiAkip}', [EvaluasiAkipController::class, 'destroy'])->name('evaluasi-akip.destroy');
-});
+});*/
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/upload-file', [UploadFileController::class, 'index'])->name('upload-file.index');
     Route::get('/upload-file/edit/{level}', [UploadFileController::class, 'edit'])->name('upload-file.edit');
     Route::get('/upload-file/create', [UploadFileController::class, 'create'])->name('upload-file.create');
     Route::post('/upload-filep/store', [UploadFileController::class, 'store'])->name('upload-file.store');
     Route::put('/upload-file/{level}', [UploadFileController::class, 'update'])->name('upload-file.update');
     Route::delete('/upload-file/{level}', [UploadFileController::class, 'destroy'])->name('upload-file.destroy');
-});
+});*/
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/hasil-evaluasi', [HasilEvaluasiController::class, 'index'])->name('hasil-evaluasi.index');
     Route::get('/hasil-evaluasi/edit{HasilEvalasi}/', [HasilEvaluasiController::class, 'edit'])->name('hasil-evaluasi.edit');
     Route::get('/hasil-evaluasi/create', [HasilEvaluasiController::class, 'create'])->name('hasil-evaluasi.create');
     Route::post('/hasil-evaluasi/store', [HasilEvaluasiController::class, 'store'])->name('hasil-evaluasi.store');
     Route::put('/hasil-evaluasi/{HasilEvaluasi}', [HasilEvaluasiController::class, 'update'])->name('hasil-evaluasi.update');
     Route::delete('/hasil-evaluasi/{HasilEvaluasi}', [HasilEvaluasiController::class, 'destroy'])->name('hasil-evaluasi.destroy');
-});
+});*/
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'index'])->name('kategori-dokumen.index');
     Route::get('/kategori-dokumen/edit/{KategoriDokumen}', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
     Route::get('/kategori-dokumen/create', [KategoriDokumenController::class, 'create'])->name('kategori-dokumen.create');
     Route::post('/kategori-dokumen/store', [KategoriDokumenController::class, 'store'])->name('kategori-dokumen.store');
     Route::put('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
     Route::delete('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
-});
+});*/
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/instrument-kinerja', [InstrumentKinerjaController::class, 'index'])->name('instrument-kinerja.index');
     Route::get('/instrument-kinerja/create-komponen', [InstrumentKinerjaController::class, 'createKomponen'])->name('instrument-kinerja.create-komponen');
     Route::post('/instrument-kinerja/store-komponen', [InstrumentKinerjaController::class, 'storeKomponen'])->name('instrument-kinerja.store-komponen');
@@ -220,7 +221,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/instrument-kinerja/create-sub-komponen/{komponen}', [InstrumentKinerjaController::class, 'createSubKomponen'])->name('instrument-kinerja.create-sub-komponen');
     Route::post('/instrument-kinerja/store-sub-komponen', [InstrumentKinerjaController::class, 'storeSubKomponen'])->name('instrument-kinerja.store-sub-komponen');
-});
+});*/
 
 Route::get('/test', function () {
     /* $periode = Periode::findOrFail(9);

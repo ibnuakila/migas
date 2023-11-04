@@ -78,14 +78,6 @@ export default function EditRealisasi(props) {
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
             
-            /*router.visit('/input-realisasi/calculate-realization/' , {
-                method: 'get',
-                data:{id:input_realisasi.data.id},
-                onSuccess: page => {
-                    //router.reload();
-                    console.log(page)},
-            });*/
-            
             axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.data.id})
                     .then(res => {
                         console.log(res);
