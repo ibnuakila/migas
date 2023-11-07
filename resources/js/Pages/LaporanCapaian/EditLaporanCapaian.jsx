@@ -18,11 +18,16 @@ import MSelect from '../../Components/MSelect';
 
 export default function EditLaporanCapaian() {
     const {auth, laporan_capaian, indikators, indikator_periode, periodes, triwulans, pics} = usePage().props;
+    let real = parseFloat(laporan_capaian.data[0].realisasi);
+    const defPics = usePage().props.laporan_capaian.data[0].laporan_capaian_pic;
+    const optPic = pics.map(pic => {
+        return {value: pic.id, label: pic.nama_pic};
+    })
     const {data, setData, put, errors, processing} = useForm({
-        id: laporan_capaian.data.id || '',
+        id: laporan_capaian.data[0].id || '',
         //indikator_periode_id: laporan_capaian.data.indikator_periode_id || '',
         triwulan_id: laporan_capaian.data[0].triwulan_id || '',
-        realisasi: laporan_capaian.data[0].realisasi || '',
+        realisasi: real.toFixed(2) || '',
         kinerja: laporan_capaian.data[0].kinerja || '',
         periode_id: laporan_capaian.data[0].periode_id || '',
         kategori_kinerja_id: laporan_capaian.data[0].kategori_kinerja_id || '',
@@ -32,10 +37,10 @@ export default function EditLaporanCapaian() {
         persentasi_kinerja: laporan_capaian.data[0].persentasi_kinerja || '',
         sumber_data: laporan_capaian.data[0].sumber_data || '',
         file_path: laporan_capaian.data[0].file_path || '',
-        pics: laporan_capaian.data[0]
+        pics: optPic || ''
     });
     console.log(usePage().props);
-    const defPics = usePage().props.laporan_capaian.data[0].laporan_capaian_pic;
+    
     const [optionPeriode, setOptionPeriode] = useState('');
     const [optionIndikator, setOptionIndikator] = useState('');
     const [optionPic, setOptionPic] = useState([]);
@@ -76,9 +81,7 @@ export default function EditLaporanCapaian() {
         setData('target_format', e);
     }
 
-    const optPic = pics.map(pic => {
-        return {value: pic.id, label: pic.nama_pic};
-    })
+    
     
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi kinerja?')) {            
@@ -152,14 +155,15 @@ export default function EditLaporanCapaian() {
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                 }
                                                 <Input label="Target" variant="outlined" id="target" 
-                                                       defaultValue={laporan_capaian.data[0].target}                                                      
+                                                       defaultValue={laporan_capaian.data[0].target} 
+                                                       onChange={(e)=> setData('target', e.target.value)}
                                                        />
                                                 {errors.terget &&
-                                                        <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                                        <div className="text-red-400 mt-1">{errors.terget}</div>
                                                 }
-                                                <Select label="Format Target" onChange=""
+                                                <Select label="Format Target" onChange={handleTargetFormatChange}
                                                         defaultValue={laporan_capaian.data[0].target_format}
-                                                        error={errors.Status}>                                                    
+                                                        error={errors.target_format}>                                                    
                                                     <Option value="Decimal">Decimal</Option>
                                                     <Option value="Persentase">Persentase</Option>                                                      
                                                 </Select>
@@ -170,11 +174,11 @@ export default function EditLaporanCapaian() {
                                                        defaultValue={
                                                                (parseFloat(laporan_capaian.data[0].realisasi)).toLocaleString(undefined, {maximumFractionDigits: 2})}
                                                        onChange={e => {
-                                                                   setData('Periode', e.target.value)
+                                                                   setData('realisasi', e.target.value)
                                                                }}                                                        
-                                                       error={errors.Periode}/>
+                                                       error={errors.realisasi}/>
                                                 {errors.realisasi &&
-                                                        <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                                        <div className="text-red-400 mt-1">{errors.realisasi}</div>
                                                 }
                                                 <div className="relative flex w-full">
                                                     <Input label="Persentasi Kinerja" variant="outlined" id="persentasi"
@@ -200,13 +204,13 @@ export default function EditLaporanCapaian() {
                                                 </div>
                                                 <Select label="Kategori Kinerja" onChange=""
                                                         defaultValue=""
-                                                        error={errors.Status}>
+                                                        error={errors.kategori_kinerja_id}>
                                                     <Option value="undefined">Undefined</Option>
                                                     <Option value="Minimize">Minimize</Option>
                                                     <Option value="Maximize">Maximize</Option>                                                      
                                                 </Select>
-                                                {errors.persentasi_kinerja &&
-                                                        <div className="text-red-400 mt-1">{errors.persentasi_kinerja}</div>
+                                                {errors.kategori_kinerja_id &&
+                                                        <div className="text-red-400 mt-1">{errors.kategori_kinerja_id}</div>
                                                 }
                                                 <Input label="Kinerja Tahunan" variant="outlined" id="kinerja-tahunan" 
                                                        onChange={e => {
@@ -222,10 +226,16 @@ export default function EditLaporanCapaian() {
                                                                    setData('Periode', e.target.value)
                                                                }} 
                             
-                                                       error={errors.Periode}/>
+                                                       error={errors.sumber_data}/>
+                                                {errors.sumber_data &&
+                                                        <div className="text-red-400 mt-1">{errors.sumber_data}</div>
+                                                }
                                                 <Input type="File" label="File" variant="outlined" id="file"
                                                        defaultValue=""                                                      
                                                        />
+                                                {errors.file_path &&
+                                                        <div className="text-red-400 mt-1">{errors.file_path}</div>
+                                                }
                                             </div>                                
                             
                                         </CardBody>
