@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\DB;
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+        //'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+/*Route::middleware('auth')->group(function () {
     Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
     Route::get('/indikator-periode/edit/{indikatorperiode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
     Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
@@ -113,7 +113,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
     Route::delete('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'destroy'])->name('indikator-periode.destroy');
     Route::get('/indikator-periode/importindikator', [IndikatorPeriodeController::class, 'importIndikator'])->name('indikator-periode.importindikator');
-});
+});*/
 
 Route::middleware('auth')->group(function () {
     Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');

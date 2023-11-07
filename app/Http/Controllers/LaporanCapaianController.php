@@ -112,6 +112,18 @@ class LaporanCapaianController extends Controller //implements ICrud {
         $laporancapaian->update(
                 $request->validated()
         );
+        $pics = $request->input('pics');
+        if(is_array($pics)){
+            DB::table('laporan_capaian_pic')
+                    ->where('laporan_capaian_id', '=', $laporancapaian->id)
+                    ->delete();
+            foreach($pics as $pic){
+                $data = ['laporan_capaian_id' => $laporancapaian->id,
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
+                DB::table('laporan_capaian_pic')->insert($data);
+            }        
+        }
         return Redirect::route('laporan-capaian.index');
     }
 
