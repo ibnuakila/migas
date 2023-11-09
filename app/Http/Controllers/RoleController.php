@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -13,7 +18,9 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Role/ListRole',[
+            'roles' => new \App\Http\Resources\RoleCollection(Role::all())
+        ]);
     }
 
     /**
@@ -23,7 +30,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Role/FormRole',[
+            'permissions' =>(\Spatie\Permission\Models\Permission::all())
+        ]);
     }
 
     /**
@@ -34,7 +43,16 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required',
+        ]);
+
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->input('permission'));
+
+        return redirect()->route('role.index')
+            ->with('success', 'Role created successfully');
     }
 
     /**

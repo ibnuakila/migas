@@ -107,8 +107,8 @@ export default function Header(auth) {
                         </Typography>
                     </MenuHandler>
                     <MenuList>
-                    <MenuItem><Link href="">Users</Link></MenuItem>
-                    <MenuItem><Link href="">Roles</Link></MenuItem>
+                    <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>
+                    <MenuItem><Link href={route('role.index')}>Roles</Link></MenuItem>
                     </MenuList>
                 </Menu>
                 <Typography

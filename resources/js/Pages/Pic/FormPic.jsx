@@ -15,7 +15,7 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
  
-export default function FormPeriode() {
+export default function FormPic() {
     const {auth} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
         d: '',
