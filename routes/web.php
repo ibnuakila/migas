@@ -81,13 +81,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/kompositor/index/', [KompositorController::class, 'index'])->name('indikator-kompositor.index');
-    Route::get('/kompositor/create/{indikator}', [KompositorController::class, 'create'])->name('indikator-kompositor.create');
-    Route::post('/kompositor/store', [KompositorController::class, 'store'])->name('indikator-kompositor.store');
-    Route::get('/kompositor/edit/{indikatorkompositor}', [KompositorController::class, 'edit'])->name('indikator-kompositor.edit');
-    Route::put('/kompositor/{indikatorkompositor}', [KompositorController::class, 'update'])->name('indikator-kompositor.update');
-    Route::delete('/kompositor/{indikatorkompositor}', [KompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
-    Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('indikator-kompositor.index-indikator');
+    Route::get('/kompositor/index/', [KompositorController::class, 'index'])->name('kompositor.index');
+    Route::get('/kompositor/create/{indikator}', [KompositorController::class, 'create'])->name('kompositor.create');
+    Route::post('/kompositor/store', [KompositorController::class, 'store'])->name('kompositor.store');
+    Route::get('/kompositor/edit/{indikatorkompositor}', [KompositorController::class, 'edit'])->name('kompositor.edit');
+    Route::put('/kompositor/{indikatorkompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
+    Route::delete('/kompositor/{indikatorkompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
+    Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('kompositor.index-indikator');
 });
 
 Route::middleware('auth')->group(function () {
@@ -244,7 +244,7 @@ Route::get('/test', function () {
       ->paginate(10)
       ]
       ]; */
-    $select = DB::table('laporan_capaian')
+    /*$select = DB::table('laporan_capaian')
             ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
             ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
@@ -260,9 +260,14 @@ Route::get('/test', function () {
                     'periode.periode',
                     'pic.nama_pic',
                     'triwulan.triwulan')
-            ->paginate(10);
+            ->paginate(10);*/
+    $result = DB::table('kompositor')
+                    ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                        ->where('indikator_kompositor.indikator_id', '=', 9)
+                        ->select('kompositor.*')
+                        ->get();
 
-    return $select;
+    return $result;
 });
 
 Route::get('/test2', function () {

@@ -13,7 +13,7 @@ class InputRealisasi extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'indikator_kompositor_id',
+        'kompositor_id',
         'realisasi',        
         'satuan',
         'triwulan_id',
