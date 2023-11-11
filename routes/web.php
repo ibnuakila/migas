@@ -23,6 +23,7 @@ use App\Http\Controllers\HitungKompositorController;
 use App\Http\Controllers\IndeksController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\KompositorController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -80,13 +81,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/indikator-kompositor/index/', [IndikatorKompositorController::class, 'index'])->name('indikator-kompositor.index');
-    Route::get('/indikator-kompositor/create/{indikator}', [IndikatorKompositorController::class, 'create'])->name('indikator-kompositor.create');
-    Route::post('/indikator-kompositor/store', [IndikatorKompositorController::class, 'store'])->name('indikator-kompositor.store');
-    Route::get('/indikator-kompositor/edit/{indikatorkompositor}', [IndikatorKompositorController::class, 'edit'])->name('indikator-kompositor.edit');
-    Route::put('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'update'])->name('indikator-kompositor.update');
-    Route::delete('/indikator-kompositor/{indikatorkompositor}', [IndikatorKompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
-    Route::get('/indikator-kompositor/index-indikator/{indikator}', [IndikatorKompositorController::class, 'indexIndikator'])->name('indikator-kompositor.index-indikator');
+    Route::get('/kompositor/index/', [KompositorController::class, 'index'])->name('indikator-kompositor.index');
+    Route::get('/kompositor/create/{indikator}', [KompositorController::class, 'create'])->name('indikator-kompositor.create');
+    Route::post('/kompositor/store', [KompositorController::class, 'store'])->name('indikator-kompositor.store');
+    Route::get('/kompositor/edit/{indikatorkompositor}', [KompositorController::class, 'edit'])->name('indikator-kompositor.edit');
+    Route::put('/kompositor/{indikatorkompositor}', [KompositorController::class, 'update'])->name('indikator-kompositor.update');
+    Route::delete('/kompositor/{indikatorkompositor}', [KompositorController::class, 'destroy'])->name('indikator-kompositor.destroy');
+    Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('indikator-kompositor.index-indikator');
 });
 
 Route::middleware('auth')->group(function () {

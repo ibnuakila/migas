@@ -83,7 +83,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'sicaki'),
+            'database' => env('DB_DATABASE', 'sicaki-rev'),
             'username' => env('DB_USERNAME', 'akila'),
             'password' => env('DB_PASSWORD', 'Aksi2006'),
             'charset' => 'utf8',

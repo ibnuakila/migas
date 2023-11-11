@@ -91,17 +91,6 @@ export default function EditIndikator() {
                                                            error={errors.nama_indikator}/> 
                                                     {errors.nama_indikator && <div className="text-red-400 mt-1">{errors.nama_indikator}</div>}
                                                 </div>
-                            
-                                                <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Satuan" onChange={handleChangeSatuan}
-                                                            value={indikator.data.satuan_id}
-                                                            error={errors.satuan_id}>
-                                                        {satuans.map(({id, nama_satuan}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_satuan}</Option>
-                                                                            ))}
-                                                    </Select>
-                                                    {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
-                                                </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Select label="Select Level" onChange={handleChangeLevel}
                                                             value={indikator.data.level_id}
@@ -112,6 +101,17 @@ export default function EditIndikator() {
                                                     </Select>
                                                     {errors.level_id && <div className="text-red-400 mt-1">{errors.level_id}</div>}
                                                 </div>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Select label="Select Satuan" onChange={handleChangeSatuan}
+                                                            value={indikator.data.satuan_id}
+                                                            error={errors.satuan_id}>
+                                                        {satuans.map(({id, nama_satuan}) => (
+                                                            <Option value={id.toString()} key={id}>{nama_satuan}</Option>
+                                                                            ))}
+                                                    </Select>
+                                                    {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
+                                                </div>
+                                                
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Select label="Select Parent" onChange={handleChangeParent}
                                                             value={indikator.data.parent_id}
