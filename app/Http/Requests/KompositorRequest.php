@@ -27,7 +27,8 @@ class KompositorRequest extends FormRequest
             'nama_kompositor' => ['required'],
             'satuan' => ['required'],
             'indeks_id' => ['required'],
-            'jenis_kompositor_id' => ['required']
+            'jenis_kompositor_id' => ['required'],
+            'indikator_id' => ['required']
         ];
     }
 }

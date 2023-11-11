@@ -29,7 +29,7 @@ class InputRealisasiController extends Controller //implements ICrud
     }
 
     public function edit(InputRealisasi $inputrealisasi) {
-            $indikator_kompositor = \App\Models\IndikatorKompositor::where('id', $inputrealisasi->indikator_kompositor_id)->first();
+            $indikator_kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
         return Inertia::render('InputRealisasi/EditRealisasi',[
             'input_realisasi' => new InputRealisasiResource($inputrealisasi),
             'indikator_kompositor' => $indikator_kompositor,
@@ -41,13 +41,9 @@ class InputRealisasiController extends Controller //implements ICrud
     }
 
     function getPics($inputrealisasi) {
-        $indikator_kompositor = \App\Models\IndikatorKompositor::where('id', $inputrealisasi->indikator_kompositor_id)->first();
-        $temp_res = DB::table('indikator')                
-                ->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
-                ->join('indikator_periode_pic', 'indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
-                ->where('indikator.id', '=', $indikator_kompositor->indikator_id)
-                ->select('indikator_periode_pic.*')
-                ->get();
+        //$indikator_kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
+        $temp_res = \App\Models\InputRealisasiPic::query()
+                ->where('input_realisasi_id', '=', $inputrealisasi->id)->get();
         $def_pics = []; $i=0;
         foreach ($temp_res as $row) {
             $def_pics[$i] = ['value' => $row->pic_id, 'label' => $row->nama_pic];
@@ -58,14 +54,15 @@ class InputRealisasiController extends Controller //implements ICrud
     public function index(\App\Models\LaporanCapaian $laporancapaian) {
         return Inertia::render('InputRealisasi/ListInputRealisasi',[
             'indikator' => DB::table('laporan_capaian')
-                ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
-                ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
+                //->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->where('laporan_capaian.id', $laporancapaian->id)->get(),
                 
             'input_realisasis' => InputRealisasi::query()
-                ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
-                ->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                //->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
                 ->join('laporan_capaian','indikator_periode.id', '=', 'laporan_capaian.indikator_periode_id')
                 ->where('laporan_capaian.id',$laporancapaian->id)
                 ->get()
@@ -79,7 +76,8 @@ class InputRealisasiController extends Controller //implements ICrud
             'laporan_capaian' => $laporancapaian,
             'indikator' => $indikator,                
             'input_realisasis' => InputRealisasi::query()
-                ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                 //->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
                 ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
@@ -88,8 +86,8 @@ class InputRealisasiController extends Controller //implements ICrud
                 ->where('laporan_capaian.id', $laporancapaian->id)
                 ->where('input_realisasi.triwulan_id', $laporancapaian->triwulan_id)
                 ->select('input_realisasi.*', 
-                        'indikator_kompositor.nama_kompositor',
-                        'indikator_kompositor.satuan',
+                        'kompositor.nama_kompositor',
+                        'kompositor.satuan',
                         'triwulan.triwulan',
                         'periode.periode'
                         )
@@ -139,24 +137,35 @@ class InputRealisasiController extends Controller //implements ICrud
         $indikator = \App\Models\Indikator::where('id', $laporan_capaian->indikator_id)->first();
         $data['message'] = 'Undefined message';
         if ($periode->count() == 1) {
-            $result = DB::table('indikator_kompositor')
-                        ->where('indikator_id', '=', $indikator->id)
+            $result = DB::table('kompositor')
+                    ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                        ->where('indikator_kompositor.indikator_id', '=', $indikator->id)
+                        ->select('kompositor.*')
                         ->get();
             if($result->count() > 0){
                 foreach ($result as $row) {                    
-                            $object = new InputRealisasi();
-                            $object->indikator_kompositor_id = $row->id;
-                            $object->triwulan_id = $laporan_capaian->triwulan_id;
-                            $object->periode_id = $laporan_capaian->periode_id;
-                            $object->laporan_capaian_id = $laporan_capaian->id;
-                            $object->save();                        
-                    $data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
-                    $data['message'] = 'Import successfull';
+                            $object = [
+                                'kompositor_id' => $row->id,
+                                'triwulan_id' => $laporan_capaian->triwulan_id,
+                                'periode_id' => $laporan_capaian->periode_id,
+                                'laporan_capaian_id' => $laporan_capaian->id
+                            ];
+                            $input = InputRealisasi::create($object);
+                            //insert input_realisasi_pic;
+                            $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
+                            foreach($pics as $pic){
+                                $temp_lap_pic = ['input_realisasi_id' => $input->id,
+                                    'pic_id' => $pic->pic_id,
+                                    'nama_pic' => $pic->nama_pic];
+                                \App\Models\InputRealisasiPic::create($temp_lap_pic);
+                            }
+                    //$data['result'][$row->id] = 'Import '.$row->nama_kompositor.' successfull';
+                    //$data['message'] = 'Import successfull';
                 }
             }
         }
         
-        return Redirect::back()->with($data);
+        return Redirect::back()->with('message', 'Import Berhasil!');
     }
     
     public function calculateRealization(\Illuminate\Http\Request $request)

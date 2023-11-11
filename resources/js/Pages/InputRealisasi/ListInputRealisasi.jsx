@@ -7,7 +7,8 @@ import { Card,
     DialogHeader,
   DialogBody,
   DialogFooter,
-  Input} from "@material-tailwind/react";
+  Input,
+  Alert} from "@material-tailwind/react";
 import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
@@ -17,7 +18,7 @@ export default function ListInputRealisasi({auth}){
     const { input_realisasis, indikator, laporan_capaian } = usePage().props;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
- 
+    const { flash } = usePage().props;
     
     const [term, setTerm] = useState('');
         
@@ -49,7 +50,7 @@ export default function ListInputRealisasi({auth}){
                 method: 'get',
                 data:{laporan_capaian_id:laporan_capaian.id},
                 onFinish: visit => {
-                    router.reload();
+                    //router.reload();
                     console.log(visit)},
             });
             
@@ -60,6 +61,9 @@ export default function ListInputRealisasi({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">
+                    {flash.message && (
+                        <Alert color="green">{flash.message}</Alert>
+                    )}
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <div className="flex justify-between">
                         <Typography variant="h4">Input Realisasi Kompositor/Parameter {indikator.nama_indikator}                     

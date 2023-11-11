@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Requests\KompositorRequest;
 use App\Models\Kompositor;
+use App\Models\IndikatorKompositor;
 use Illuminate\Support\Facades\DB;
 
 class KompositorController extends Controller
@@ -51,30 +52,24 @@ class KompositorController extends Controller
                  ->select(
                          'kompositor.*',
                          'indikator.nama_indikator',
-                         'jenis_indikator.nama_jenis_kompositor',
+                         'jenis_kompositor.nama_jenis_kompositor',
                          'indeks.nama_indeks')
-                 ->get(),
-             /*'indikator_kompositors' => Kompositor::query()
-                ->where('indikator_id', '=', $indikator->id)
-                ->addSelect(['nama_indikator' => \App\Models\Indikator::select('nama_indikator')
-                            ->whereColumn('id','indikator_kompositor.indikator_id')])
-                ->addSelect(['nama_indeks' => \App\Models\Indeks::select('nama_indeks')
-                            ->whereColumn('id','indikator_kompositor.indeks_id')])
-                ->addSelect(['nama_jenis_kompositor' => \App\Models\JenisKompositor::select('nama_jenis_kompositor')
-                            ->whereColumn('id','indikator_kompositor.jenis_kompositor_id')])
-                ->get(),*/
+                 ->get(),             
              'indikator' => $indikator,
          ]);
     }
 
-    public function store(IndikatorKompositorRequest $request) {
+    public function store(KompositorRequest $request) {
         $validated = $request->validated();
-        $object = IndikatorKompositor::create($validated);        
-        return Redirect::route('indikator-kompositor.index-indikator',$object->indikator_id);
+        $object = Kompositor::create($validated);
+        $data = ['indikator_id' => $request->input('indikator_id'),
+            'kompositor_id' => $object->id];
+        IndikatorKompositor::create($data);
+        return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
     }
 
     public function update(IndikatorKompositor $indikator, IndikatorKompositorRequest $request) {
         $indikator->update($request->validated());
-        return Redirect::route('indikator-kompositor.index-indikator', $indikator);
+        return Redirect::route('kompositor.index-indikator', $indikator);
     }
 }
