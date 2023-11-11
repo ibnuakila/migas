@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndikatorKompositorRequest extends FormRequest
+class KompositorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,10 @@ class IndikatorKompositorRequest extends FormRequest
     public function rules()
     {
         return [
-            'indikator_id' => ['required','integer'],
-            'nama_kompositor' => ['required','string'],
+            'nama_kompositor' => ['required'],
             'satuan' => ['required'],
-            'indeks_id' => ['required','integer'],
-            'jenis_kompositor_id' => ['required','integer']
+            'indeks_id' => ['required'],
+            'jenis_kompositor_id' => ['required']
         ];
     }
 }

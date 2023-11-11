@@ -14,7 +14,7 @@ import Pagination from '@/Components/Pagination';
 export default function ListIndikatorKompositor({auth}){
     const TABLE_HEAD = ["ID", "Indeks", "Nama Indikator", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
  
-    const { indikator_kompositors, indikator } = usePage().props;
+    const { kompositors, indikator } = usePage().props;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
  
@@ -80,7 +80,7 @@ export default function ListIndikatorKompositor({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {indikator_kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, nama_indeks, jenis_kompositor_id }) => (
+                                {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, nama_indeks, jenis_kompositor_id }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">

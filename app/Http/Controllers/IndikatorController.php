@@ -79,6 +79,10 @@ class IndikatorController extends Controller //implements ICrud
     }
 
     public function destroy(Indikator $indikator) {
+        //$ind_pic = $indikator->indikatorPics();
+        foreach ($indikator->indikatorPics as $pic) {
+            $pic->delete();
+        }
         $indikator->delete();
         return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
     }
