@@ -15,4 +15,8 @@ class IndikatorKompositor extends Model
         'indikator_id',
         'kompositor_id'
     ];
+    
+    public function kompositor(){
+        $this->belongsToMany(Kompositor::class);
+    }
 }

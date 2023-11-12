@@ -29,10 +29,10 @@ class InputRealisasiController extends Controller //implements ICrud
     }
 
     public function edit(InputRealisasi $inputrealisasi) {
-            $indikator_kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
+            $kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
         return Inertia::render('InputRealisasi/EditRealisasi',[
             'input_realisasi' => new InputRealisasiResource($inputrealisasi),
-            'indikator_kompositor' => $indikator_kompositor,
+            'kompositor' => $kompositor,
             'triwulans' => \App\Models\Triwulan::all(),
             'periodes' => \App\Models\Periode::all(),
             'pics' => \App\Models\PIC::all(),
@@ -99,7 +99,7 @@ class InputRealisasiController extends Controller //implements ICrud
     public function store(InputRealisasiRequest $request) {
         $validated = $request->validated();
         $object = InputRealisasi::create($validated);
-        return Redirect::back();
+        return Redirect::route('input-realisasi.index-indikator');
     }
 
     public function update(InputRealisasi $inputrealisasi, InputRealisasiRequest $request) {
@@ -139,7 +139,9 @@ class InputRealisasiController extends Controller //implements ICrud
         if ($periode->count() == 1) {
             $result = DB::table('kompositor')
                     ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                    ->join('input_realisasi', 'kompositor.id', '=', 'input_realisasi.kompositor_id', 'left')
                         ->where('indikator_kompositor.indikator_id', '=', $indikator->id)
+                        ->whereNull('input_realisasi.kompositor_id')
                         ->select('kompositor.*')
                         ->get();
             if($result->count() > 0){
@@ -172,10 +174,14 @@ class InputRealisasiController extends Controller //implements ICrud
     {
         $id = $request->input('input_realisasi_id');
         $input_realisasi = InputRealisasi::where('id', $id)->first();
-        $indikator_kompositor = \App\Models\IndikatorKompositor::where('id', $input_realisasi->indikator_kompositor_id)->first();
-        $nama_kompositor = $indikator_kompositor->nama_kompositor;
+        $indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
+        $result = DB::table('kompositor')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->where('kompositor.id', $input_realisasi->kompositor_id)
+                ->get()->first();
+        $nama_indeks = $result->nama_kompositor;
         $realisasi = 0;
-        switch ($nama_kompositor){
+        switch ($nama_indeks){
             case 'Indeks Ketersediaan Hulu Minyak':
                 $res_realisasi = InputRealisasi::query()
                     ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
@@ -219,14 +225,15 @@ class InputRealisasiController extends Controller //implements ICrud
                 }
                 break;            
             case 'Indeks Ketersediaan BBM':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    //->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indikator', 'Like', 'Indeks Ketersediaan BBM')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan BBM')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor')->get();
-                //$data['result'] = $res_realisasi;
+                            'kompositor.*')->get();
+                $data['result'] = $res_realisasi;
                 $realisasi_produksi_bbm = 0; $kuota_impor_bbm = 0; $kuota_ekspor_bbm = 0;
                 $realisasi_impor_bbm = 0; $realisasi_ekspor_bbm = 0;
                 foreach($res_realisasi as $realisasi){

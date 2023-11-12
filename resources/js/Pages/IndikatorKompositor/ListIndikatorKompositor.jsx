@@ -98,7 +98,8 @@ export default function ListIndikatorKompositor({auth}){
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                        <Typography variant="small" color="blue-gray"                                            
+                                         className="font-normal text-blue-600">
                                           {nama_kompositor}
                                         </Typography>
                                       </td>

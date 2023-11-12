@@ -84,9 +84,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/kompositor/index/', [KompositorController::class, 'index'])->name('kompositor.index');
     Route::get('/kompositor/create/{indikator}', [KompositorController::class, 'create'])->name('kompositor.create');
     Route::post('/kompositor/store', [KompositorController::class, 'store'])->name('kompositor.store');
-    Route::get('/kompositor/edit/{indikatorkompositor}', [KompositorController::class, 'edit'])->name('kompositor.edit');
-    Route::put('/kompositor/{indikatorkompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
-    Route::delete('/kompositor/{indikatorkompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
+    Route::get('/kompositor/edit/{kompositor}', [KompositorController::class, 'edit'])->name('kompositor.edit');
+    Route::put('/kompositor/{kompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
+    Route::delete('/kompositor/{kompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
     Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('kompositor.index-indikator');
 });
 
@@ -618,22 +618,139 @@ Route::get('/test-formula', function () {
     $all_result = ['inputRealisasi' => $result1, 'laporanCapaian' => $result3];
     return $all_result;
 });
-Route::get('/testing', function () {
-    $indikator = \App\Models\Indikator::find(7);//->with('indikatorPics')->first();
-    $pics = $indikator->indikatorPics;
-    //var_dump($indikator);
-    foreach ($indikator as $key => $value) {
-        if ($key == 'indikator_pics') {
-            $pics = $value;
-            foreach($pics as $pic){
-                return $pic->nama_pic.'/ ';
-            }
-            //echo '</br>';
-        } else {
-            //echo $key . ':' . '-' . '</br>';
+Route::get('/test-calculate/{id}', function ($id) {
+    $input_realisasi = App\Models\InputRealisasi::where('id', $id)->first();
+        $indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
+        $result = DB::table('kompositor')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->where('kompositor.id', $input_realisasi->kompositor_id)
+                ->get()->first();
+        $nama_indeks = trim($result->nama_kompositor);
+        $realisasi = 0;
+        //var_dump($result);
+        switch ($nama_indeks){
+            case 'Indeks Ketersediaan Hulu Minyak':
+                $res_realisasi = App\Models\InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Minyak')
+                    ->select('input_realisasi.*', 
+                            'indikator_kompositor.nama_kompositor',
+                            'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
+                break;
+            case 'Indeks Ketersediaan Hulu Gas':
+                $res_realisasi = App\Models\InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Gas')
+                    ->select('input_realisasi.*', 
+                            'indikator_kompositor.nama_kompositor',
+                            'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
+                break;
+            case 'Indeks Ketersediaan Hulu Migas':
+                $res_realisasi = App\Models\InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Migas')
+                    ->select('input_realisasi.*', 
+                            'indikator_kompositor.nama_kompositor',
+                            'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
+                break;            
+            case 'Indeks Ketersediaan BBM':
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan BBM')
+                    ->select('input_realisasi.*', 
+                            'kompositor.*')->get();
+    var_dump($res_realisasi);
+                $data['result'] = $res_realisasi;
+                $realisasi_produksi_bbm = 0; $kuota_impor_bbm = 0; $kuota_ekspor_bbm = 0;
+                $realisasi_impor_bbm = 0; $realisasi_ekspor_bbm = 0;
+                foreach($res_realisasi as $realisasi){
+                    if(trim($realisasi->nama_kompositor) == 'Realisasi Produksi BBM'){                        
+                        $realisasi_produksi_bbm = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Impor BBM'){
+                        $kuota_impor_bbm = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Ekspor BBM'){
+                        $kuota_ekspor_bbm = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Impor BBM'){
+                        $realisasi_impor_bbm = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Ekspor BBM'){
+                        $realisasi_ekspor_bbm =$realisasi->realisasi;
+                    }                    
+                }
+                $realisasi = (($realisasi_produksi_bbm + $kuota_impor_bbm) - $kuota_ekspor_bbm) / (($realisasi_produksi_bbm + $realisasi_impor_bbm) - $realisasi_ekspor_bbm);
+                break;
+            case 'Indeks Ketersediaan LPG':
+                $res_realisasi = App\Models\InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    //->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indikator', 'Like', 'Indeks Ketersediaan LPG')
+                    ->select('input_realisasi.*', 
+                            'indikator_kompositor.nama_kompositor')->get();
+                $realisasi_produksi_lpg = 0; $kuota_impor_lpg = 0;
+                $kuota_ekspor_lpg = 0; $realisasi_impor_lpg = 0;
+                $realisasi_ekspor_lpg = 0;
+                foreach($res_realisasi as $realisasi){
+                    if(trim($realisasi->nama_kompositor) == 'Realisasi Produksi LPG'){                        
+                        $realisasi_produksi_lpg = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Impor LPG '){
+                        $kuota_impor_lpg = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kuota Ekspor LPG '){
+                        $kuota_ekspor_lpg = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Impor LPG'){
+                        $realisasi_impor_lpg = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Ekspor LPG '){
+                        $realisasi_ekspor_lpg =$realisasi->realisasi;
+                    }
+                }
+                $realisasi = (($realisasi_produksi_lpg + $kuota_impor_lpg) - $kuota_ekspor_lpg) / (($realisasi_produksi_lpg + $realisasi_impor_lpg) - $realisasi_ekspor_lpg);
+                break;
+            case 'Indeks Ketersediaan LNG':
+                $res_realisasi = App\Models\InputRealisasi::query()
+                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
+                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
+                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan LNG')
+                    ->select('input_realisasi.*', 
+                            'indikator_kompositor.nama_kompositor',
+                            'indeks.nama_indeks')->get();
+                
+                foreach($res_realisasi as $realisasi){
+                    
+                }
+                break;
+            case 'Indeks Fasilitas Niaga Migas':
+                break;
+            case 'Indeks Fasilitas Pengolahan Migas':
+                break;
+            case 'Fasilitasi Peningkatan Infrastruktur Kilang Minyak Bumi':
+                break;
+            case 'Indeks Fasilitas Penyimpanan Migas':
+                break;
+            case 'Indeks Aksesibilitas Migas':
+                break;
         }
-    }
-    //echo($objId->nama_indikator.'</br>');
-    return ['indikator'=>$indikator, 'pics'=>$pics];
+        $data['realisasi'] = round($realisasi, 2);
+        //return json_encode($data);
 });
 require __DIR__ . '/auth.php';

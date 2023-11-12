@@ -17,26 +17,26 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 
 export default function EditRealisasi(props) {
-    
+    console.log(props);
     const auth = props.auth;    
     const input_realisasi = props.input_realisasi;
-    const indikator_kompositor = props.indikator_kompositor;
+    const kompositor = props.kompositor;
     const triwulans = props.triwulans;
     const periodes = props.periodes;
     const pics = props.pics;
     const defPics = props.def_pics;
     const {data, setData, put, errors, processing} = useForm({
         id: input_realisasi.data.id || '',
-        indikator_kompositor_id: input_realisasi.data.indikator_kompositor_id || '',
+        kompositor_id: input_realisasi.data.kompositor_id || '',
         realisasi: input_realisasi.data.realisasi || '',
         //pic_id: input_realisasi.data.pic_id || '',
-        satuan: indikator_kompositor.satuan || '',
+        satuan: kompositor.satuan || '',
         triwulan_id: input_realisasi.data.triwulan_id || '',
         periode_id: input_realisasi.data.periode_id || '',
         laporan_capaian_id: input_realisasi.data.laporan_capaian_id || '',
         pics: defPics
     });
-    console.log(props);
+    
     const [optionTriwulan, setOptionTriwulan] = useState('');
     const [optionPic, setOptionPic] = useState('');
     const [optionPeriode, setOptionPeriode] = useState('');
@@ -130,14 +130,14 @@ export default function EditRealisasi(props) {
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-indikator" 
-                                                    defaultValue={indikator_kompositor.nama_kompositor}
+                                                    defaultValue={kompositor.nama_kompositor}
                                                     disabled ={true}
                                                        />  
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Satuan" variant="outlined" id="satuan" 
-                                                        defaultValue={indikator_kompositor.satuan}
+                                                        defaultValue={kompositor.satuan}
                                                         disabled ={true}
                                                         error={errors.satuan}/>  
                                                 {errors.satuan && <div className="text-red-400 mt-1">{errors.satuan}</div>}
@@ -163,7 +163,7 @@ export default function EditRealisasi(props) {
                                                           className: "min-w-0",
                                                         }}                                                        
                                                         />
-                                                        {indikator_kompositor.jenis_kompositor_id > 1? (<Button
+                                                        {kompositor.jenis_kompositor_id > 1? (<Button
                                                             size="sm"
                                                             color="blue"                                                            
                                                             className="!absolute right-1 top-1 rounded"

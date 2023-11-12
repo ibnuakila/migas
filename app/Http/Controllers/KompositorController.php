@@ -22,15 +22,31 @@ class KompositorController extends Controller
     }
 
     public function destroy(Kompositor $kompositor) {
+        if($kompositor->jenis_kompositor_id == 2){
+            $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
+            $kompositors = Kompositor::where('indeks_id', $indeks->id)->get();
+            foreach ($kompositors as $komp) {
+                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
+                foreach ($indikator_kompositor as $idk_kom) {
+                    $idk_kom->delete();
+                }
+                $komp->delete();
+            }
+            $indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
+            foreach ($indeks_child as $value) {
+                $value->delete();
+            }
+        }
         $kompositor->delete();
         return Redirect::route('kompositor.index');
     }
 
     public function edit(Kompositor $kompositor) {
-        //return new \App\Http\Resources\IndikatorKompositorResource($indikatorkompositor);
+        //$ind_kompositor = IndikatorKompositor::where()
+        $indikator_kompositor = $kompositor->indikatorKompositor()->firstOrNew();
         return Inertia::render('IndikatorKompositor/EditKompositor',[
-            'kompositor' => new \App\Http\Resources\KomponenResource($kompositor),
-            'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$kompositor->indikator_id)->get()),
+            'kompositor' => new \App\Http\Resources\KompositorResource($kompositor),
+            'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikator_kompositor->indikator_id)->get()),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all()
          ]);
@@ -54,6 +70,7 @@ class KompositorController extends Controller
                          'indikator.nama_indikator',
                          'jenis_kompositor.nama_jenis_kompositor',
                          'indeks.nama_indeks')
+                 ->where('indikator.id', '=', $indikator->id)
                  ->get(),             
              'indikator' => $indikator,
          ]);
@@ -65,11 +82,19 @@ class KompositorController extends Controller
         $data = ['indikator_id' => $request->input('indikator_id'),
             'kompositor_id' => $object->id];
         IndikatorKompositor::create($data);
+        if($request->input('jenis_kompositor_id')==2){
+            $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
+                'parent_id' => $request->input('indeks_id')];
+            \App\Models\Indeks::create($data_indeks);
+        }
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
     }
 
-    public function update(IndikatorKompositor $indikator, IndikatorKompositorRequest $request) {
-        $indikator->update($request->validated());
-        return Redirect::route('kompositor.index-indikator', $indikator);
+    public function update(Kompositor $kompositor, KompositorRequest $request) {
+        $kompositor->update($request->validated());
+        /*$data = ['indikator_id' => $request->input('indikator_id'),
+            'kompositor_id' => $object->id];
+        IndikatorKompositor::create($data);*/
+        return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
     }
 }

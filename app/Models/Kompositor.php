@@ -23,5 +23,7 @@ class Kompositor extends Model
         return $this->hasOne(InputRealisasi::class);
     }
     
-    
+    public function indikatorKompositor(){
+        return $this->hasMany(IndikatorKompositor::class);
+    }
 }

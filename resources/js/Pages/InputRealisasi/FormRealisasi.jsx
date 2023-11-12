@@ -22,7 +22,7 @@ export default function FormRealisasi(props) {
     const periode = props.periode;
     const pic = props.pic;
     const {data, setData, post, errors, processing} = useForm({
-        indikator_kompositor_id: '',
+        kompositor_id: '',
         realisasi: '',
         pic_id: '',
         satuan: '',

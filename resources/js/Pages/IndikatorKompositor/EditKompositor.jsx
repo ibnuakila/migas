@@ -16,26 +16,27 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function EditKompositor(props) {
-    const indikator_kompositor = props.indikator_kompositor;
+    console.log(props);
+    const kompositor = props.kompositor;
     const auth = props.auth;
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
     const indeks = props.indeks;
-    const {data, setData, put, errors, processing} = useForm({
-        indikator_id: indikator_kompositor.data.indikator_id || '',
-        nama_kompositor: indikator_kompositor.data.nama_kompositor || '',
+    const {data, setData, put, errors,delete:destroy, processing} = useForm({
+        indikator_id: indikator.data[0].id || '',
+        nama_kompositor: kompositor.data.nama_kompositor || '',
         //kalkulasi: '',
-        satuan: indikator_kompositor.data.satuan || '',
-        indeks_id: indikator_kompositor.data.indeks_id || '0',
-        jenis_kompositor_id: indikator_kompositor.data.jenis_kompositor_id || ''       
+        satuan: kompositor.data.satuan || '',
+        indeks_id: kompositor.data.indeks_id || '0',
+        jenis_kompositor_id: kompositor.data.jenis_kompositor_id || ''       
     });
-    console.log(props);
+    
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');
     
     const handleSave = (e) => {
         e.preventDefault();
-        put(route('indikator-kompositor.update',indikator_kompositor.data.id));
+        put(route('kompositor.update',kompositor.data.id));
     }
     
     function handleChangeIndeks(e) {
@@ -48,6 +49,12 @@ export default function EditKompositor(props) {
         setOptionJenisKompositor({selectValue: e});
         setData('jenis_kompositor_id', e);
         //console.log(optionJenisKompositor);
+    }
+    
+    const handleDestroy = (e) => {
+        if (confirm('Apakah Anda yakin akan menghapus data kompositor?')) {
+            destroy(route('kompositor.destroy', kompositor.data.id));
+        }
     }
     
     return (
@@ -66,13 +73,13 @@ export default function EditKompositor(props) {
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Indikator" variant="outlined" id="nama-indikator" 
-                                                    defaultValue={indikator.data[0].nama_kompositor} disabled
+                                                    defaultValue={indikator.data[0].nama_indikator} disabled
                                                        error=""/>  
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-kompositor" 
-                                                    defaultValue={indikator_kompositor.data.nama_kompositor}
+                                                    defaultValue={kompositor.data.nama_kompositor}
                                                         onChange={e => {
                                                                     setData('nama_kompositor', e.target.value)
                                                                 }}
@@ -82,7 +89,7 @@ export default function EditKompositor(props) {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Indeks" id="indeks"
                                                             onChange={handleChangeIndeks}
-                                                            value={indikator_kompositor.data.indeks_id}
+                                                            value={kompositor.data.indeks_id}
                                                             error={errors.indeks_id}>
                                                         {indeks.map(({id, nama_indeks}) => (
                                                             <Option value={id.toString()} key={id}>{nama_indeks}</Option>
@@ -92,7 +99,7 @@ export default function EditKompositor(props) {
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Satuan" variant="outlined" id="satuan"
-                                                    defaultValue={indikator_kompositor.data.satuan}
+                                                    defaultValue={kompositor.data.satuan}
                                                         onChange={e => {
                                                                     setData('satuan', e.target.value)
                                                                 }}
@@ -102,7 +109,7 @@ export default function EditKompositor(props) {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Jenis Kompositor" id="jenis-kompositor"
                                                         onChange={handleChangeJenisKompositor}
-                                                        value={indikator_kompositor.data.jenis_kompositor_id}
+                                                        value={kompositor.data.jenis_kompositor_id}
                                                         error={errors.indeks_id}>                            
                                                     {jenis_kompositor.map(({id, nama_jenis_kompositor}) => (
                                                             <Option value={id.toString()} key={id}>{nama_jenis_kompositor}</Option>

@@ -71,9 +71,7 @@ export default function ListInputRealisasi({auth}){
                         <span><Input variant="outlined" size="md" className="w-45" label="Search for Indikator" name="namaIndikator" onChange={handleChange}/></span>
                     </div>
                     <div className="flex my-2">
-                        <Link href={route('input-realisasi.create')}>
-                            <Button size="sm" className="ml-2" color="blue">Add</Button>
-                        </Link>
+                        
                         <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator Kompositor</Button>
                     </div>
                     
