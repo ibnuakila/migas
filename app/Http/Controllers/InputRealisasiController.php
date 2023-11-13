@@ -252,13 +252,14 @@ class InputRealisasiController extends Controller //implements ICrud
                 $realisasi = (($realisasi_produksi_bbm + $kuota_impor_bbm) - $kuota_ekspor_bbm) / (($realisasi_produksi_bbm + $realisasi_impor_bbm) - $realisasi_ekspor_bbm);
                 break;
             case 'Indeks Ketersediaan LPG':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    //->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indikator', 'Like', 'Indeks Ketersediaan LPG')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan LPG')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor')->get();
+                            'kompositor.*')->get();
                 $realisasi_produksi_lpg = 0; $kuota_impor_lpg = 0;
                 $kuota_ekspor_lpg = 0; $realisasi_impor_lpg = 0;
                 $realisasi_ekspor_lpg = 0;
@@ -278,14 +279,14 @@ class InputRealisasiController extends Controller //implements ICrud
                 $realisasi = (($realisasi_produksi_lpg + $kuota_impor_lpg) - $kuota_ekspor_lpg) / (($realisasi_produksi_lpg + $realisasi_impor_lpg) - $realisasi_ekspor_lpg);
                 break;
             case 'Indeks Ketersediaan LNG':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan LNG')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan LNG')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor',
-                            'indeks.nama_indeks')->get();
+                            'kompositor.*')->get();
                 
                 foreach($res_realisasi as $realisasi){
                     
