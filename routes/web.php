@@ -680,7 +680,7 @@ Route::get('/test-calculate/{id}', function ($id) {
                     ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan BBM')
                     ->select('input_realisasi.*', 
                             'kompositor.*')->get();
-    var_dump($res_realisasi);
+    //var_dump($res_realisasi);
                 $data['result'] = $res_realisasi;
                 $realisasi_produksi_bbm = 0; $kuota_impor_bbm = 0; $kuota_ekspor_bbm = 0;
                 $realisasi_impor_bbm = 0; $realisasi_ekspor_bbm = 0;
