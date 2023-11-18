@@ -18,6 +18,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function FormKompositor(props) {
     
     const auth = props.auth;
+    const kompositors = props.kompositors;
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
     const indeks = props.indeks;
@@ -27,12 +28,14 @@ export default function FormKompositor(props) {
         //kalkulasi: '',
         satuan: '',
         indeks_id: '0',
-        jenis_kompositor_id: ''       
+        jenis_kompositor_id: '',
+        type_kompositor: ''
     });
     console.log(props);
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');
-    
+    const [newKompositor, setNewKompositor] = useState(true);
+    const [existingKompositor, setExistingKompositor] = useState(false);
     const handleSave = (e) => {
         e.preventDefault();
         post(route('kompositor.store',indikator.id));
@@ -48,6 +51,17 @@ export default function FormKompositor(props) {
         setOptionJenisKompositor({selectValue: e});
         setData('jenis_kompositor_id', e);
         //console.log(optionJenisKompositor);
+    }
+    
+    function handleChangeType(e){
+        if(e === 'New'){
+            setNewKompositor(true);
+            setExistingKompositor(false);            
+        }else{
+            setNewKompositor(false);
+            setExistingKompositor(true);
+        }
+        setData('type_kompositor',{selectValue: e});
     }
     
     return (
@@ -71,13 +85,34 @@ export default function FormKompositor(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
+                                            <Select label="Type Kompositor" id="type-kompositor"
+                                                value="New" onChange={handleChangeType}>
+                                                <Option value="New">New</Option>
+                                                <Option value="Existing">Existing</Option>
+                                            </Select>
+                                            </div>
+                                            {newKompositor ? (
+                                            <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-kompositor" 
                                                         onChange={e => {
                                                                     setData('nama_kompositor', e.target.value)
                                                                 }}
                                                        error={errors.nama_kompositor}/>  
                                                 {errors.nama_kompositor && <div className="text-red-400 mt-1">{errors.nama_kompositor}</div>}
-                                            </div>
+                                            </div>):(null)}
+                                            {existingKompositor ? (
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Select Kompositor" id="indeks"
+                                                            onChange={handleChangeIndeks}
+                                                            value={optionIndeks.selectValue}
+                                                            error={errors.indeks_id}>
+                                                        {kompositors.map(({id, nama_kompositor}) => (
+                                                            <Option value={id.toString()} key={id}>{nama_kompositor}</Option>
+                                                                            ))}
+                                                </Select>
+                                                {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
+                                            </div>):(null)}
+                                            {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Indeks" id="indeks"
                                                             onChange={handleChangeIndeks}
@@ -88,7 +123,8 @@ export default function FormKompositor(props) {
                                                                             ))}
                                                 </Select>
                                                 {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
-                                            </div>
+                                            </div>):(null)}
+                                            {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Satuan" variant="outlined" id="satuan"
                                                         onChange={e => {
@@ -96,7 +132,8 @@ export default function FormKompositor(props) {
                                                                 }}
                                                        error=""/>  
                                                 {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
-                                            </div>
+                                            </div>):(null)}
+                                            {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Jenis Kompositor" id="jenis-kompositor"
                                                         onChange={handleChangeJenisKompositor}
@@ -107,8 +144,7 @@ export default function FormKompositor(props) {
                                                                             ))}                           
                                                 </Select>
                                                 {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
-                                            </div>
-                                            
+                                            </div>):(null)}                                            
                                             
                                             <div className="flex">
                                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
