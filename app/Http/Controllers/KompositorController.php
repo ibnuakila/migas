@@ -17,7 +17,8 @@ class KompositorController extends Controller
         return Inertia::render('IndikatorKompositor/FormKompositor',[
             'indikator' => new \App\Http\Resources\IndikatorResource($indikator),
             'indeks' => \App\Models\Indeks::all(),
-            'jenis_kompositor' => \App\Models\JenisKompositor::all()
+            'jenis_kompositor' => \App\Models\JenisKompositor::all(),
+            'kompositors' => Kompositor::all()
         ]);
     }
 
@@ -78,15 +79,20 @@ class KompositorController extends Controller
 
     public function store(KompositorRequest $request) {
         $validated = $request->validated();
-        $object = Kompositor::create($validated);
-        $data = ['indikator_id' => $request->input('indikator_id'),
-            'kompositor_id' => $object->id];
-        IndikatorKompositor::create($data);
-        if($request->input('jenis_kompositor_id')==2){
-            $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
-                'parent_id' => $request->input('indeks_id')];
-            \App\Models\Indeks::create($data_indeks);
+        if($request->input('type_kompositor') == 'New'){
+            $object = Kompositor::create($validated);
+            $data = ['indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $object->id];
+            IndikatorKompositor::create($data);
+            if($request->input('jenis_kompositor_id')==2){
+                $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
+                    'parent_id' => $request->input('indeks_id')];
+                \App\Models\Indeks::create($data_indeks);
+            }
+        }else{
+            
         }
+        
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
     }
 
