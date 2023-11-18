@@ -183,46 +183,64 @@ class InputRealisasiController extends Controller //implements ICrud
         $realisasi = 0;
         switch ($nama_indeks){
             case 'Indeks Ketersediaan Hulu Minyak':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Minyak')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Minyak')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor',
-                            'indeks.nama_indeks')->get();
-                
+                            'kompositor.*')->get();
+                $realisasi_produksi_lifting_minyak = 0;
+                $realisasi_impor_minyak = 0;
+                $realisasi_ekspor_minyak = 0;
+                $kebutuhan_kilang_minyak = 0;
                 foreach($res_realisasi as $realisasi){
-                    
+                    if(trim($realisasi->nama_kompositor) == 'Realisasi Produksi/Lifting Minyak'){
+                        $realisasi_produksi_lifting_minyak = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Impor Minyak'){
+                        $realisasi_impor_minyak = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Ekspor Minyak'){
+                        $realisasi_ekspor_minyak = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Kebutuhan Kilang Minyak'){
+                        $kebutuhan_kilang_minyak =  $realisasi->realisasi;
+                    }
                 }
+                $realisasi = (($realisasi_produksi_lifting_minyak + $realisasi_impor_minyak) - $realisasi_ekspor_minyak) / $kebutuhan_kilang_minyak;
                 break;
             case 'Indeks Ketersediaan Hulu Gas':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Gas')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Gas')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor',
-                            'indeks.nama_indeks')->get();
+                            'kompositor.*')->get();
                 
                 foreach($res_realisasi as $realisasi){
                     
                 }
                 break;
             case 'Indeks Ketersediaan Hulu Migas':
-                $res_realisasi = InputRealisasi::query()
-                    ->join('indikator_kompositor', 'input_realisasi.indikator_kompositor_id', '=', 'indikator_kompositor.id')
-                    ->join('indikator','indikator_kompositor.indikator_id', '=', 'indikator.id')
-                    ->join('indeks', 'indikator_kompositor.indeks_id', '=', 'indeks.id')
-                    ->where('nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Migas')
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Migas')
                     ->select('input_realisasi.*', 
-                            'indikator_kompositor.nama_kompositor',
-                            'indeks.nama_indeks')->get();
-                
+                            'kompositor.*')->get();
+                $indeks_ketersediaan_hulu_minyak = 0;
+                $indeks_ketersediaan_hulu_gas = 0;
                 foreach($res_realisasi as $realisasi){
-                    
+                    if(trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Minyak'){
+                        $indeks_ketersediaan_hulu_minyak = $realisasi->realisasi;
+                    }elseif(trime($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Gas'){
+                        $indeks_ketersediaan_hulu_gas = $realisasi->realisasi;
+                    }
                 }
+                $realisasi = ($indeks_ketersediaan_hulu_minyak + $indeks_ketersediaan_hulu_gas) / 2;
                 break;            
             case 'Indeks Ketersediaan BBM':
                 $res_realisasi = DB::table('indikator')
