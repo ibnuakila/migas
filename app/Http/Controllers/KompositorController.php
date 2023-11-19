@@ -89,8 +89,17 @@ class KompositorController extends Controller
                     'parent_id' => $request->input('indeks_id')];
                 \App\Models\Indeks::create($data_indeks);
             }
-        }else{
-            
+        }else{//existing kompositor
+            //tambahkan validasi
+            $valid = \Illuminate\Support\Facades\Validator::make($data, $valid);
+            $data = ['indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $request->input('kompositor_id')];
+            IndikatorKompositor::create($data);
+            if($request->input('jenis_kompositor_id')==2){
+                $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
+                    'parent_id' => $request->input('indeks_id')];
+                \App\Models\Indeks::create($data_indeks);
+            }
         }
         
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
