@@ -91,7 +91,7 @@ export default function FormKompositor(props) {
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                             <Select label="Type Kompositor" id="type-kompositor"
-                                                value="New" onChange={handleChangeType}>
+                                                onChange={handleChangeType}>
                                                 <Option value="New">New</Option>
                                                 <Option value="Existing">Existing</Option>
                                             </Select>
@@ -134,20 +134,20 @@ export default function FormKompositor(props) {
                                                         onChange={e => {
                                                                     setData('satuan', e.target.value)
                                                                 }}
-                                                       error=""/>  
-                                                {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
+                                                       error={errors.satuan}/>  
+                                                {errors.satuan && <div className="text-red-400 mt-1">{errors.satuan}</div>}
                                             </div>):(null)}
                                             {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Jenis Kompositor" id="jenis-kompositor"
                                                         onChange={handleChangeJenisKompositor}
                                                         value={optionJenisKompositor.selectValue}
-                                                        error={errors.indeks_id}>                            
+                                                        error={errors.jenis_kompositor_id}>                            
                                                     {jenis_kompositor.map(({id, nama_jenis_kompositor}) => (
                                                             <Option value={id.toString()} key={id}>{nama_jenis_kompositor}</Option>
                                                                             ))}                           
                                                 </Select>
-                                                {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
+                                                {errors.jenis_kompositor_id && <div className="text-red-400 mt-1">{errors.jenis_kompositor_id}</div>}
                                             </div>):(null)}                                            
                                             
                                             <div className="flex">
