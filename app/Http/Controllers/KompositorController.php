@@ -77,12 +77,21 @@ class KompositorController extends Controller
          ]);
     }
 
-    public function store(KompositorRequest $request) {
-        $validated = $request->validated();
+    public function store(Request $request) {
+        
         if($request->input('type_kompositor') == 'New'){
-            $object = Kompositor::create($validated);
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
+                'nama_kompositor' => ['required'],
+                'satuan' => ['required'],
+                'indeks_id' => ['required'],
+                'jenis_kompositor_id' => ['required'],
+                'indikator_id' => ['required'],
+                'type_kompositor' => ['required']                
+            ]);
+            $validated = $validator->validated();
+            $kompositor = Kompositor::create($validated);
             $data = ['indikator_id' => $request->input('indikator_id'),
-                'kompositor_id' => $object->id];
+                'kompositor_id' => $kompositor->id];
             IndikatorKompositor::create($data);
             if($request->input('jenis_kompositor_id')==2){
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
@@ -91,15 +100,19 @@ class KompositorController extends Controller
             }
         }else{//existing kompositor
             //tambahkan validasi
-            $valid = \Illuminate\Support\Facades\Validator::make($data, $valid);
-            $data = ['indikator_id' => $request->input('indikator_id'),
-                'kompositor_id' => $request->input('kompositor_id')];
-            IndikatorKompositor::create($data);
-            if($request->input('jenis_kompositor_id')==2){
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                'indikator_id' => 'required',
+                'kompositor_id' => 'required'
+            ]);
+            $validated = $validator->validated();
+            /*$data = ['indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $request->input('kompositor_id')];*/
+            IndikatorKompositor::create($$validated);
+            /*if($request->input('jenis_kompositor_id')==2){
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
                     'parent_id' => $request->input('indeks_id')];
                 \App\Models\Indeks::create($data_indeks);
-            }
+            }*/
         }
         
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
