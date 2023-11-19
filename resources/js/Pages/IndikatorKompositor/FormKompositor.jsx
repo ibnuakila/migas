@@ -29,7 +29,8 @@ export default function FormKompositor(props) {
         satuan: '',
         indeks_id: '0',
         jenis_kompositor_id: '',
-        type_kompositor: ''
+        type_kompositor: '',
+        kompositor_id: ''
     });
     console.log(props);
     const [optionIndeks, setOptionIndeks] = useState('');
@@ -61,7 +62,11 @@ export default function FormKompositor(props) {
             setNewKompositor(false);
             setExistingKompositor(true);
         }
-        setData('type_kompositor',{selectValue: e});
+        setData('type_kompositor', e);
+    }
+    
+    function handleChangeKompositor(e){
+        setData('kompositor_id', e);
     }
     
     return (
@@ -103,14 +108,13 @@ export default function FormKompositor(props) {
                                             {existingKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Select Kompositor" id="indeks"
-                                                            onChange={handleChangeIndeks}
-                                                            value={optionIndeks.selectValue}
-                                                            error={errors.indeks_id}>
+                                                            onChange={handleChangeKompositor}                                                            
+                                                            error={errors.kompositor_id}>
                                                         {kompositors.map(({id, nama_kompositor}) => (
                                                             <Option value={id.toString()} key={id}>{nama_kompositor}</Option>
                                                                             ))}
                                                 </Select>
-                                                {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
+                                                {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
                                             </div>):(null)}
                                             {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
