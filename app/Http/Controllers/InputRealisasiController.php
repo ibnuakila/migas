@@ -182,6 +182,32 @@ class InputRealisasiController extends Controller //implements ICrud
         $nama_indeks = $result->nama_kompositor;
         $realisasi = 0;
         switch ($nama_indeks){
+            case 'Indeks Ketersediaan Migas':
+                $res_realisasi = DB::table('indikator')
+                    ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                    ->join('kompositor','indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                    ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Migas')
+                    ->select('input_realisasi.*', 
+                            'kompositor.*')->get();
+                $indeks_ketersediaan_hulu_migas = 0;
+                $indeks_ketersediaan_bbm = 0;
+                $indeks_ketersediaan_lpg = 0;
+                $indeks_ketersediaan_lng = 0;
+                foreach($res_realisasi as $realisasi){
+                    if(trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Migas'){
+                        $indeks_ketersediaan_hulu_migas = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan BBM'){
+                        $indeks_ketersediaan_bbm = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan LPG'){
+                        $indeks_ketersediaan_lpg = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan LNG'){
+                        $indeks_ketersediaan_lng = $realisasi->realisasi;
+                    }
+                }
+                $realisasi = ($indeks_ketersediaan_hulu_migas + $indeks_ketersediaan_bbm + $indeks_ketersediaan_lpg + $indeks_ketersediaan_lng) / 4;
+                break;  
             case 'Indeks Ketersediaan Hulu Minyak':
                 $res_realisasi = DB::table('indikator')
                     ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')

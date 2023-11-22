@@ -27,7 +27,7 @@ export default function FormKompositor(props) {
         nama_kompositor: '',
         //kalkulasi: '',
         satuan: '',
-        indeks_id: '0',
+        indeks_id: '1',
         jenis_kompositor_id: '',
         type_kompositor: '',
         kompositor_id: ''

@@ -18,6 +18,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function EditKompositor(props) {
     console.log(props);
     const kompositor = props.kompositor;
+    const kompositors = props.kompositors;
     const auth = props.auth;
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
@@ -97,7 +98,7 @@ export default function EditKompositor(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Type Kompositor" id="type-kompositor" value="New"
+                                            <Select label="Type Kompositor" id="type-kompositor" value="New" disabled
                                                 onChange={handleChangeType}>
                                                 <Option value="New">New</Option>
                                                 <Option value="Existing">Existing</Option>

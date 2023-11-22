@@ -24,21 +24,23 @@ class KompositorController extends Controller
 
     public function destroy(Kompositor $kompositor) {
         if($kompositor->jenis_kompositor_id == 2){
-            $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
+            $indeks = \App\Models\Indeks::find($kompositor->indeks_id);            
             $kompositors = Kompositor::where('indeks_id', $indeks->id)->get();
             foreach ($kompositors as $komp) {
                 $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
                 foreach ($indikator_kompositor as $idk_kom) {
-                    $idk_kom->delete();
+                    $idk_kom->delete();//delete indikator_kompositor
                 }
-                $komp->delete();
+                    $komp->delete();//delete kompositor
             }
             $indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
             foreach ($indeks_child as $value) {
-                $value->delete();
+                $value->delete();//delete indeks
             }
+        }else{
+            IndikatorKompositor::where('kompositor_id', $komp->id)->delete();            
+            $kompositor->delete();
         }
-        $kompositor->delete();
         return Redirect::route('kompositor.index');
     }
 
@@ -47,6 +49,7 @@ class KompositorController extends Controller
         $indikator_kompositor = $kompositor->indikatorKompositor()->firstOrNew();
         return Inertia::render('IndikatorKompositor/EditKompositor',[
             'kompositor' => new \App\Http\Resources\KompositorResource($kompositor),
+            'kompositors' => Kompositor::all(),
             'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikator_kompositor->indikator_id)->get()),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all()
@@ -96,6 +99,10 @@ class KompositorController extends Controller
             if($request->input('jenis_kompositor_id')==2){
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
                     'parent_id' => $request->input('indeks_id')];
+                DB::table('indeks')
+                        ->where('nama_indeks', '=', $request->input('nama_kompositor'))
+                        ->where('parent_id', '=', $request->input('indeks_id'))
+                        ->delete();
                 \App\Models\Indeks::create($data_indeks);
             }
         }else{//existing kompositor
@@ -107,7 +114,7 @@ class KompositorController extends Controller
             $validated = $validator->validated();
             /*$data = ['indikator_id' => $request->input('indikator_id'),
                 'kompositor_id' => $request->input('kompositor_id')];*/
-            IndikatorKompositor::create($$validated);
+            IndikatorKompositor::create($validated);
             /*if($request->input('jenis_kompositor_id')==2){
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
                     'parent_id' => $request->input('indeks_id')];
@@ -120,6 +127,16 @@ class KompositorController extends Controller
 
     public function update(Kompositor $kompositor, KompositorRequest $request) {
         $kompositor->update($request->validated());
+            if($request->input('jenis_kompositor_id')==2){
+                
+                $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
+                    'parent_id' => $request->input('indeks_id')];
+                DB::table('indeks')
+                        ->where('nama_indeks', '=', $request->input('nama_kompositor'))
+                        ->where('parent_id', '=', $request->input('indeks_id'))
+                        ->delete();
+                \App\Models\Indeks::create($data_indeks);
+            }
         /*$data = ['indikator_id' => $request->input('indikator_id'),
             'kompositor_id' => $object->id];
         IndikatorKompositor::create($data);*/
