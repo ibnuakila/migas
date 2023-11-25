@@ -6,14 +6,14 @@ const PageLink = ({ active, label, url }) => {
   const className = classNames(
     [
       'mr-1 mb-1',
-      'px-3 py-3',
-      'border border-solid border-blue-gray-100 rounded-full',
+      'px-1 py-1',
+      'border border-solid border-blue-gray-100 rounded-sm shadow-sm',
       'text-sm text-gray-700',
       'hover:bg-teal-100',
       'focus:outline-none focus:border-indigo-700 focus:text-indigo-700'
     ],
     {
-      'bg-blue-gray-200': active
+      'bg-yellow-200': active
     }
   );
   return (
@@ -28,7 +28,7 @@ const PageLink = ({ active, label, url }) => {
 // and dots, if exists (...)
 const PageInactive = ({ label }) => {
   const className = classNames(
-    'mr-1 mb-1 px-3 py-3 text-sm border rounded-full border-solid border-gray-300 text-gray-700 bg-gray-200'
+    'mr-1 mb-1 px-1 py-1 text-sm border rounded-sm border-solid border-gray-300 text-gray-700 bg-gray-200'
   );
   return (
     <li className={className} dangerouslySetInnerHTML={{ __html: label }} />

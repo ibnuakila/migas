@@ -9,6 +9,7 @@ import { Card,
   DialogFooter,
   Input} from "@material-tailwind/react";
   import { Link, usePage, router } from '@inertiajs/react';
+  import Pagination from '@/Components/Pagination';
 
 export default function ListPic({auth}){
     const { pics } = usePage().props;
@@ -63,7 +64,7 @@ export default function ListPic({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {pics.map(({ id, nama_pic, keterangan }) => (
+                                {pics.data.map(({ id, nama_pic, keterangan }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -93,6 +94,7 @@ export default function ListPic({auth}){
                                   ))}
                             </tbody>
                         </table>
+                        <Pagination links={pics.links} />
                     </Card>
                 </div>
                 )}

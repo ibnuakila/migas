@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     
      private $permissions = [
-            'profile-edit',
+            /*'profile-edit',
             //'profile-update',
             'profile-delete',
             'periode-list',
@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
             'kategori-kinerja-list',
             'kategori-kinerja-create',
             'kategori-kinerja-edit',
-            'kategori-kinerja-delete'
+            'kategori-kinerja-delete'*/
         ];
     /**
      * Seed the application's database.
@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
         $user = \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('P@ssw0rd')
+            'password' => Hash::make('P@ssw0rd'),
         ]);
         $role = Role::create(['name' => 'Administrator']);
 
