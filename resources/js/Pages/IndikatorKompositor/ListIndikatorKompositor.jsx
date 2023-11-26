@@ -53,14 +53,19 @@ export default function ListIndikatorKompositor({auth}){
                 <div className="container mx-auto">
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <div className="flex justify-between">
-                        <Typography variant="h3">Kompositor/Parameter Indikator {indikator.nama_indikator}                            
-                        </Typography>
+                    {indikator ? ( 
+                        <Typography variant="h3">Kompositor/Parameter Indikator {indikator.nama_indikator}</Typography> 
+                        ):(
+                        <Typography variant="h3">Kompositor/Parameter </Typography> 
+                        )}                
+                        
                         
                     </div>
                     <div className="flex my-2">
+                    {indikator ? (
                         <Link href={route('kompositor.create', indikator.id)}>
                         <Button size="sm" className="ml-2" color="blue">Add</Button>
-                        </Link>
+                        </Link>):(null)}
                     </div>
                     
                         <table>
@@ -80,7 +85,7 @@ export default function ListIndikatorKompositor({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, nama_indeks, jenis_kompositor_id }) => (
+                                {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, indeks_id,nama_indeks, jenis_kompositor_id }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -103,10 +108,17 @@ export default function ListIndikatorKompositor({auth}){
                                           {nama_kompositor}
                                         </Typography>
                                       </td>
-                                      <td className="p-4">                                      
+                                      <td className="p-4">
+                                      {nama_jenis_kompositor == 'Agregasi' ? (
+                                                <Link href={route('kompositor.agregasi-kompositor', indeks_id)}>
+                                                    <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
+                                                        {nama_jenis_kompositor}
+                                                    </Typography>
+                                                </Link>
+                                            ):(
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_jenis_kompositor}
-                                        </Typography>                                                                                
+                                        </Typography>)}                                                                                
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">

@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/kompositor/{kompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
     Route::delete('/kompositor/{kompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
     Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('kompositor.index-indikator');
+    Route::get('/kompositor/agregasi-kompositor/{indeks}', [KompositorController::class, 'agregasiKompositor'])->name('kompositor.agregasi-kompositor');
 });
 
 Route::middleware('auth')->group(function () {
