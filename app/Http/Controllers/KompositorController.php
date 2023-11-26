@@ -18,7 +18,11 @@ class KompositorController extends Controller
             'indikator' => new \App\Http\Resources\IndikatorResource($indikator),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all(),
-            'kompositors' => Kompositor::all()
+            'kompositors' => Kompositor::all(),
+            'parameters' => DB::table('parameter')
+                ->join('indeks', 'parameter.indeks_id', '=', 'indeks.id')
+                ->select('parameter.*', 'indeks.nama_indeks')
+                ->get()
         ]);
     }
 
@@ -38,10 +42,10 @@ class KompositorController extends Controller
                 $value->delete();//delete indeks
             }
         }else{
-            IndikatorKompositor::where('kompositor_id', $komp->id)->delete();            
+            IndikatorKompositor::where('kompositor_id', $kompositor->id)->delete();            
             $kompositor->delete();
         }
-        return Redirect::route('kompositor.index');
+        return Redirect::route('kompositor.index-indikator');
     }
 
     public function edit(Kompositor $kompositor) {
@@ -58,7 +62,19 @@ class KompositorController extends Controller
 
     public function index() {
          return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
-             'kompositors' => Kompositor::all()                
+             'kompositors' => DB::table('kompositor')
+                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                 ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                 ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                 ->select(
+                         'kompositor.*',
+                         'indikator.nama_indikator',
+                         'jenis_kompositor.nama_jenis_kompositor',
+                         'indeks.nama_indeks')
+                 //->where('indikator.id', '=', $indikator->id)
+                 ->get(),             
+             'indikator' => '',       
          ]);
     }
     
@@ -93,6 +109,7 @@ class KompositorController extends Controller
             ]);
             $validated = $validator->validated();
             $kompositor = Kompositor::create($validated);
+            
             $data = ['indikator_id' => $request->input('indikator_id'),
                 'kompositor_id' => $kompositor->id];
             IndikatorKompositor::create($data);
@@ -104,7 +121,16 @@ class KompositorController extends Controller
                         ->where('parent_id', '=', $request->input('indeks_id'))
                         ->delete();
                 \App\Models\Indeks::create($data_indeks);
+            }elseif($request->input('jenis_kompositor_id')==3){
+                $data_param = ['parameter_id' => $request->input('parameter_id'),
+                    'kompositor_id' => $request->input('kompositor_id')];
+                DB::table('kompositor_parameter')
+                        ->where('parameter_id', '=', $request->input('kompositor_id'))
+                        ->where('kompositor_id', '=', $request->input('kompositor_id'))
+                        ->delete();
+                \App\Models\Parameter::create($data_param);
             }
+            
         }else{//existing kompositor
             //tambahkan validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -141,5 +167,23 @@ class KompositorController extends Controller
             'kompositor_id' => $object->id];
         IndikatorKompositor::create($data);*/
         return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
+    }
+    
+    public function agregasiKompositor(\App\Models\Indeks $indeks) {
+         return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
+             'kompositors' => DB::table('kompositor')
+                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                 ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                 ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                 ->select(
+                         'kompositor.*',
+                         'indikator.nama_indikator',
+                         'jenis_kompositor.nama_jenis_kompositor',
+                         'indeks.nama_indeks')
+                 ->where('indeks.id', '=', $indeks->id)
+                 ->get(),             
+             //'indikator' => $indikator,
+         ]);
     }
 }
