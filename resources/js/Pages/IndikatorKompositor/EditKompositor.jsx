@@ -23,10 +23,11 @@ export default function EditKompositor(props) {
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
     const indeks = props.indeks;
+    const parameters = props.parameters;
     const {data, setData, put, errors,delete:destroy, processing} = useForm({
         indikator_id: indikator.data[0].id || '',
         nama_kompositor: kompositor.data.nama_kompositor || '',
-        //kalkulasi: '',
+        kalkulasi: kompositor.data.kalkulasi || '',
         satuan: kompositor.data.satuan || '',
         indeks_id: kompositor.data.indeks_id || '0',
         jenis_kompositor_id: kompositor.data.jenis_kompositor_id || '',
@@ -38,7 +39,24 @@ export default function EditKompositor(props) {
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');
     const [newKompositor, setNewKompositor] = useState(true);
     const [existingKompositor, setExistingKompositor] = useState(false);
+    const [isParameter, setIsParameter] = useState(false);
     
+    /*if(kompositor.data.jenis_kompositor_id == 3){
+        setIsParameter(true);
+    }*/
+    window.addEventListener('load' , function(e){
+        console.log('The page has fully loaded');
+        //setIsParameter(true);
+    });
+    /*let _form = document.getElementById('form-kompositor');
+    _form.addEventListener('focus',function(e){
+        console.log('The page has fully loaded');
+        setIsParameter(true);
+    })*/
+    function handleLoad() {
+        console.log('The page has fully loaded');
+        setIsParameter(true);
+    };
     const handleSave = (e) => {
         e.preventDefault();
         put(route('kompositor.update',kompositor.data.id));
@@ -89,7 +107,12 @@ export default function EditKompositor(props) {
                                     </Typography>
                                 </CardHeader>                                    
                                 <CardBody>
-                                    <form action="">
+                                    <form action="" id="form-kompositor" onClick={ (e) => {
+                                        console.log("Form loaded sucessfully!");
+                                        if(kompositor.data.jenis_kompositor_id == 3){
+                                            setIsParameter(true);
+                                        }
+                                    }}>
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Indikator" variant="outlined" id="nama-indikator" 
@@ -156,7 +179,32 @@ export default function EditKompositor(props) {
                                                 </Select>
                                                 {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
                                             </div>
-                                            
+                                            {isParameter ? (
+                                            <>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Select label="Parameter" id="parameter"
+                                                        onChange={ (e) => {
+                                                            setData('parameter_id', e);
+                                                            }
+                                                        }
+                                                        value={1}
+                                                        >
+                                                        {parameters.map(({id, nama_parameter, nama_indeks}) => (
+                                                            <Option value={id.toString()} key={id} label={nama_parameter}>{nama_parameter + " (" + nama_indeks + ")"}</Option>
+                                                                            ))}  
+                                                    </Select>
+                                                </div>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Input label="Kalkulasi" variant="outlined" id="kalkulasi" 
+                                                            onChange={e => {
+                                                                        setData('kalkulasi', e.target.value)
+                                                                    }}
+                                                            defaultValue={kompositor.data.kalkulasi}
+                                                           error={errors.kalkulasi}/>  
+                                                    {errors.kalkulasi && <div className="text-red-400 mt-1">{errors.kalkulasi}</div>}
+                                                </div>
+                                            </>
+                                                ):(null)}
                                             
                                             
                                         </div>

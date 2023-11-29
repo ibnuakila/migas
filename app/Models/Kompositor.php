@@ -12,11 +12,12 @@ class Kompositor extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        //'indikator_id',
+        'kalkulasi',
         'nama_kompositor',        
         'satuan',
         'indeks_id',
-        'jenis_kompositor_id'
+        'jenis_kompositor_id',
+        'sumber_kompositor'
     ];
     
     public function inputRealisasi(){
@@ -25,5 +26,13 @@ class Kompositor extends Model
     
     public function indikatorKompositor(){
         return $this->hasMany(IndikatorKompositor::class);
+    }
+    
+    public function kompositorParameter(){
+        return $this->hasMany(KompositorParameter::class);
+    }
+    
+    public function kompositorOfKompositor(){
+        return $this->hasMany(KompositorOfKompositor::class);
     }
 }

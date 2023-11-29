@@ -12,7 +12,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListIndikatorKompositor({auth}){
-    const TABLE_HEAD = ["ID", "Indeks", "Nama Indikator", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
+    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
  
     const { kompositors, indikator } = usePage().props;
     console.log(usePage().props);
@@ -54,7 +54,7 @@ export default function ListIndikatorKompositor({auth}){
                     <Card className="p-5 h-full w-full overflow-scroll">
                     <div className="flex justify-between">
                     {indikator ? ( 
-                        <Typography variant="h3">Kompositor/Parameter Indikator {indikator.nama_indikator}</Typography> 
+                        <Typography variant="h3">Kompositor/Parameter Indikator: {indikator.nama_indikator}</Typography> 
                         ):(
                         <Typography variant="h3">Kompositor/Parameter </Typography> 
                         )}                
@@ -97,11 +97,7 @@ export default function ListIndikatorKompositor({auth}){
                                           {nama_indeks}
                                         </Typography>                                                                                
                                       </td>
-                                      <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-green-600">
-                                          {nama_indikator}
-                                        </Typography>                                                                                
-                                      </td>
+                                      
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray"                                            
                                          className="font-normal text-blue-600">

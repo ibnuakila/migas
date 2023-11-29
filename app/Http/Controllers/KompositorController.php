@@ -27,12 +27,15 @@ class KompositorController extends Controller
     }
 
     public function destroy(Kompositor $kompositor) {
+        $indikator_id = 0;
         if($kompositor->jenis_kompositor_id == 2){
             $indeks = \App\Models\Indeks::find($kompositor->indeks_id);            
             $kompositors = Kompositor::where('indeks_id', $indeks->id)->get();
             foreach ($kompositors as $komp) {
                 $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
                 foreach ($indikator_kompositor as $idk_kom) {
+                    $indikator_id = $idk_kom->indikator_id;
+
                     $idk_kom->delete();//delete indikator_kompositor
                 }
                     $komp->delete();//delete kompositor
@@ -42,21 +45,28 @@ class KompositorController extends Controller
                 $value->delete();//delete indeks
             }
         }else{
-            IndikatorKompositor::where('kompositor_id', $kompositor->id)->delete();            
+            $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+            $indikator_id = $indikator_kompositor->indikator_id;
+            $indikator_kompositor->delete();
             $kompositor->delete();
         }
-        return Redirect::route('kompositor.index-indikator');
+        return Redirect::route('kompositor.index-indikator', $indikator_id);
     }
 
     public function edit(Kompositor $kompositor) {
         //$ind_kompositor = IndikatorKompositor::where()
         $indikator_kompositor = $kompositor->indikatorKompositor()->firstOrNew();
         return Inertia::render('IndikatorKompositor/EditKompositor',[
-            'kompositor' => new \App\Http\Resources\KompositorResource($kompositor),
+            'kompositor' => new \App\Http\Resources\KompositorResource(
+                    $kompositor->with('kompositorParameter')->where('id','=',$kompositor->id)->get()->first()),
             'kompositors' => Kompositor::all(),
             'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikator_kompositor->indikator_id)->get()),
             'indeks' => \App\Models\Indeks::all(),
-            'jenis_kompositor' => \App\Models\JenisKompositor::all()
+            'jenis_kompositor' => \App\Models\JenisKompositor::all(),
+            'parameters' => DB::table('parameter')
+                ->join('indeks', 'parameter.indeks_id', '=', 'indeks.id')
+                ->select('parameter.*', 'indeks.nama_indeks')
+                ->get()
          ]);
     }
 
@@ -105,7 +115,8 @@ class KompositorController extends Controller
                 'indeks_id' => ['required'],
                 'jenis_kompositor_id' => ['required'],
                 'indikator_id' => ['required'],
-                'type_kompositor' => ['required']                
+                //'type_kompositor' => ['required'],
+                'sumber_kompositor' => ['required']
             ]);
             $validated = $validator->validated();
             $kompositor = Kompositor::create($validated);
@@ -113,7 +124,7 @@ class KompositorController extends Controller
             $data = ['indikator_id' => $request->input('indikator_id'),
                 'kompositor_id' => $kompositor->id];
             IndikatorKompositor::create($data);
-            if($request->input('jenis_kompositor_id')==2){
+            if($request->input('jenis_kompositor_id')=='2'){
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
                     'parent_id' => $request->input('indeks_id')];
                 DB::table('indeks')
@@ -121,17 +132,17 @@ class KompositorController extends Controller
                         ->where('parent_id', '=', $request->input('indeks_id'))
                         ->delete();
                 \App\Models\Indeks::create($data_indeks);
-            }elseif($request->input('jenis_kompositor_id')==3){
+            }elseif($request->input('jenis_kompositor_id')=='3'){
                 $data_param = ['parameter_id' => $request->input('parameter_id'),
                     'kompositor_id' => $request->input('kompositor_id')];
                 DB::table('kompositor_parameter')
                         ->where('parameter_id', '=', $request->input('kompositor_id'))
                         ->where('kompositor_id', '=', $request->input('kompositor_id'))
                         ->delete();
-                \App\Models\Parameter::create($data_param);
+                \App\Models\KompositorParameter::create($data_param);
             }
             
-        }else{//existing kompositor
+        }elseif($request->input('type_kompositor') == 'Existing Indikator'){//existing indikator
             //tambahkan validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                 'indikator_id' => 'required',
@@ -146,6 +157,34 @@ class KompositorController extends Controller
                     'parent_id' => $request->input('indeks_id')];
                 \App\Models\Indeks::create($data_indeks);
             }*/
+        }else{//existing kompositor
+            //tambahkan validasi
+            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                //'indikator_id' => 'required',
+                'kompositor_id' => 'required'
+            ]);
+            //cari kompositor existing
+            $ref_kompositor = Kompositor::where('id',$request->input('kompositor_id'))->first();
+            $ref_kom_data = [
+                'nama_kompositor' => $ref_kompositor->nama_kompositor,
+                'satuan' => $ref_kompositor->satuan,
+                'indeks_id' => $ref_kompositor->indeks_id,
+                'jenis_kompositor_id' => $ref_kompositor->indeks_id, //diubah
+                'indikator_id' => $ref_kompositor->indikator_id,
+                //'type_kompositor' => $ref_kompositor->type_kompositor,
+                'sumber_kompositor' => $request->input('type_kompositor')
+            ];
+            //tambahkan kompositor baru dari data kompositor existing
+            $kompositor = Kompositor::create($ref_kom_data);
+            
+            $data = ['kompositor_id' => $kompositor->id,
+                'ref_kompositor_id' => $request->input('kompositor_id')];
+            //hapus record kompositor of kompositor jika sudah ada
+            /*DB::table('kompositor_of_kompositor')
+                        ->where('ref_kompositor_id', '=', $request->input('kompositor_id'))
+                        ->where('kompositor_id', '=', $kompositor->id)
+                        ->delete();*/
+            \App\Models\KompositorOfKompositor::create($data);
         }
         
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
@@ -153,8 +192,7 @@ class KompositorController extends Controller
 
     public function update(Kompositor $kompositor, KompositorRequest $request) {
         $kompositor->update($request->validated());
-            if($request->input('jenis_kompositor_id')==2){
-                
+            if($request->input('jenis_kompositor_id')=='2'){                
                 $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
                     'parent_id' => $request->input('indeks_id')];
                 DB::table('indeks')
@@ -162,6 +200,14 @@ class KompositorController extends Controller
                         ->where('parent_id', '=', $request->input('indeks_id'))
                         ->delete();
                 \App\Models\Indeks::create($data_indeks);
+            }elseif($request->input('jenis_kompositor_id')=='3'){
+                $data_param = ['parameter_id' => $request->input('parameter_id'),
+                    'kompositor_id' => $request->input('kompositor_id')];
+                DB::table('kompositor_parameter')
+                        ->where('parameter_id', '=', $request->input('kompositor_id'))
+                        ->where('kompositor_id', '=', $request->input('kompositor_id'))
+                        ->delete();
+                \App\Models\KompositorParameter::create($data_param);
             }
         /*$data = ['indikator_id' => $request->input('indikator_id'),
             'kompositor_id' => $object->id];
