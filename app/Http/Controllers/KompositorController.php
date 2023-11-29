@@ -166,25 +166,23 @@ class KompositorController extends Controller
             //cari kompositor existing
             $ref_kompositor = Kompositor::where('id',$request->input('kompositor_id'))->first();
             $ref_kom_data = [
-                'nama_kompositor' => $ref_kompositor->nama_kompositor,
-                'satuan' => $ref_kompositor->satuan,
+                'nama_kompositor' => str($ref_kompositor->nama_kompositor),
+                'satuan' => str($ref_kompositor->satuan),
                 'indeks_id' => $ref_kompositor->indeks_id,
-                'jenis_kompositor_id' => $ref_kompositor->indeks_id, //diubah
+                'jenis_kompositor_id' => $ref_kompositor->jenis_kompositor_id, //diubah
                 'indikator_id' => $ref_kompositor->indikator_id,
                 //'type_kompositor' => $ref_kompositor->type_kompositor,
-                'sumber_kompositor' => $request->input('type_kompositor')
+                'sumber_kompositor' => str($request->input('type_kompositor'))
             ];
             //tambahkan kompositor baru dari data kompositor existing
             $kompositor = Kompositor::create($ref_kom_data);
             
-            $data = ['kompositor_id' => $kompositor->id,
+            $data_kompositor_of = ['kompositor_id' => $kompositor->id,
                 'ref_kompositor_id' => $request->input('kompositor_id')];
-            //hapus record kompositor of kompositor jika sudah ada
-            /*DB::table('kompositor_of_kompositor')
-                        ->where('ref_kompositor_id', '=', $request->input('kompositor_id'))
-                        ->where('kompositor_id', '=', $kompositor->id)
-                        ->delete();*/
-            \App\Models\KompositorOfKompositor::create($data);
+            $data_indikator_kompositor = ['indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $kompositor->id];
+            IndikatorKompositor::create($data_indikator_kompositor);
+            \App\Models\KompositorOfKompositor::create($data_kompositor_of);
         }
         
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
