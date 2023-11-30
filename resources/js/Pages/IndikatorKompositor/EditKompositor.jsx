@@ -31,7 +31,7 @@ export default function EditKompositor(props) {
         satuan: kompositor.data.satuan || '',
         indeks_id: kompositor.data.indeks_id || '0',
         jenis_kompositor_id: kompositor.data.jenis_kompositor_id || '',
-        type_kompositor: 'New',
+        sumber_kompositor: kompositor.data.sumber_kompositor ||'',
         kompositor_id: kompositor.data.id
     });
     
@@ -40,7 +40,7 @@ export default function EditKompositor(props) {
     const [newKompositor, setNewKompositor] = useState(true);
     const [existingKompositor, setExistingKompositor] = useState(false);
     const [isParameter, setIsParameter] = useState(false);
-    
+    const [existingIndikator, setExistingIndikator] = useState(false);
     /*if(kompositor.data.jenis_kompositor_id == 3){
         setIsParameter(true);
     }*/
@@ -121,12 +121,30 @@ export default function EditKompositor(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Type Kompositor" id="type-kompositor" value="New" disabled
-                                                onChange={handleChangeType}>
-                                                <Option value="New">New</Option>
-                                                <Option value="Existing">Existing</Option>
-                                            </Select>
+                                                <Select label="Sumber Kompositor" id="type-kompositor" value="New" disabled
+                                                    value={kompositor.data.sumber_kompositor}
+                                                    onChange={ (e)=> {
+                                                            if(e === 'New'){
+                                                                setNewKompositor(true);
+                                                                setExistingIndikator(false);
+                                                                setExistingKompositor(false);            
+                                                            }else if(e === 'Existing Indikator'){
+                                                                setNewKompositor(false);
+                                                                setExistingIndikator(true);
+                                                                setExistingKompositor(false);
+                                                            }else{//existing kompositor
+                                                                setNewKompositor(false);
+                                                                setExistingIndikator(false);
+                                                                setExistingKompositor(true);
+                                                            }
+                                                            setData('sumber_kompositor', e);
+                                                        }}>
+                                                    <Option value="New">New</Option>
+                                                    <Option value="Existing Indikator">Existing Indikator</Option>
+                                                    <Option value="Existing Kompositor">Existing Kompositor</Option>
+                                                </Select>
                                             </div>
+                                            
                                             {newKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-kompositor" 

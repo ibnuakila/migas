@@ -30,7 +30,7 @@ export default function FormKompositor(props) {
         satuan: '',
         indeks_id: '1',
         jenis_kompositor_id: '',
-        type_kompositor: '',
+        sumber_kompositor: '',
         kompositor_id: '',
         parameter_id: ''
     });
@@ -112,7 +112,7 @@ export default function FormKompositor(props) {
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Type Kompositor" id="type-kompositor"
+                                                <Select label="Sumber Kompositor" id="type-kompositor"
                                                     onChange={ (e)=> {
                                                         if(e === 'New'){
                                                             setNewKompositor(true);
@@ -127,7 +127,7 @@ export default function FormKompositor(props) {
                                                             setExistingIndikator(false);
                                                             setExistingKompositor(true);
                                                         }
-                                                        setData('type_kompositor', e);
+                                                        setData('sumber_kompositor', e);
                                                     }}>
                                                     <Option value="New">New</Option>
                                                     <Option value="Existing Indikator">Existing Indikator</Option>

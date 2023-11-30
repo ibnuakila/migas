@@ -228,47 +228,28 @@ Route::middleware('auth')->group(function () {
 });*/
 
 Route::get('/test', function () {
-    /* $periode = Periode::findOrFail(9);
-      $data = [
-      [
-      'filter' => Request::all('search', 'trashed'),
-      /*'periodes' => new App\Http\Resources\PeriodeCollection(
-      Periode::
-      //filter(Request::only('search', 'trashed'))
-      paginate(10)
-      ->appends(Request::all())
-      ) */
-    /* 'periodes' => Periode::query()
-      ->when(\Illuminate\Support\Facades\Request::input('search'), function($query, $search){
-      $query->where('Periode','like', "{$search}%");
-      })
-      ->paginate(10)
-      ]
-      ]; */
-    /*$select = DB::table('laporan_capaian')
-            ->join('indikator_periode', 'laporan_capaian.indikator_periode_id', '=', 'indikator_periode.id')
-            ->join('indikator', 'indikator_periode.indikator_id', '=', 'indikator.id')
-            ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-            ->join('indikator_periode_pic', 'indikator_periode.id', '=', 'indikator_periode_pic.indikator_periode_id')
-            ->join('pic', 'indikator_periode_pic.pic_id', '=', 'pic.id')
-            ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
-            ->select('laporan_capaian.id',
-                    'laporan_capaian.realisasi',
-                    'laporan_capaian.kinerja',
-                    'laporan_capaian.sumber_data',
-                    'indikator_periode.target',
-                    'indikator.*',
-                    'periode.periode',
-                    'pic.nama_pic',
-                    'triwulan.triwulan')
-            ->paginate(10);*/
-    $result = DB::table('kompositor')
-                    ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
-                        ->where('indikator_kompositor.indikator_id', '=', 9)
-                        ->select('kompositor.*')
-                        ->get();
-
-    return $result;
+    
+    $result = App\Models\InputRealisasi::query()
+                ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
+                ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                ->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
+                ->with('inputRealisasiPic')
+                ->paginate(10);
+            
+    $result2 = App\Models\LaporanCapaian::query()            
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                ->with('laporanCapaianPic')
+                ->paginate(10);
+    return $result2;
 });
 
 Route::get('/test2', function () {

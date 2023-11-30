@@ -13,7 +13,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListInputRealisasi({auth}){
-    const TABLE_HEAD = ["ID", "Nama Kompositor", "Realisasi", "Satuan", "Triwulan", "PIC", "Periode", "Action"];
+    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC","Periode", "Action"];
  
     const { input_realisasis, indikator, laporan_capaian } = usePage().props;
     console.log(usePage().props);
@@ -92,7 +92,8 @@ export default function ListInputRealisasi({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {input_realisasis.map(({ id, nama_kompositor, realisasi, satuan, triwulan, pic_id, periode}) => (
+                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, realisasi, 
+                                    satuan, triwulan, input_realisasi_pic, periode}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -101,7 +102,17 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {nama_indeks}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_kompositor}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {nama_jenis_kompositor}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
@@ -119,11 +130,14 @@ export default function ListInputRealisasi({auth}){
                                           {triwulan}
                                         </Typography>
                                       </td>
-                                      <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {pic_id}
-                                        </Typography>                                                                                
-                                      </td>                                      
+                                      <td>
+                                        <div className="flex">
+                                            {input_realisasi_pic.map( ({id, nama_pic}) => (
+                                                <Typography variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                    {nama_pic}
+                                                </Typography>) )}
+                                        </div>
+                                      </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {periode}

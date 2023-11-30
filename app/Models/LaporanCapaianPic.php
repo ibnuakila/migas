@@ -16,4 +16,8 @@ class LaporanCapaianPic extends Model
         'pic_id',
         'nama_pic'
     ];
+    
+    public function laporanCapaian(){
+        return $this->belongsTo(LaporanCapaian::class);
+    }
 }

@@ -75,11 +75,12 @@ class InputRealisasiController extends Controller //implements ICrud
         return Inertia::render('InputRealisasi/ListInputRealisasi',[
             'laporan_capaian' => $laporancapaian,
             'indikator' => $indikator,                
-            'input_realisasis' => InputRealisasi::query()
+            'input_realisasis' => InputRealisasi::query()->with('inputRealisasiPic')
                 ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
                 ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
-                //->join('indikator_periode', 'indikator.id', '=', 'indikator_periode.indikator_id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
                 ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
                 ->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
@@ -89,7 +90,9 @@ class InputRealisasiController extends Controller //implements ICrud
                         'kompositor.nama_kompositor',
                         'kompositor.satuan',
                         'triwulan.triwulan',
-                        'periode.periode'
+                        'periode.periode',
+                        'indeks.nama_indeks',
+                        'jenis_kompositor.nama_jenis_kompositor'
                         )
                 ->get()
         ]);
@@ -243,10 +246,16 @@ class InputRealisasiController extends Controller //implements ICrud
                     ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Gas')
                     ->select('input_realisasi.*', 
                             'kompositor.*')->get();
-                
+                $realisasi_produksi_lifting_gas_bumi_bbtu = 0;
+                $realisasi_alokasi_dom = 0;
                 foreach($res_realisasi as $realisasi){
-                    
+                    if(trim($realisasi->nama_kompositor) == 'Realisasi Produksi/Lifting Gas Bumi BBTU'){
+                        $realisasi_produksi_lifting_gas_bumi_bbtu = $realisasi->realisasi;
+                    }elseif(trim($realisasi->nama_kompositor) == 'Realisasi Alokasi Gas Dom'){
+                        $realisasi_alokasi_dom = $realisasi->realisasi;
+                    }
                 }
+                $realisasi = ($realisasi_produksi_lifting_gas_bumi_bbtu / $realisasi_alokasi_dom);
                 break;
             case 'Indeks Ketersediaan Hulu Migas':
                 $res_realisasi = DB::table('indikator')
