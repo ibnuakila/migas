@@ -11,19 +11,15 @@ class LaporanCapaian extends Model
     protected $table = 'laporan_capaian';
     protected $primaryKey = 'id';
     public $timestamps = false;
-    protected $fillable = [
-        //'indikator_periode_id',
-        'triwulan_id',
-        'realisasi',
-        'kinerja',
-        'periode_id',
-        'kategori_kinerja_id',
-        'sumber_data',
+    protected $fillable = [       
+        'periode_id',                
         'indikator_id',
+        'kategori_kinerja_id',
         'target',
         'target_format',
-        'persentasi_kinerja',
-        'file_path'
+        'status_kinerja',
+        'kinerja_tahunan',
+        'sumber_data',
     ];
     
     public function indikator(){
@@ -33,11 +29,7 @@ class LaporanCapaian extends Model
     public function periode() {
         return $this->belongsTo(Periode::class);
     }
-    
-    public function triwulan() {
-        return $this->belongsTo(Triwulan::class);
-    }
-    
+        
     public function kategoriKinerja() {
         return $this->hasOne(KategoriKinerja::class);
     }
@@ -46,5 +38,8 @@ class LaporanCapaian extends Model
         return $this->hasMany(LaporanCapaianPic::class);
     }
     
+    public function kinerjaTriwulan(){
+        return $this->hasMany(KinerjaTriwulan::class);
+    }
     
 }

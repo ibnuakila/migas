@@ -249,7 +249,7 @@ Route::get('/test', function () {
                 ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
                 ->with('laporanCapaianPic')
                 ->paginate(10);
-    return $result2;
+    return $result;
 });
 
 Route::get('/test2', function () {

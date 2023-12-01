@@ -24,18 +24,15 @@ class LaporanCapaianRequest extends FormRequest
     public function rules()
     {
         return [
-            'triwulan_id' => ['required', 'integer'],
-            'realisasi' => ['required', 'decimal:2'],
-            'kinerja' => ['nullable'],
-            'periode_id' => ['required', 'integer'],
-            'kategori_kinerja_id', ['nullable'],
+            
+            'periode_id' => ['required', 'integer'],               
             'indikator_id' => ['required', 'integer'],
+            'kategori_kinerja_id' =>['nullable'],
             'target' => ['required', 'decimal:2'],
-            'persentasi_kinerja' => ['required'],
-            'sumber_data' => ['nullable'],
-            'target' => ['required'],
             'target_format' => ['required'],
-            'file_path' => ['nullable']
+            'status_kinerja' => ['nullable'],
+            'kinerja_tahunan' => ['nullable'],
+            'sumber_data' => ['nullable'],
         ];
     }
 }
