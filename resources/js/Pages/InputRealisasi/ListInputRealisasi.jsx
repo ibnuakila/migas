@@ -50,8 +50,8 @@ export default function ListInputRealisasi({auth}){
                 method: 'get',
                 data:{laporan_capaian_id:laporan_capaian.id},
                 onFinish: visit => {
-                    //router.reload();
-                    console.log(visit)},
+                    router.reload();
+                    },
             });
             
         }

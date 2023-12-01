@@ -8,7 +8,7 @@ import { Card,
   DialogBody,
   DialogFooter,
   Select, Option, 
-  Input} from "@material-tailwind/react";
+  Input, Alert} from "@material-tailwind/react";
 import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
@@ -22,12 +22,26 @@ export default function ListLaporanCapaian({auth}){
       } = laporan_capaians;
     console.log(laporan_capaians);
     
-    const TABLE_HEAD = ["ID", "No", "Nama Indikator", "Level", "Satuan","Target", "Triwulan", "Realisasi", "Persentasi Kinerja" , "PIC", "Periode", "Action"];
+    const TABLE_HEAD = ["ID", "No", 
+        "Nama Indikator", 
+        "Level", 
+        "Satuan",
+        "Target", 
+        "PIC", 
+        "Realisasi Triwulan", 
+        "Kinerja Triwulan", 
+        "Kinerja Tahunan", 
+        "Kategori Kinerja",
+        "Status Kinerja",
+        "Periode", 
+        "Action"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
     const [term, setTerm] = useState('');
+    const { flash } = usePage().props;
+    var _id = 1;
     
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
@@ -36,7 +50,7 @@ export default function ListLaporanCapaian({auth}){
                 data:{isImport:true},
                 onFinish: visit => {
                     router.reload();
-                    console.log(visit)},
+                    },
             });
             
         }
@@ -68,7 +82,10 @@ export default function ListLaporanCapaian({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">
-                    <Card className="p-5 h-full w-full overflow-scroll">
+                            {flash.message && (
+                                <Alert color="green">{flash.message}</Alert>
+                            )}
+                    <Card className="p-5 h-full w-full overflow-scroll">                    
                     <div className="flex justify-between">
                         <Typography variant="h3">Laporan Capaian Kinerja                            
                         </Typography>
@@ -83,31 +100,33 @@ export default function ListLaporanCapaian({auth}){
                     <Link href={route('laporan-capaian.create')}>
                         <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
                     </Link>
-                    <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Target Indikator</Button>
+                    <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator</Button>
                     </div>
                     
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
-                                    {TABLE_HEAD.map((head) => (
-                                    <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                      <Typography key={head.id}
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                      >
-                                        {head}
-                                      </Typography>
-                                    </th>
-                                  ))}
+                                    {TABLE_HEAD.map((head) => (                                            
+                                            <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                            <Typography key={head.id}
+                                              variant="small"
+                                              color="blue-gray"
+                                              className="font-normal leading-none opacity-70"
+                                            >
+                                              {head}
+                                            </Typography>
+                                          </th>
+                                        )                                            
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({id, indikator_periode_id ,numbering, nama_indikator, nama_level, nama_satuan, target, triwulan ,realisasi, persentasi_kinerja, nama_pic, periode}) => (
-                                    <tr key={id} className="even:bg-blue-gray-50/50">
+                                {data.map(({id, indikator_id,numbering, nama_indikator, nama_level, nama_satuan, target, laporan_capaian_pic,
+                                    input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja_id,status_kinerja, periode}) => (
+                                    <tr key={indikator_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
-                                          {id}
+                                          {indikator_id}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
@@ -137,22 +156,49 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {triwulan}
+                                            <div className="flex">
+                                            {laporan_capaian_pic.map( ({id, nama_pic}) => (
+                                                <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                    {nama_pic}
+                                                </Typography>) )}
+                                            </div>
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
-                                          {realisasi ? ((parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
+                                            {
+                                                input_realisasi.map( ({id, realisasi})=>(
+                                                    <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                        {realisasi}
+                                                    </Typography>
+                                                ) )
+                                            }
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {persentasi_kinerja}
+                                          {
+                                            kinerja_triwulan.map( ({id, triwulan_id, kinerja})=>(
+                                              <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                  {triwulan_id + " | " + kinerja }
+                                              </Typography>
+                                            ))
+                                           }
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {nama_pic}
+                                          {kinerja_tahunan}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {kategori_kinerja_id}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {status_kinerja}
                                         </Typography>
                                       </td>
                                       <td className="p-4">

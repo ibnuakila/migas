@@ -235,21 +235,37 @@ Route::get('/test', function () {
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                 ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
-                ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
+                ->join('laporan_capaian','input_realisasi.laporan_capaian_id', '=', 'laporan_capaian.id')
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
-                ->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
+                //->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
                 ->with('inputRealisasiPic')
                 ->paginate(10);
             
     $result2 = App\Models\LaporanCapaian::query()            
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
-                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-                ->join('triwulan', 'laporan_capaian.triwulan_id', '=', 'triwulan.id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')                
                 ->join('level', 'indikator.level_id', '=', 'level.id')
                 ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                ->with('kinerjaTriwulan')
                 ->with('laporanCapaianPic')
+                ->with('inputRealisasi')
+                ->when(Request::input('flevel'), function ($query, $search) {
+                    $query->where('level.nama_level', 'like', "%{$search}%");
+                })
+                ->when(Request::input('fpic'), function ($query, $search) {
+                    $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
+                    $query->where('laporan_capaian_pic.nama_pic', 'like', "%{$search}%");
+                })
+                ->when(Request::input('findikator'), function ($query, $search) {
+                    $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                })
+                ->select('laporan_capaian.*',
+                        'indikator.nama_indikator',
+                        'periode.periode',
+                        'level.nama_level',
+                        'satuan.nama_satuan')
                 ->paginate(10);
-    return $result;
+    return $result2;
 });
 
 Route::get('/test2', function () {

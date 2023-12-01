@@ -37,4 +37,8 @@ class InputRealisasi extends Model
     public function indikatorKompositor(){
         return $this->belongsTo(IndikatorKompositor::class);
     }
+    
+    public function laporanCapaian(){
+        return $this->belongsTo(LaporanCapaian::class);
+    }
 }

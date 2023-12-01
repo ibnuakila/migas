@@ -42,4 +42,8 @@ class LaporanCapaian extends Model
         return $this->hasMany(KinerjaTriwulan::class);
     }
     
+    public function inputRealisasi(){
+        return $this->hasMany(InputRealisasi::class);
+    }
+    
 }
