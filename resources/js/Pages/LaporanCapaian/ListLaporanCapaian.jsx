@@ -13,7 +13,11 @@ import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-
+import {
+  ArrowDownTrayIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/solid";
 export default function ListLaporanCapaian({auth}){ 
     const { laporan_capaians } = usePage().props;
     const {
@@ -164,18 +168,18 @@ export default function ListLaporanCapaian({auth}){
                                           className="font-normal leading-none opacity-70"
                                         >PIC</Typography>
                                     </th>
-                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4" colspan="4">
                                         <Typography
                                           variant="small"
                                           color="blue-gray"
-                                          className="font-normal leading-none opacity-70"
+                                          className="font-normal leading-none opacity-70 text-center"
                                         >Realisasi Triwulan</Typography>
                                     </th>
-                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4" colspan="4">
                                         <Typography
                                           variant="small"
                                           color="blue-gray"
-                                          className="font-normal leading-none opacity-70"
+                                          className="font-normal leading-none opacity-70 text-center"
                                         >Kinerja Triwulan</Typography>
                                     </th>
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -214,35 +218,98 @@ export default function ListLaporanCapaian({auth}){
                                         >Action</Typography>
                                     </th>
                                 </tr>
-                                <tr>
+                                <tr className="border-b-2">
                                     <th></th>
                                     <th></th>
-                                    <th>
-                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
-                                        onChange={handleChangeIndikator}/>
+                                    <th className="p-2">
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10" 
+                                            onChange={handleChangeIndikator} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Indikator" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
                                     </th>
                                     <th>
-                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
-                                        onChange={handleChangeLevel}/>
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>
-                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
-                                        onChange={handleChangePic}/>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeLevel} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Level" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
                                     </th>
                                     <th></th>
                                     <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangePic} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Pic" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW I</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW II</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW III</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW IV</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW I</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW II</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW III</Typography>
+                                    </th>
+                                    <th className="border text-center p-1">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >TW IV</Typography>
+                                    </th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th><Input variant="outlined" size="md" className="w-auto my-1" label="Search.." 
-                                        onChange={handleChangePeriode}/></th>
+                                    
+                                    <th><Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangePeriode} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Periode" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({id, indikator_id,numbering, nama_indikator, nama_level, nama_satuan, target, laporan_capaian_pic,
+                                {data.map(({id, indikator_id, numbering, nama_indikator, nama_level, nama_satuan, target, laporan_capaian_pic,
                                     input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja_id,status_kinerja, periode}) => (
                                     <tr key={indikator_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
@@ -285,32 +352,86 @@ export default function ListLaporanCapaian({auth}){
                                             </div>
                                         </Typography>
                                       </td>
-                                      <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
-                                            <div className="flex">
-                                            {
-                                                input_realisasi.map( ({id, realisasi})=>(
-                                                    <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
-                                                        {realisasi}
+                                        {input_realisasi.length > 0 ?
+                                            (input_realisasi.map( ({id, realisasi})=>(
+                                                <td className="p-4 text-center" key={id}>
+                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                                      {realisasi}
                                                     </Typography>
-                                                ) )
-                                            }
-                                            </div>
-                                        </Typography>
-                                      </td>
-                                      <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal">
-                                            <div className="flex">
-                                          {
-                                            kinerja_triwulan.map( ({id, triwulan_id, kinerja})=>(
-                                              <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
-                                                  {triwulan_id + " | " + kinerja }
-                                              </Typography>
-                                            ))
-                                           }
-                                           </div>
-                                        </Typography>
-                                      </td>
+                                                </td>
+                                            ) )): 
+                                            (<>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            </>)
+                                        }
+                                        
+                                        {kinerja_triwulan.length > 0 ?
+                                            (kinerja_triwulan.map( ({id, triwulan_id, kinerja})=>(
+                                                <td className="p-4 text-center" key={id}>
+                                                    <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                        {kinerja}
+                                                    </Typography>
+                                                </td>
+                                            ))) : 
+                                            (<>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            <td>
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                        <PencilIcon className="h-4 w-4" />
+                                                    </Link>
+                                                </Typography>
+                                            </td>
+                                            </>)
+                                        }
+                                      
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {kinerja_tahunan}
