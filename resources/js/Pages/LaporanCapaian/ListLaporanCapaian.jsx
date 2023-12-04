@@ -89,8 +89,7 @@ export default function ListLaporanCapaian({auth}){
                     <div className="flex justify-between">
                         <Typography variant="h3">Laporan Capaian Kinerja                            
                         </Typography>
-                        <div className="flex">
-                            
+                        <div className="flex">                            
                             <span>
                                 <Input variant="outlined" size="md" className="w-45" label="Search.." onChange={handleChange}/>
                             </span>
@@ -166,6 +165,7 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
+                                            <div className="flex">
                                             {
                                                 input_realisasi.map( ({id, realisasi})=>(
                                                     <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
@@ -173,10 +173,12 @@ export default function ListLaporanCapaian({auth}){
                                                     </Typography>
                                                 ) )
                                             }
+                                            </div>
                                         </Typography>
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
+                                            <div className="flex">
                                           {
                                             kinerja_triwulan.map( ({id, triwulan_id, kinerja})=>(
                                               <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
@@ -184,6 +186,7 @@ export default function ListLaporanCapaian({auth}){
                                               </Typography>
                                             ))
                                            }
+                                           </div>
                                         </Typography>
                                       </td>
                                       <td className="p-4">

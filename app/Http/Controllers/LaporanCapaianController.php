@@ -187,7 +187,7 @@ class LaporanCapaianController extends Controller {
                         }
                     }
 
-                    //looping for triwulan
+                    //insert kinerja triwulan
                     $triwulans = DB::table('triwulan')->get();
                     if ($triwulans->count() > 0) {
                         foreach ($triwulans as $triwulan) {

@@ -16,6 +16,10 @@ export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC","Periode", "Action"];
  
     const { input_realisasis, indikator, laporan_capaian } = usePage().props;
+    const {
+        data,
+        //meta: { links }
+      } = input_realisasis;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
     const { flash } = usePage().props;
@@ -72,7 +76,7 @@ export default function ListInputRealisasi({auth}){
                     </div>
                     <div className="flex my-2">
                         
-                        <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator Kompositor</Button>
+                        <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Kompositor</Button>
                     </div>
                     
                         <table>
@@ -92,7 +96,7 @@ export default function ListInputRealisasi({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, realisasi, 
+                                {data.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, realisasi, 
                                     satuan, triwulan, input_realisasi_pic, periode}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
@@ -155,6 +159,13 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                     </tr>
                                   ))}
+                                {data.length === 0 && (
+                                    <tr>
+                                      <td className="px-6 py-4 border-t" colSpan="4">
+                                        No data found.
+                                      </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                         <Pagination links={input_realisasis.links} />

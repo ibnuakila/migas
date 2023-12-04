@@ -230,18 +230,26 @@ Route::middleware('auth')->group(function () {
 Route::get('/test', function () {
     
     $result = App\Models\InputRealisasi::query()
-                ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
-                ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')    
+                ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                 ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
-                ->join('laporan_capaian','input_realisasi.laporan_capaian_id', '=', 'laporan_capaian.id')
-                ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
-                //->join('periode', 'input_realisasi.periode_id', '=', 'periode.id')
+                ->where('input_realisasi.laporan_capaian_id', 8)
+                //->where('input_realisasi.triwulan_id', $laporancapaian->triwulan_id)
+                ->select('input_realisasi.*',
+                        'kompositor.nama_kompositor',
+                        'kompositor.satuan',
+                        'triwulan.triwulan',                        
+                        'indeks.nama_indeks',
+                        'jenis_kompositor.nama_jenis_kompositor'
+                )
                 ->with('inputRealisasiPic')
-                ->paginate(10);
+                ->get();
             
-    $result2 = App\Models\LaporanCapaian::query()            
+    $laporan_capaian = App\Models\LaporanCapaian::query()            
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')                
                 ->join('level', 'indikator.level_id', '=', 'level.id')
@@ -265,7 +273,27 @@ Route::get('/test', function () {
                         'level.nama_level',
                         'satuan.nama_satuan')
                 ->paginate(10);
-    return $result2;
+    /*$input_realisasi = App\Models\InputRealisasi::query()->with('inputRealisasiPic')
+                ->join('kompositor', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator_kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                ->join('laporan_capaian','indikator.id', '=', 'laporan_capaian.indikator_id')
+                ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                //->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->where('laporan_capaian.id', 8)
+                ->where('input_realisasi.triwulan_id', 1)
+                ->select('input_realisasi.*', 
+                        'kompositor.nama_kompositor',
+                        'kompositor.satuan',
+                        'triwulan.triwulan',
+                        //'periode.periode',
+                        'indeks.nama_indeks',
+                        'jenis_kompositor.nama_jenis_kompositor'
+                        )
+                ->get();*/
+    return $result;
 });
 
 Route::get('/test2', function () {

@@ -14,8 +14,7 @@ class InputRealisasi extends Model
     public $timestamps = false;
     protected $fillable = [
         'kompositor_id',
-        'realisasi',        
-        'satuan',
+        'realisasi',                
         'triwulan_id',
         'pic_id',
         'periode_id',
