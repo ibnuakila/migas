@@ -17,10 +17,10 @@ import { router } from '@inertiajs/react';
 export default function ListLaporanCapaian({auth}){ 
     const { laporan_capaians } = usePage().props;
     const {
-        data,
-        //meta: { links }
+        data,        
       } = laporan_capaians;
-    console.log(laporan_capaians);
+    const levels = usePage().props;
+    console.log(usePage().props);
     
     const TABLE_HEAD = ["ID", "No", 
         "Nama Indikator", 
@@ -39,10 +39,17 @@ export default function ListLaporanCapaian({auth}){
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
-    const [term, setTerm] = useState('');
+    const [termIndikator, setTermIndikator] = useState('');
+    const [termPic, setTermPic] = useState('');
+    const [termPeriode, setTermPeriode] = useState('');
+    const [termLevel, setTermLevel] = useState('');
     const { flash } = usePage().props;
-    var _id = 1;
-    
+    const queryString = {page:laporan_capaians.current_page, 
+        findikator:termIndikator, 
+        fpic:termPic,
+        fperiode:termPeriode,
+        flevel:termLevel};
+    const [optionLevel, setOptionLevel] = useState('');
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
             router.visit('/laporan-capaian/importindikator', {
@@ -55,28 +62,35 @@ export default function ListLaporanCapaian({auth}){
             
         }
     }
-    function handleChange(e) {
+    function handleChangeIndikator(e) {
         //const key = e.target.name;
         const value = e.target.value;
-
-        /*setValues(values => ({
-          ...values,
-          [key]: value
-        }));*/
-        setTerm(value);
-        //console.log(key + ", " +value);
+        setTermIndikator(value);
+        //queryString.findikator = term;
+    }
+    function handleChangeLevel(e){
+        const value = e.target.value;
+        setTermLevel(value);
+    }
+    function handleChangePic(e){
+        const value = e.target.value;
+        setTermPic(value);
+    }
+    function handleChangePeriode(e){
+        const value = e.target.value;
+        setTermPeriode(value);
     }
       useEffect( () => {
         //if(term.length >= 2){
             router.visit('/laporan-capaian', {
                 method: 'get',
-                data: { search: term, page:laporan_capaians.current_page},
+                data: queryString,
                 replace: true,
                 preserveState: true
             });
         //}
         
-      },[term]);
+      },[termIndikator, termPic, termLevel, termPeriode]);
     return (
         <AdminLayout 
         auth = {auth}
@@ -89,11 +103,7 @@ export default function ListLaporanCapaian({auth}){
                     <div className="flex justify-between">
                         <Typography variant="h3">Laporan Capaian Kinerja                            
                         </Typography>
-                        <div className="flex">                            
-                            <span>
-                                <Input variant="outlined" size="md" className="w-45" label="Search.." onChange={handleChange}/>
-                            </span>
-                        </div>
+                        
                     </div>
                     <div className="flex my-2">
                     <Link href={route('laporan-capaian.create')}>
@@ -104,19 +114,131 @@ export default function ListLaporanCapaian({auth}){
                     
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
+                                <tr>                                                                                
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >ID</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >No</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Nama Indikator</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Level</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Satuan</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Target</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >PIC</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Realisasi Triwulan</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Kinerja Triwulan</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Kinerja Tahunan</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Kategori Kinerja</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Status Kinerja</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Periode</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Action</Typography>
+                                    </th>
+                                </tr>
                                 <tr>
-                                    {TABLE_HEAD.map((head) => (                                            
-                                            <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                            <Typography key={head.id}
-                                              variant="small"
-                                              color="blue-gray"
-                                              className="font-normal leading-none opacity-70"
-                                            >
-                                              {head}
-                                            </Typography>
-                                          </th>
-                                        )                                            
-                                    )}
+                                    <th></th>
+                                    <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
+                                        onChange={handleChangeIndikator}/>
+                                    </th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
+                                        onChange={handleChangeLevel}/>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="w-auto mx-2 my-1" label="Search.." 
+                                        onChange={handleChangePic}/>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th><Input variant="outlined" size="md" className="w-auto my-1" label="Search.." 
+                                        onChange={handleChangePeriode}/></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>                                                      

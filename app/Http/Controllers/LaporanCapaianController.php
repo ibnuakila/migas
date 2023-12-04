@@ -43,6 +43,7 @@ class LaporanCapaianController extends Controller {
     }
 
     public function index() {
+        //if(!Request::input('page')){
         $select = LaporanCapaian::query()
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
@@ -52,25 +53,53 @@ class LaporanCapaianController extends Controller {
                 ->with('laporanCapaianPic')
                 ->with('inputRealisasi')
                 ->when(Request::input('flevel'), function ($query, $search) {
-                    $query->where('level.nama_level', 'like', "%{$search}%");
+                    if($search != ''){
+                        $query->where('level.nama_level', 'like', "%{$search}%");
+                    }
                 })
                 ->when(Request::input('fpic'), function ($query, $search) {
-                    $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
-                    $query->where('laporan_capaian_pic.nama_pic', 'like', "%{$search}%");
+                    if($search != ''){
+                        $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
+                        $query->where('laporan_capaian_pic.nama_pic', 'like', "%{$search}%");
+                    }
                 })
                 ->when(Request::input('findikator'), function ($query, $search) {
-                    $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                    if($search != ''){
+                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                    }
                 })
+                ->when(Request::input('fperiode'), function ($query, $search) {
+                    if($search != ''){
+                        $query->where('periode.periode', '=', "{$search}");
+                    }
+                })
+
                 ->select('laporan_capaian.*',
                         'indikator.nama_indikator',
                         'periode.periode',
                         'level.nama_level',
                         'satuan.nama_satuan')
-                ->paginate(10);
-
+                ->paginate();
+        /*}else{
+            $select = LaporanCapaian::query()
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                ->with('kinerjaTriwulan')
+                ->with('laporanCapaianPic')
+                ->with('inputRealisasi')
+                    ->select('laporan_capaian.*',
+                        'indikator.nama_indikator',
+                        'periode.periode',
+                        'level.nama_level',
+                        'satuan.nama_satuan')
+                    ->paginate(10);
+        }*/
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
-                    'filter' => Request::all('search', 'trashed'),
-                    'laporan_capaians' => $select
+                    //'filter' => Request::all('search', 'trashed'),
+                    'laporan_capaians' => $select,
+                    'levels' => \App\Models\Level::all()
         ]);
     }
 
