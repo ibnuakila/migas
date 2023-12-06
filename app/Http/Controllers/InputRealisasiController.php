@@ -27,10 +27,12 @@ class InputRealisasiController extends Controller {
         
     }
 
-    public function edit(InputRealisasi $inputrealisasi) {
-        $kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
+    public function edit(InputRealisasi $inputrealisasi, \App\Models\RealisasiKompositor $realisasikompositor) {
+        //$realisasi_kompositor = \App\Models\RealisasiKompositor::where('input_realisasi_id', $inputrealisasi->id)->first();
+        $kompositor = \App\Models\Kompositor::where('id', $realisasikompositor->kompositor_id)->first();
         return Inertia::render('InputRealisasi/EditRealisasi', [
                     'input_realisasi' => new InputRealisasiResource($inputrealisasi),
+                    'laporan_capaian' => new \App\Http\Resources\LaporanCapaianResource(\App\Models\LaporanCapaian::find($inputrealisasi->laporan_capaian_id)),
                     'kompositor' => $kompositor,
                     'triwulans' => \App\Models\Triwulan::all(),
                     'periodes' => \App\Models\Periode::all(),
@@ -69,33 +71,66 @@ class InputRealisasiController extends Controller {
         ]);
     }
 
-    public function indexIndikator(\App\Models\LaporanCapaian $laporancapaian) {
+    public function indexIndikator(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan) {
         //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first();
         $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first();
         return Inertia::render('InputRealisasi/ListInputRealisasi', [
                     'laporan_capaian' => $laporancapaian,
                     'indikator' => $indikator,
                     'input_realisasis' => InputRealisasi::query()
-                        ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
-                        ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
-                        ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')    
-                        ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
-                        ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
-                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                        ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
-                        ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
-                        //->where('input_realisasi.triwulan_id', $laporancapaian->triwulan_id)
-                        ->select('input_realisasi.*',
-                                'kompositor.nama_kompositor',
-                                'kompositor.satuan',
-                                'triwulan.triwulan',                        
-                                'indeks.nama_indeks',
-                                'jenis_kompositor.nama_jenis_kompositor'
-                        )
-                        ->with('inputRealisasiPic')
-                        ->paginate(10),
+                            ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                            ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                            ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                            ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
+                            ->where('input_realisasi.triwulan_id', $triwulan->id)
+                            ->select('input_realisasi.*',
+                                    'kompositor.nama_kompositor',
+                                    'kompositor.satuan',
+                                    'triwulan.triwulan',
+                                    'indeks.nama_indeks',
+                                    'jenis_kompositor.nama_jenis_kompositor'
+                            )
+                            ->with('inputRealisasiPic')
+                            ->paginate(),
         ]);
         //return \App\Http\Resources\IndikatorPeriodeCollection::collection($indikator_periode);
+    }
+
+    public function laporanCapaianTriwulan(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan) {
+        $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first();
+        return Inertia::render('InputRealisasi/ListInputRealisasi', [
+                    'laporan_capaian' => $laporancapaian,
+                    'indikator' => $indikator,
+                    'triwulan' => $triwulan,
+                    'input_realisasis' => InputRealisasi::query()
+                            ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                            ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                            ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                            ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
+                            ->where('input_realisasi.triwulan_id', $triwulan->id)
+                            ->select('input_realisasi.*',
+                                    'triwulan.triwulan',
+                                    'realisasi_kompositor.id as realisasi_kompositor_id',
+                                    'realisasi_kompositor.nilai',
+                                    'kompositor.nama_kompositor',
+                                    'kompositor.satuan',
+                                    'kompositor.kalkulasi',
+                                    'kompositor.sumber_kompositor',
+                                    'indeks.nama_indeks',
+                                    'jenis_kompositor.nama_jenis_kompositor'
+                            )
+                            ->with('inputRealisasiPic')
+                            ->with('realisasiKompositor')
+                            ->paginate(),
+        ]);
     }
 
     public function store(InputRealisasiRequest $request) {
@@ -107,6 +142,21 @@ class InputRealisasiController extends Controller {
     public function update(InputRealisasi $inputrealisasi, InputRealisasiRequest $request) {
         //update input realisasi
         $inputrealisasi->update($request->validated());
+        
+        //insert/ update realisasi kompositor
+        $data_realisasi_kompositor = ['kompositor_id' => ($request->input('kompositor_id')),
+                    'input_realisasi_id' => $inputrealisasi->id,
+                    'nilai' => $request->input('realisasi')];
+        $obj_realisasi_kompositor = \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
+                    ->where('input_realisasi_id', $inputrealisasi->id)->first();
+        
+        if($obj_realisasi_kompositor === null){
+            \App\Models\RealisasiKompositor::create($data_realisasi_kompositor);
+        }else{
+            \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
+                    ->where('input_realisasi_id', $inputrealisasi->id)
+                    ->update($data_realisasi_kompositor);
+        }
         //update input realisasi pic
         $laporancapaian = \App\Models\LaporanCapaian::where('id', $inputrealisasi->laporan_capaian_id)->first();
         $pics = $request->input('pics');
@@ -122,61 +172,44 @@ class InputRealisasiController extends Controller {
             }
         }
         //update laporan capaian
-        DB::table('laporan_capaian')
+        /*DB::table('laporan_capaian')
                 ->where('id', '=', $inputrealisasi->laporan_capaian_id)
-                ->update(['realisasi' => $inputrealisasi->realisasi]);
+                ->update(['realisasi' => $inputrealisasi->realisasi]);*/
         return Redirect::route('input-realisasi.index-indikator', $laporancapaian->id);
     }
 
     public function importKompositor(\Illuminate\Http\Request $request) {
-        $id = $request->input('laporan_capaian_id');
-        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $id)->first();
+        $laporan_capaian_id = $request->input('laporan_capaian_id');
+        $triwulan_id = $request->input('triwulan_id');
+        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $laporan_capaian_id)->first();
         //check active periode
         $periode = DB::table('periode')
                 ->where('status', '=', 'Active')
                 ->get();
         //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporan_capaian->indikator_periode_id)->first();
         $indikator = \App\Models\Indikator::where('id', $laporan_capaian->indikator_id)->first();
-        $data['message'] = 'Undefined message';
-        if ($periode->count() == 1) {
-            //looping for triwulan
-            $triwulans = DB::table('triwulan')->get();
-            if ($triwulans->count() > 0) {
-                foreach ($triwulans as $triwulan) {
-                    //insert input realisasi utk masing2 triwulan                           
-                    $object = [                        
-                        'triwulan_id' => $triwulan->id,
-                        'realisasi' => 0,                        
-                        'laporan_capaian_id' => $laporan_capaian->id
-                    ];
-                    $input = InputRealisasi::create($object);
-                    //insert input_realisasi_pic;
-                    $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
-                    foreach ($pics as $pic) {
-                        $temp_lap_pic = ['input_realisasi_id' => $input->id,
-                            'pic_id' => $pic->pic_id,
-                            'nama_pic' => $pic->nama_pic];
-                        \App\Models\InputRealisasiPic::create($temp_lap_pic);
-                    }
-                    //ambil data kompositor
-                    $result = DB::table('kompositor')
-                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
-                            ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id', 'left')
-                            ->where('indikator_kompositor.indikator_id', '=', $indikator->id)
-                            ->whereNull('realisasi_kompositor.kompositor_id')
-                            ->select('kompositor.*')
-                            ->get();
-                    if ($result->count() > 0) {
-                        foreach ($result as $row) {
-                            //input realisasi kompositor
-                            $temp_realisasi = [
-                                'kompositor_id' => $row->id,
-                                'input_realisasi_id' => $input->id,
-                                'nilai' => 0
-                            ];
-                            \App\Models\RealisasiKompositor::create($temp_realisasi);
-                        }
-                    }
+        
+        $input = InputRealisasi::where('laporan_capaian_id', $laporan_capaian->id)
+                        ->where('triwulan_id', $triwulan_id)->first();
+
+        //ambil data kompositor
+        $result = DB::table('kompositor')
+                ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                ->where('indikator_kompositor.indikator_id', '=', $indikator->id)
+                ->select('kompositor.*')
+                ->get();
+        if ($result->count() > 0) {
+            foreach ($result as $row) {
+                //insert realisasi kompositor
+                $temp_realisasi = [
+                    'kompositor_id' => $row->id,
+                    'input_realisasi_id' => $input->id,
+                    'nilai' => 0
+                ];
+                $obj_realisasi_kompositor = \App\Models\RealisasiKompositor::where('input_realisasi_id', $input->id)
+                                ->where('kompositor_id', $row->id)->first();
+                if ($obj_realisasi_kompositor === null) {
+                    \App\Models\RealisasiKompositor::create($temp_realisasi);
                 }
             }
         }

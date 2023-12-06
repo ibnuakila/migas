@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/home', function () {
-    return Inertia::render('Home');
+    return Inertia::render('Beranda');
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::middleware('auth')->group(function () {
@@ -135,12 +135,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/input-realisasi/index-indikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
     Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
-    Route::get('/input-realisasi/edit/{inputrealisasi}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
+    Route::get('/input-realisasi/inputrealisasi/{inputrealisasi}/realisasikompositor/{realisasikompositor}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
     Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
     Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
+    Route::get('/input-realisasi/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputRealisasiController::class, 'laporanCapaianTriwulan'])->name('input-realisasi.laporan-capaian-triwulan');
 });
 
 Route::middleware('auth')->group(function () {
@@ -385,36 +386,74 @@ Route::get('/test2', function () {
     //return Redirect::back()->with($json_data);
 });
 
-Route::get('/test-import/{id}', function ($id) {
-    //check active periode
-    $periode = DB::table('periode')
-            ->where('status', '=', 'Active')
-            ->get();
-    $data['message'] = 'Undefined message';
-    if ($periode->count() == 1) {
-
-        $result = DB::table('indikator_kompositor')
-                ->where('indikator_id', '=', $id)
+Route::get('/test-import/', function () {
+        $laporan_capaian_id = 9; //$request->input('laporan_capaian_id');
+        $triwulan_id = 2;//$request->input('triwulan_id');
+        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $laporan_capaian_id)->first();
+        //check active periode
+        $periode = DB::table('periode')
+                ->where('status', '=', 'Active')
                 ->get();
-        if ($result->count() > 0) {
-            foreach ($result as $row) {
-                //looping for triwulan
-                $triwulans = DB::table('triwulan')->get();
-                if ($triwulans->count() > 0) {
-                    foreach ($triwulans as $trw) {
-                        $obj = new App\Models\InputRealisasi();
-                        $obj->indikator_kompositor_id = $row->id;
-                        $obj->triwulan_id = $trw->id;
-                        $obj->periode_id = $periode->first()->id;
-                        $obj->save();
+        //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporan_capaian->indikator_periode_id)->first();
+        $indikator = \App\Models\Indikator::where('id', $laporan_capaian->indikator_id)->first();
+        $data['message'] = 'Undefined message';
+        if ($periode->count() == 1) {
+            //looping for triwulan
+            $triwulans = DB::table('triwulan')->get();
+            //if ($triwulans->count() > 0) {
+                //foreach ($triwulans as $triwulan) {
+                    //insert input realisasi utk masing2 triwulan                           
+                    $object = [                        
+                        'triwulan_id' => $triwulan_id,
+                        'realisasi' => 0,                        
+                        'laporan_capaian_id' => $laporan_capaian->id
+                    ];
+                    $obj_input_realisasi = App\Models\InputRealisasi::where('laporan_capaian_id', $laporan_capaian->id)
+                            ->where('triwulan_id', $triwulan_id)->first();
+                    print_r($obj_input_realisasi);
+                    if($obj_input_realisasi === null){
+                        $input = new App\Models\InputRealisasi() ;//App\Models\InputRealisasi::create($object);
+                    }else{
+                        $input = $obj_input_realisasi;
                     }
-                }
-                $data['result'][$row->id] = 'Import ' . $row->nama_kompositor . ' successfull';
-                $data['message'] = 'All Import successfull';
-            }
+                    //insert input_realisasi_pic;
+                    if($obj_input_realisasi === null){
+                        $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
+                        foreach ($pics as $pic) {
+                            $temp_lap_pic = ['input_realisasi_id' => $input->id,
+                                'pic_id' => $pic->pic_id,
+                                'nama_pic' => $pic->nama_pic];
+                            //\App\Models\InputRealisasiPic::create($temp_lap_pic);
+                        }
+                    }
+                    //ambil data kompositor
+                    $result = DB::table('kompositor')
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            //->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id', 'left')
+                            ->where('indikator_kompositor.indikator_id', '=', $indikator->id)
+                            //->whereNull('realisasi_kompositor.kompositor_id')
+                            ->select('kompositor.*')
+                            ->get();
+                    if ($result->count() > 0) {
+                        foreach ($result as $row) {
+                            //input realisasi kompositor
+                            $temp_realisasi = [
+                                'kompositor_id' => $row->id,
+                                'input_realisasi_id' => $input->id,
+                                'nilai' => 0
+                            ];
+                            $obj_realisasi_kompositor = \App\Models\RealisasiKompositor::where('input_realisasi_id', $input->id)
+                                    ->where('kompositor_id', $row->id)->first();
+                            print_r($obj_realisasi_kompositor);
+                            if($obj_input_realisasi === null){
+                                //\App\Models\RealisasiKompositor::create($temp_realisasi);
+                            }
+                        }
+                    }
+                //}
+            //}
         }
-    }
-    return $data;
+    //return $data;
 });
 
 Route::get('/test-calculation/{id}', function ($id) {

@@ -15,15 +15,14 @@ import Pagination from '@/Components/Pagination';
 export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC","Periode", "Action"];
  
-    const { input_realisasis, indikator, laporan_capaian } = usePage().props;
+    const { input_realisasis, indikator, laporan_capaian, triwulan } = usePage().props;
     const {
         data,
         //meta: { links }
       } = input_realisasis;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
-    const { flash } = usePage().props;
-    
+    const { flash } = usePage().props;    
     const [term, setTerm] = useState('');
         
     function handleChange(e) {
@@ -52,8 +51,11 @@ export default function ListInputRealisasi({auth}){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
             router.visit('/input-realisasi/import-kompositor/' , {
                 method: 'get',
-                data:{laporan_capaian_id:laporan_capaian.id},
+                data:{laporan_capaian_id:laporan_capaian.id, triwulan_id:triwulan.id},
                 onFinish: visit => {
+                    if(flash.message){
+                        alert(flash.message);
+                    }
                     router.reload();
                     },
             });
@@ -97,7 +99,7 @@ export default function ListInputRealisasi({auth}){
                             </thead>
                             <tbody>                                                      
                                 {data.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, realisasi, 
-                                    satuan, triwulan, input_realisasi_pic, periode}) => (
+                                    satuan, triwulan, input_realisasi_pic, periode, realisasi_kompositor_id}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -149,7 +151,7 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">
-                                          <Link href={route('input-realisasi.edit', id)} title="Edit">
+                                          <Link href={route('input-realisasi.edit', {inputrealisasi:id, realisasikompositor:realisasi_kompositor_id})} title="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                             </svg>

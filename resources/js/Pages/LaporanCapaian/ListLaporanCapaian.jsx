@@ -25,21 +25,7 @@ export default function ListLaporanCapaian({auth}){
       } = laporan_capaians;
     const levels = usePage().props;
     console.log(usePage().props);
-    
-    const TABLE_HEAD = ["ID", "No", 
-        "Nama Indikator", 
-        "Level", 
-        "Satuan",
-        "Target", 
-        "PIC", 
-        "Realisasi Triwulan", 
-        "Kinerja Triwulan", 
-        "Kinerja Tahunan", 
-        "Kategori Kinerja",
-        "Status Kinerja",
-        "Periode", 
-        "Action"];
- 
+     
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
     const [objPeriode, setObjPeriode] = useState([]);
@@ -60,8 +46,11 @@ export default function ListLaporanCapaian({auth}){
                 method: 'get',
                 data:{isImport:true},
                 onFinish: visit => {
+                    if(flash.message){
+                        alert(flash.message);
+                    }
                     router.reload();
-                    },
+                },
             });
             
         }
@@ -99,10 +88,7 @@ export default function ListLaporanCapaian({auth}){
         <AdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto">
-                            {flash.message && (
-                                <Alert color="green">{flash.message}</Alert>
-                            )}
+                <div className="container mx-auto">                            
                     <Card className="p-5 h-full w-full overflow-scroll">                    
                     <div className="flex justify-between">
                         <Typography variant="h3">Laporan Capaian Kinerja                            
@@ -353,38 +339,40 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                       </td>
                                         {input_realisasi.length > 0 ?
-                                            (input_realisasi.map( ({id, realisasi})=>(
+                                            (input_realisasi.map( ({ realisasi, triwulan_id})=>(
                                                 <td className="p-4 text-center" key={id}>
-                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                                      {realisasi}
+                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-red-600">
+                                                        <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} title="Realisasi Kompositor/Parameter">
+                                                            {realisasi}
+                                                        </Link>
                                                     </Typography>
                                                 </td>
                                             ) )): 
                                             (<>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:1})} title="Realisasi Kompositor/Parameter">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:2})} title="Realisasi Kompositor/Parameter">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:3})} title="Realisasi Kompositor/Parameter">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:4})} title="Realisasi Kompositor/Parameter">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
@@ -403,28 +391,28 @@ export default function ListLaporanCapaian({auth}){
                                             (<>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW I">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW II">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW III">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
+                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW IV">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
@@ -459,14 +447,7 @@ export default function ListLaporanCapaian({auth}){
                                               <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                             </svg>
                                           </Link>
-                                        </Typography>
-                                        <Typography title="" variant="small" color="blue-gray" className="font-normal text-center text-blue-gray-400">
-                                            <Link href={route('input-realisasi.index-indikator', id)} title="Realisasi Kompositor/Parameter">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
-                                                </svg>
-                                            </Link>
-                                        </Typography>
+                                        </Typography>                                        
                                       </td>
                                     </tr>
                                   ))}

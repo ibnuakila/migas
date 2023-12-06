@@ -23,8 +23,7 @@ class InputRealisasiRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'kompositor_id' => ['required','integer'],
+        return [            
             'realisasi' => ['required','decimal:2'],
             'realisasi_format' => ['required'],
             'triwulan_id' => ['required','integer'],            

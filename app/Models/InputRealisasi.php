@@ -33,8 +33,8 @@ class InputRealisasi extends Model
         return $this->hasMany(InputRealisasiPic::class);
     }
     
-    public function indikatorKompositor(){
-        return $this->belongsTo(IndikatorKompositor::class);
+    public function realisasiKompositor(){
+        return $this->hasMany(RealisasiKompositor::class);
     }
     
     public function laporanCapaian(){

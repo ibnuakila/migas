@@ -20,6 +20,7 @@ export default function EditRealisasi(props) {
     console.log(props);
     const auth = props.auth;    
     const input_realisasi = props.input_realisasi;
+    const laporan_capaian = props.laporan_capaian;
     const kompositor = props.kompositor;
     const triwulans = props.triwulans;
     const periodes = props.periodes;
@@ -29,8 +30,8 @@ export default function EditRealisasi(props) {
         id: input_realisasi.data.id || '',
         kompositor_id: input_realisasi.data.kompositor_id || '',
         realisasi: input_realisasi.data.realisasi || '',
-        //pic_id: input_realisasi.data.pic_id || '',
-        satuan: kompositor.satuan || '',
+        realisasi_format: input_realisasi.data.realisasi_format || '',
+        //satuan: kompositor.satuan || '',
         triwulan_id: input_realisasi.data.triwulan_id || '',
         periode_id: input_realisasi.data.periode_id || '',
         laporan_capaian_id: input_realisasi.data.laporan_capaian_id || '',
@@ -41,6 +42,7 @@ export default function EditRealisasi(props) {
     const [optionPic, setOptionPic] = useState('');
     const [optionPeriode, setOptionPeriode] = useState('');
     const [selectedValue, setSelectedValue] = useState([]);
+    const [realisasFormat, setRealisasiFormat] = useState('');
     const handleSave = (e) => {
         let realisasi = document.getElementById('realisasi');
             //alert(realisasi.value);
@@ -106,13 +108,16 @@ export default function EditRealisasi(props) {
             defPics[].map(pic => {
                 return {value:pic.value, label:pic.label};
             })*/
-        
+    const handleChangeRealisasiFormat = (e) => {
+        setRealisasiFormat({selectValue: e});
+        setData('realisasi_format', e);
+    }
     
-    console.log(defPics);
+    //console.log(defPics);
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
-    console.log(optPic);
+    //console.log(optPic);
     return (
             <AdminLayout 
                 auth = {auth}
@@ -125,20 +130,17 @@ export default function EditRealisasi(props) {
                                         Input Realisasi
                                     </Typography>
                                 </CardHeader>                                    
-                                <CardBody>
-                                    
+                                <CardBody>                                    
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-indikator" 
-                                                    defaultValue={kompositor.nama_kompositor}
-                                                    disabled ={true}
+                                                    defaultValue={kompositor.nama_kompositor}                                                    
                                                        />  
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Satuan" variant="outlined" id="satuan" 
-                                                        defaultValue={kompositor.satuan}
-                                                        disabled ={true}
+                                                        defaultValue={kompositor.satuan}                                                        
                                                         error={errors.satuan}/>  
                                                 {errors.satuan && <div className="text-red-400 mt-1">{errors.satuan}</div>}
                                             </div>
@@ -171,7 +173,14 @@ export default function EditRealisasi(props) {
                                                           >Get</Button>):("")}
                                                 {errors.realisasi && <div className="text-red-400 mt-1">{errors.realisasi}</div>}
                                             </div>
-                                            
+                                            <div>
+                                                <Select label="Realisasi Format" onChange={handleChangeRealisasiFormat}
+                                                        defaultValue={input_realisasi.data.realisasi_format}
+                                                        error={errors.realisasi_format}>                                                    
+                                                    <Option value="Decimal">Decimal</Option>
+                                                    <Option value="Persentase">Persentase</Option>                                                      
+                                                </Select>
+                                            </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                  <MSelect id="pic" options={optPic} defaultValue={defPics} 
                                                     onChange={(item) => {
@@ -187,7 +196,7 @@ export default function EditRealisasi(props) {
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Periode" id="periode" onChange={handleChangePeriode}
-                                                    value={input_realisasi.data.periode_id}
+                                                    value={laporan_capaian.data.periode_id}
                                                     error={errors.periode_id}>
                                                         {periodes.map(({id, periode}) => (
                                                             <Option value={id.toString()} key={id}>{periode}</Option>

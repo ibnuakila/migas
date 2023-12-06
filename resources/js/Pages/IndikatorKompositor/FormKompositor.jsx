@@ -21,6 +21,7 @@ export default function FormKompositor(props) {
     const kompositors = props.kompositors;
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
+    const indikators = props.indikators;
     const indeks = props.indeks;
     const parameters = props.parameters;
     const {data, setData, post, errors, processing} = useForm({
@@ -193,6 +194,19 @@ export default function FormKompositor(props) {
                                                                 defaultValue = {namaKompositor}
                                                        error={errors.nama_kompositor}/>  
                                                 {errors.nama_kompositor && <div className="text-red-400 mt-1">{errors.nama_kompositor}</div>}
+                                            </div>):(null)}
+                                            {existingIndikator ? (
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                <Select label="Select Indikator" id="indeks"
+                                                            onChange={(e)=>{
+                                                                setData('kompositor_id', e);
+                                                            }}                                                            
+                                                            error={errors.kompositor_id}>
+                                                        {indikators.map(({id, nama_indikator}) => (
+                                                            <Option value={id.toString()} key={id}>{nama_indikator}</Option>
+                                                                            ))}
+                                                </Select>
+                                                {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
                                             </div>):(null)}
                                             {existingKompositor ? (
                                             <div className="sm:w-full md:w-full lg:w-full">

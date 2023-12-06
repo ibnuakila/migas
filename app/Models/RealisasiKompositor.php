@@ -16,4 +16,8 @@ class RealisasiKompositor extends Model
         'input_realisasi_id',        
         'nilai'        
     ];
+    
+    public function inputRealisasi(){
+        return $this->belongsTo(InputRealisasi::class);
+    }
 }

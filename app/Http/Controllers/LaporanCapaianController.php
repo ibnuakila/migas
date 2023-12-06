@@ -53,49 +53,49 @@ class LaporanCapaianController extends Controller {
                 ->with('laporanCapaianPic')
                 ->with('inputRealisasi')
                 ->when(Request::input('flevel'), function ($query, $search) {
-                    if($search != ''){
+                    if ($search != '') {
                         $query->where('level.nama_level', 'like', "%{$search}%");
                     }
                 })
                 ->when(Request::input('fpic'), function ($query, $search) {
-                    if($search != ''){
+                    if ($search != '') {
                         $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
                         $query->where('laporan_capaian_pic.nama_pic', 'like', "%{$search}%");
                     }
                 })
                 ->when(Request::input('findikator'), function ($query, $search) {
-                    if($search != ''){
+                    if ($search != '') {
                         $query->where('indikator.nama_indikator', 'like', "%{$search}%");
                     }
                 })
                 ->when(Request::input('fperiode'), function ($query, $search) {
-                    if($search != ''){
+                    if ($search != '') {
                         $query->where('periode.periode', '=', "{$search}");
                     }
                 })
-
                 ->select('laporan_capaian.*',
                         'indikator.nama_indikator',
+                        'indikator.numbering',
                         'periode.periode',
                         'level.nama_level',
                         'satuan.nama_satuan')
                 ->paginate();
-        /*}else{
-            $select = LaporanCapaian::query()
-                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
-                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-                ->join('level', 'indikator.level_id', '=', 'level.id')
-                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
-                ->with('kinerjaTriwulan')
-                ->with('laporanCapaianPic')
-                ->with('inputRealisasi')
-                    ->select('laporan_capaian.*',
-                        'indikator.nama_indikator',
-                        'periode.periode',
-                        'level.nama_level',
-                        'satuan.nama_satuan')
-                    ->paginate(10);
-        }*/
+        /* }else{
+          $select = LaporanCapaian::query()
+          ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+          ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+          ->join('level', 'indikator.level_id', '=', 'level.id')
+          ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+          ->with('kinerjaTriwulan')
+          ->with('laporanCapaianPic')
+          ->with('inputRealisasi')
+          ->select('laporan_capaian.*',
+          'indikator.nama_indikator',
+          'periode.periode',
+          'level.nama_level',
+          'satuan.nama_satuan')
+          ->paginate(10);
+          } */
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
                     //'filter' => Request::all('search', 'trashed'),
                     'laporan_capaians' => $select,
@@ -199,7 +199,7 @@ class LaporanCapaianController extends Controller {
             if ($indikators->count() > 1) {
                 foreach ($indikators as $row) {
                     //model indikator
-                    $indikator = \App\Models\Indikator::where('id',$row->id)->first();
+                    $indikator = \App\Models\Indikator::where('id', $row->id)->first();
 
                     //insert laporan capaian
                     $data_lap_cap = ['indikator_id' => $indikator->id,
@@ -225,6 +225,30 @@ class LaporanCapaianController extends Controller {
                                 'kinerja' => 0,
                                 'triwulan_id' => $triwulan->id];
                             \App\Models\KinerjaTriwulan::create($data_kinerja);
+                            
+                            //insert input realisasi
+                            $object = [
+                                'triwulan_id' => $triwulan->id,
+                                'realisasi' => 0,
+                                'laporan_capaian_id' => $obj_lap_capaian->id
+                            ];
+                            $obj_input_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $obj_lap_capaian->id)
+                                            ->where('triwulan_id', $triwulan->id)->first();
+                            if ($obj_input_realisasi === null) {
+                                $input = \App\Models\InputRealisasi::create($object);
+                            } else {
+                                $input = $obj_input_realisasi;
+                            }
+                            //insert input_realisasi_pic;
+                            if ($obj_input_realisasi === null) {
+                                $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
+                                foreach ($pics as $pic) {
+                                    $temp_lap_pic = ['input_realisasi_id' => $input->id,
+                                        'pic_id' => $pic->pic_id,
+                                        'nama_pic' => $pic->nama_pic];
+                                    \App\Models\InputRealisasiPic::create($temp_lap_pic);
+                                }
+                            }
                         }
                     }
                 }

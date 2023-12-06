@@ -16,6 +16,7 @@ class KompositorController extends Controller
     public function create(\App\Models\Indikator $indikator) {
         return Inertia::render('IndikatorKompositor/FormKompositor',[
             'indikator' => new \App\Http\Resources\IndikatorResource($indikator),
+            'indikators' => \App\Models\Indikator::all(),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all(),
             'kompositors' => Kompositor::all(),
