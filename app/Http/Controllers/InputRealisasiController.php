@@ -31,8 +31,9 @@ class InputRealisasiController extends Controller {
         //$realisasi_kompositor = \App\Models\RealisasiKompositor::where('input_realisasi_id', $inputrealisasi->id)->first();
         $kompositor = \App\Models\Kompositor::where('id', $realisasikompositor->kompositor_id)->first();
         return Inertia::render('InputRealisasi/EditRealisasi', [
-                    'input_realisasi' => new InputRealisasiResource($inputrealisasi),
-                    'laporan_capaian' => new \App\Http\Resources\LaporanCapaianResource(\App\Models\LaporanCapaian::find($inputrealisasi->laporan_capaian_id)),
+                    'input_realisasi' => ($inputrealisasi),
+                    'realisasi_kompositor' => ($realisasikompositor),
+                    'laporan_capaian' => (\App\Models\LaporanCapaian::find($inputrealisasi->laporan_capaian_id)),
                     'kompositor' => $kompositor,
                     'triwulans' => \App\Models\Triwulan::all(),
                     'periodes' => \App\Models\Periode::all(),
@@ -141,21 +142,25 @@ class InputRealisasiController extends Controller {
 
     public function update(InputRealisasi $inputrealisasi, InputRealisasiRequest $request) {
         //update input realisasi
-        $inputrealisasi->update($request->validated());
+        $update_status_1 = $inputrealisasi->update($request->validated());
         
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
+                'kompositor_id' => ['required'],
+                'input_realisasi_id' => ['required'],
+                'nilai' => ['required']                
+            ]);
+        $validated_realisasi_kompositor = $validator->validated();
         //insert/ update realisasi kompositor
-        $data_realisasi_kompositor = ['kompositor_id' => ($request->input('kompositor_id')),
-                    'input_realisasi_id' => $inputrealisasi->id,
-                    'nilai' => $request->input('realisasi')];
+        
         $obj_realisasi_kompositor = \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
                     ->where('input_realisasi_id', $inputrealisasi->id)->first();
         
         if($obj_realisasi_kompositor === null){
-            \App\Models\RealisasiKompositor::create($data_realisasi_kompositor);
+            $update_status_2 = \App\Models\RealisasiKompositor::create($validated_realisasi_kompositor);
         }else{
-            \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
+            $update_status_2 = \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
                     ->where('input_realisasi_id', $inputrealisasi->id)
-                    ->update($data_realisasi_kompositor);
+                    ->update($validated_realisasi_kompositor);
         }
         //update input realisasi pic
         $laporancapaian = \App\Models\LaporanCapaian::where('id', $inputrealisasi->laporan_capaian_id)->first();
@@ -171,11 +176,14 @@ class InputRealisasiController extends Controller {
                 DB::table('input_realisasi_pic')->insert($data);
             }
         }
-        //update laporan capaian
-        /*DB::table('laporan_capaian')
-                ->where('id', '=', $inputrealisasi->laporan_capaian_id)
-                ->update(['realisasi' => $inputrealisasi->realisasi]);*/
-        return Redirect::route('input-realisasi.index-indikator', $laporancapaian->id);
+        
+        $message = '';
+        if($update_status_1 && $update_status_2){
+            $message = "Update berahasil!";
+        }else{
+            $message = "Update gagal!";
+        }
+        return Redirect::back()->with('message', $message);
     }
 
     public function importKompositor(\Illuminate\Http\Request $request) {

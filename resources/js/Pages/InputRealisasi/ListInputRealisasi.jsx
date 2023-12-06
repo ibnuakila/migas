@@ -1,6 +1,8 @@
 import {React, useState, useEffect} from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, 
+    CardHeader,
+    CardBody,
     Typography, 
     Button,
     Dialog,
@@ -21,10 +23,10 @@ export default function ListInputRealisasi({auth}){
         //meta: { links }
       } = input_realisasis;
     console.log(usePage().props);
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const { flash } = usePage().props;    
     const [term, setTerm] = useState('');
-        
+       
     function handleChange(e) {
         //const key = e.target.name;
         const value = e.target.value;
@@ -68,20 +70,22 @@ export default function ListInputRealisasi({auth}){
         children={(
                 <div className="container mx-auto">
                     {flash.message && (
-                        <Alert color="green">{flash.message}</Alert>
+                        <Alert color="blue" open={open} 
+                        onClose={() => setOpen(false)} className="my-3">{flash.message}</Alert>
                     )}
-                    <Card className="p-5 h-full w-full overflow-scroll">
-                    <div className="flex justify-between">
-                        <Typography variant="h4">Input Realisasi Kompositor/Parameter {indikator.nama_indikator}                     
-                        </Typography>
-                        <span><Input variant="outlined" size="md" className="w-45" label="Search for Indikator" name="namaIndikator" onChange={handleChange}/></span>
-                    </div>
-                    <div className="flex my-2">
-                        
+                    <Card className="mt-12 mb-8 flex flex-col gap-12">
+                        <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
+                            <Typography variant="h6" color="white">
+                              Input Realisasi Kompositor/Parameter {indikator.nama_indikator} 
+                            </Typography>
+                        </CardHeader>
+                        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+                    
+                    <div className="flex my-2">                        
                         <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Kompositor</Button>
                     </div>
                     
-                        <table>
+                        <table className="w-full min-w-[640px] table-auto">
                             <thead>
                                 <tr>
                                     {TABLE_HEAD.map((head) => (
@@ -98,7 +102,7 @@ export default function ListInputRealisasi({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, realisasi, 
+                                {data.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, nilai,  
                                     satuan, triwulan, input_realisasi_pic, periode, realisasi_kompositor_id}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
@@ -123,7 +127,7 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600 text-right">
-                                            {realisasi ? ((parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
+                                            {nilai ? ((parseFloat(nilai)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
@@ -139,7 +143,7 @@ export default function ListInputRealisasi({auth}){
                                       <td>
                                         <div className="flex">
                                             {input_realisasi_pic.map( ({id, nama_pic}) => (
-                                                <Typography variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
                                                     {nama_pic}
                                                 </Typography>) )}
                                         </div>
@@ -171,6 +175,7 @@ export default function ListInputRealisasi({auth}){
                             </tbody>
                         </table>
                         <Pagination links={input_realisasis.links} />
+                        </CardBody>
                     </Card>
                 </div>
                 )}

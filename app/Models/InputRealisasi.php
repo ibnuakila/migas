@@ -13,11 +13,9 @@ class InputRealisasi extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'kompositor_id',
-        'realisasi',                
-        'triwulan_id',
-        'pic_id',
-        'periode_id',
+        'realisasi',
+        'realisasi_format',                
+        'triwulan_id',        
         'laporan_capaian_id'
     ];
     

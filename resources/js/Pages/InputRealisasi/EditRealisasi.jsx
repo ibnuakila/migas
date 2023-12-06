@@ -22,19 +22,21 @@ export default function EditRealisasi(props) {
     const input_realisasi = props.input_realisasi;
     const laporan_capaian = props.laporan_capaian;
     const kompositor = props.kompositor;
+    const realisasi_kompositor = props.realisasi_kompositor;
     const triwulans = props.triwulans;
     const periodes = props.periodes;
     const pics = props.pics;
     const defPics = props.def_pics;
+    const flash = props.flash;
     const {data, setData, put, errors, processing} = useForm({
-        id: input_realisasi.data.id || '',
-        kompositor_id: input_realisasi.data.kompositor_id || '',
-        realisasi: input_realisasi.data.realisasi || '',
-        realisasi_format: input_realisasi.data.realisasi_format || '',
-        //satuan: kompositor.satuan || '',
-        triwulan_id: input_realisasi.data.triwulan_id || '',
-        periode_id: input_realisasi.data.periode_id || '',
-        laporan_capaian_id: input_realisasi.data.laporan_capaian_id || '',
+        id: input_realisasi.id || '',
+        kompositor_id: kompositor.id || '',
+        realisasi: input_realisasi.realisasi || '',
+        realisasi_format: input_realisasi.realisasi_format || '',
+        nilai: realisasi_kompositor.nilai || '',
+        triwulan_id: input_realisasi.triwulan_id || '',
+        periode_id: laporan_capaian.periode_id || '',
+        laporan_capaian_id: input_realisasi.laporan_capaian_id || '',
         pics: defPics
     });
     
@@ -43,15 +45,17 @@ export default function EditRealisasi(props) {
     const [optionPeriode, setOptionPeriode] = useState('');
     const [selectedValue, setSelectedValue] = useState([]);
     const [realisasFormat, setRealisasiFormat] = useState('');
+    const [open, setOpen] = useState(true);
     const handleSave = (e) => {
         let realisasi = document.getElementById('realisasi');
             //alert(realisasi.value);
-        setData('realisasi', realisasi.value)
+        setData('realisasi', realisasi.value);
+        //setData('nilai', realisasi.value);
         e.preventDefault();
-        put(route('input-realisasi.update', input_realisasi.data.id));        
-        //history.back();
-        //router.reload();
-        
+        put(route('input-realisasi.update', input_realisasi.id));        
+        if(flash.message){
+            alert(flash.message);
+        }        
     }
     
     function handleChangeTriwulan(e) {
@@ -74,13 +78,14 @@ export default function EditRealisasi(props) {
     
     function handleChangeRealisasi(e){
         setData('realisasi', e.target.value);
+        //setData('nilai', e.target.value);
     }
     
     
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
             
-            axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.data.id})
+            axios.post(route('input-realisasi.calculate-realization'), {input_realisasi_id:input_realisasi.id})
                     .then(res => {
                         console.log(res);
                         if(res.message != ''){
@@ -123,6 +128,12 @@ export default function EditRealisasi(props) {
                 auth = {auth}
                 children={(
                         <div className="container mx-auto">
+                {flash.message && (
+                    <Alert open={open} onClose={() => setOpen(false)} 
+                        color="blue" className="my-3">
+                        {flash.message}
+                    </Alert>
+                )}
                                 <Card className="p-5 h-full w-45"> 
                                 <form action="">
                                 <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
@@ -136,7 +147,7 @@ export default function EditRealisasi(props) {
                                                 <Input label="Nama Kompositor" variant="outlined" id="nama-indikator" 
                                                     defaultValue={kompositor.nama_kompositor}                                                    
                                                        />  
-                                                {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
+                                                {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Satuan" variant="outlined" id="satuan" 
@@ -147,7 +158,7 @@ export default function EditRealisasi(props) {
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Triwulan" id="indeks"
                                                             onChange={handleChangeTriwulan}
-                                                            value={input_realisasi.data.triwulan_id}
+                                                            value={input_realisasi.triwulan_id}
                                                             error={errors.triwulan_id}>
                                                         {triwulans.map(({id, triwulan}) => (
                                                             <Option value={id.toString()} key={id}>{triwulan}</Option>
@@ -157,7 +168,7 @@ export default function EditRealisasi(props) {
                                             </div>
                                             <div className="relative flex w-full">
                                                 <Input label="Realisasi" variant="outlined" id="realisasi"                                                         
-                                                        defaultValue={input_realisasi.data.realisasi}
+                                                        defaultValue={realisasi_kompositor.nilai}
                                                         onChange={handleChangeRealisasi}
                                                         error={errors.realisasi}
                                                         className="pr-20"
@@ -175,11 +186,12 @@ export default function EditRealisasi(props) {
                                             </div>
                                             <div>
                                                 <Select label="Realisasi Format" onChange={handleChangeRealisasiFormat}
-                                                        defaultValue={input_realisasi.data.realisasi_format}
+                                                        defaultValue={input_realisasi.realisasi_format}
                                                         error={errors.realisasi_format}>                                                    
                                                     <Option value="Decimal">Decimal</Option>
                                                     <Option value="Persentase">Persentase</Option>                                                      
                                                 </Select>
+                                                {errors.realisasi_format && <div className="text-red-400 mt-1">{errors.realisasi_format}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                  <MSelect id="pic" options={optPic} defaultValue={defPics} 
@@ -196,7 +208,7 @@ export default function EditRealisasi(props) {
                                             
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Select label="Periode" id="periode" onChange={handleChangePeriode}
-                                                    value={laporan_capaian.data.periode_id}
+                                                    value={laporan_capaian.periode_id}
                                                     error={errors.periode_id}>
                                                         {periodes.map(({id, periode}) => (
                                                             <Option value={id.toString()} key={id}>{periode}</Option>
