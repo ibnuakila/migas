@@ -147,7 +147,7 @@ class InputRealisasiController extends Controller {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
                 'kompositor_id' => ['required'],
                 'input_realisasi_id' => ['required'],
-                'nilai' => ['required']                
+                //'nilai' => ['required']                
             ]);
         $validated_realisasi_kompositor = $validator->validated();
         //insert/ update realisasi kompositor
@@ -160,7 +160,7 @@ class InputRealisasiController extends Controller {
         }else{
             $update_status_2 = \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
                     ->where('input_realisasi_id', $inputrealisasi->id)
-                    ->update($validated_realisasi_kompositor);
+                    ->update(['nilai' => $inputrealisasi->realisasi]);
         }
         //update input realisasi pic
         $laporancapaian = \App\Models\LaporanCapaian::where('id', $inputrealisasi->laporan_capaian_id)->first();
@@ -228,11 +228,18 @@ class InputRealisasiController extends Controller {
     public function calculateRealization(\Illuminate\Http\Request $request) {
         $id = $request->input('input_realisasi_id');
         $input_realisasi = InputRealisasi::where('id', $id)->first();
-        $indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
-        $result = DB::table('kompositor')
+        //$indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
+        /*$result = DB::table('kompositor')
                         ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                         ->where('kompositor.id', $input_realisasi->kompositor_id)
-                        ->get()->first();
+                        ->get()->first();*/
+        $result = InputRealisasi::query()
+                ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->where('realisasi_kompositor.input_realisasi_id', $id)
+                ->where('kompositor.indeks_id', 2)
+                ->first();
         $nama_indeks = $result->nama_kompositor;
         $realisasi = 0;
         switch ($nama_indeks) {
@@ -241,23 +248,27 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Migas')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $indeks_ketersediaan_hulu_migas = 0;
                 $indeks_ketersediaan_bbm = 0;
                 $indeks_ketersediaan_lpg = 0;
                 $indeks_ketersediaan_lng = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Migas') {
-                        $indeks_ketersediaan_hulu_migas = $realisasi->realisasi;
+                        $indeks_ketersediaan_hulu_migas = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan BBM') {
-                        $indeks_ketersediaan_bbm = $realisasi->realisasi;
+                        $indeks_ketersediaan_bbm = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan LPG') {
-                        $indeks_ketersediaan_lpg = $realisasi->realisasi;
+                        $indeks_ketersediaan_lpg = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan LNG') {
-                        $indeks_ketersediaan_lng = $realisasi->realisasi;
+                        $indeks_ketersediaan_lng = $realisasi->nilai;
                     }
                 }
                 $realisasi = ($indeks_ketersediaan_hulu_migas + $indeks_ketersediaan_bbm + $indeks_ketersediaan_lpg + $indeks_ketersediaan_lng) / 4;
@@ -267,23 +278,27 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Minyak')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $realisasi_produksi_lifting_minyak = 0;
                 $realisasi_impor_minyak = 0;
                 $realisasi_ekspor_minyak = 0;
                 $kebutuhan_kilang_minyak = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Realisasi Produksi/Lifting Minyak') {
-                        $realisasi_produksi_lifting_minyak = $realisasi->realisasi;
+                        $realisasi_produksi_lifting_minyak = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Impor Minyak') {
-                        $realisasi_impor_minyak = $realisasi->realisasi;
+                        $realisasi_impor_minyak = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Ekspor Minyak') {
-                        $realisasi_ekspor_minyak = $realisasi->realisasi;
+                        $realisasi_ekspor_minyak = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Kebutuhan Kilang Minyak') {
-                        $kebutuhan_kilang_minyak = $realisasi->realisasi;
+                        $kebutuhan_kilang_minyak = $realisasi->nilai;
                     }
                 }
                 $realisasi = (($realisasi_produksi_lifting_minyak + $realisasi_impor_minyak) - $realisasi_ekspor_minyak) / $kebutuhan_kilang_minyak;
@@ -293,17 +308,21 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Gas')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $realisasi_produksi_lifting_gas_bumi_bbtu = 0;
                 $realisasi_alokasi_dom = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Realisasi Produksi/Lifting Gas Bumi BBTU') {
-                        $realisasi_produksi_lifting_gas_bumi_bbtu = $realisasi->realisasi;
+                        $realisasi_produksi_lifting_gas_bumi_bbtu = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Alokasi Gas Dom') {
-                        $realisasi_alokasi_dom = $realisasi->realisasi;
+                        $realisasi_alokasi_dom = $realisasi->nilai;
                     }
                 }
                 $realisasi = ($realisasi_produksi_lifting_gas_bumi_bbtu / $realisasi_alokasi_dom);
@@ -313,17 +332,21 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan Hulu Migas')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $indeks_ketersediaan_hulu_minyak = 0;
                 $indeks_ketersediaan_hulu_gas = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Minyak') {
-                        $indeks_ketersediaan_hulu_minyak = $realisasi->realisasi;
+                        $indeks_ketersediaan_hulu_minyak = $realisasi->nilai;
                     } elseif (trime($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Gas') {
-                        $indeks_ketersediaan_hulu_gas = $realisasi->realisasi;
+                        $indeks_ketersediaan_hulu_gas = $realisasi->nilai;
                     }
                 }
                 $realisasi = ($indeks_ketersediaan_hulu_minyak + $indeks_ketersediaan_hulu_gas) / 2;
@@ -333,10 +356,14 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan BBM')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $data['result'] = $res_realisasi;
                 $realisasi_produksi_bbm = 0;
                 $kuota_impor_bbm = 0;
@@ -345,15 +372,15 @@ class InputRealisasiController extends Controller {
                 $realisasi_ekspor_bbm = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Realisasi Produksi BBM') {
-                        $realisasi_produksi_bbm = $realisasi->realisasi;
+                        $realisasi_produksi_bbm = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Kuota Impor BBM') {
-                        $kuota_impor_bbm = $realisasi->realisasi;
+                        $kuota_impor_bbm = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Kuota Ekspor BBM') {
-                        $kuota_ekspor_bbm = $realisasi->realisasi;
+                        $kuota_ekspor_bbm = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Impor BBM') {
-                        $realisasi_impor_bbm = $realisasi->realisasi;
+                        $realisasi_impor_bbm = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Ekspor BBM') {
-                        $realisasi_ekspor_bbm = $realisasi->realisasi;
+                        $realisasi_ekspor_bbm = $realisasi->nilai;
                     }
                 }
                 $realisasi = (($realisasi_produksi_bbm + $kuota_impor_bbm) - $kuota_ekspor_bbm) / (($realisasi_produksi_bbm + $realisasi_impor_bbm) - $realisasi_ekspor_bbm);
@@ -363,10 +390,14 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan LPG')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
                 $realisasi_produksi_lpg = 0;
                 $kuota_impor_lpg = 0;
                 $kuota_ekspor_lpg = 0;
@@ -374,15 +405,15 @@ class InputRealisasiController extends Controller {
                 $realisasi_ekspor_lpg = 0;
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Realisasi Produksi LPG') {
-                        $realisasi_produksi_lpg = $realisasi->realisasi;
+                        $realisasi_produksi_lpg = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Kuota Impor LPG ') {
-                        $kuota_impor_lpg = $realisasi->realisasi;
+                        $kuota_impor_lpg = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Kuota Ekspor LPG ') {
-                        $kuota_ekspor_lpg = $realisasi->realisasi;
+                        $kuota_ekspor_lpg = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Impor LPG') {
-                        $realisasi_impor_lpg = $realisasi->realisasi;
+                        $realisasi_impor_lpg = $realisasi->nilai;
                     } elseif (trim($realisasi->nama_kompositor) == 'Realisasi Ekspor LPG ') {
-                        $realisasi_ekspor_lpg = $realisasi->realisasi;
+                        $realisasi_ekspor_lpg = $realisasi->nilai;
                     }
                 }
                 $realisasi = (($realisasi_produksi_lpg + $kuota_impor_lpg) - $kuota_ekspor_lpg) / (($realisasi_produksi_lpg + $realisasi_impor_lpg) - $realisasi_ekspor_lpg);
@@ -392,10 +423,14 @@ class InputRealisasiController extends Controller {
                                 ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                                 ->join('kompositor', 'indikator_kompositor.kompositor_id', '=', 'kompositor.id')
                                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('input_realisasi', 'input_realisasi.kompositor_id', '=', 'kompositor.id')
+                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                ->join('input_realisasi', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                                 ->where('indeks.nama_indeks', 'Like', 'Indeks Ketersediaan LNG')
+                                ->where('input_realisasi.triwulan_id', $result->triwulan_id)
                                 ->select('input_realisasi.*',
-                                        'kompositor.*')->get();
+                                        'realisasi_kompositor.*',
+                                        'kompositor.*',
+                                        'indeks.nama_indeks')->get();
 
                 foreach ($res_realisasi as $realisasi) {
                     
