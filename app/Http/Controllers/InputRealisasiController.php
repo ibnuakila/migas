@@ -226,8 +226,9 @@ class InputRealisasiController extends Controller {
     }
 
     public function calculateRealization(\Illuminate\Http\Request $request) {
-        $id = $request->input('input_realisasi_id');
-        $input_realisasi = InputRealisasi::where('id', $id)->first();
+        $input_realisasi_id = $request->input('input_realisasi_id');
+        $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
+        //$input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
         //$indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
         /*$result = DB::table('kompositor')
                         ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
@@ -237,9 +238,11 @@ class InputRealisasiController extends Controller {
                 ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                 ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                ->where('realisasi_kompositor.input_realisasi_id', $id)
-                ->where('kompositor.indeks_id', 2)
+                ->where('realisasi_kompositor.input_realisasi_id', $input_realisasi_id)
+                ->where('realisasi_kompositor.id', $realisasi_kompositor_id)
+                ->where('kompositor.jenis_kompositor_id', 2)
                 ->first();
+        
         $nama_indeks = $result->nama_kompositor;
         $realisasi = 0;
         switch ($nama_indeks) {
@@ -345,7 +348,7 @@ class InputRealisasiController extends Controller {
                 foreach ($res_realisasi as $realisasi) {
                     if (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Minyak') {
                         $indeks_ketersediaan_hulu_minyak = $realisasi->nilai;
-                    } elseif (trime($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Gas') {
+                    } elseif (trim($realisasi->nama_kompositor) == 'Indeks Ketersediaan Hulu Gas') {
                         $indeks_ketersediaan_hulu_gas = $realisasi->nilai;
                     }
                 }
@@ -447,6 +450,8 @@ class InputRealisasiController extends Controller {
             case 'Indeks Aksesibilitas Migas':
                 break;
         }
+        $data['input_realisasi'] = $result;
+        $data['res_realisasi'] = $res_realisasi;
         $data['realisasi'] = round($realisasi, 2);
         return json_encode($data);
     }

@@ -75,11 +75,11 @@ export default function ListInputRealisasi({auth}){
                     )}
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
-                            <Typography variant="h6" color="white">
+                            <Typography variant="h4" color="white">
                               Input Realisasi Kompositor/Parameter {indikator.nama_indikator} 
                             </Typography>
                         </CardHeader>
-                        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+                    <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     
                     <div className="flex my-2">                        
                         <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Kompositor</Button>

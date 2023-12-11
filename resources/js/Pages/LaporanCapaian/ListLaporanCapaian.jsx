@@ -1,6 +1,8 @@
 
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, 
+    CardHeader,
+    CardBody,
     Typography, 
     Button,
     Dialog,
@@ -89,12 +91,13 @@ export default function ListLaporanCapaian({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">                            
-                    <Card className="p-5 h-full w-full overflow-scroll">                    
-                    <div className="flex justify-between">
-                        <Typography variant="h3">Laporan Capaian Kinerja                            
-                        </Typography>
-                        
-                    </div>
+                    <Card className="mt-12 mb-8 flex flex-col gap-12">                    
+                    <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
+                            <Typography variant="h6" color="white">
+                              Laporan Capaian Kinerja 
+                            </Typography>
+                        </CardHeader>
+                    <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
                     <Link href={route('laporan-capaian.create')}>
                         <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
@@ -461,6 +464,7 @@ export default function ListLaporanCapaian({auth}){
                             </tbody>
                         </table>
                         <Pagination links={laporan_capaians.links} />
+                        </CardBody>
                     </Card>                    
                     
                 </div>
