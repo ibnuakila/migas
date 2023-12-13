@@ -48,11 +48,7 @@ export default function EditKompositor(props) {
         console.log('The page has fully loaded');
         //setIsParameter(true);
     });
-    /*let _form = document.getElementById('form-kompositor');
-    _form.addEventListener('focus',function(e){
-        console.log('The page has fully loaded');
-        setIsParameter(true);
-    })*/
+    
     function handleLoad() {
         console.log('The page has fully loaded');
         setIsParameter(true);

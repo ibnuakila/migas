@@ -43,7 +43,7 @@ class LaporanCapaianController extends Controller {
     }
 
     public function index() {
-        //if(!Request::input('page')){
+        
         $select = LaporanCapaian::query()
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
@@ -80,22 +80,7 @@ class LaporanCapaianController extends Controller {
                         'level.nama_level',
                         'satuan.nama_satuan')
                 ->paginate();
-        /* }else{
-          $select = LaporanCapaian::query()
-          ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
-          ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
-          ->join('level', 'indikator.level_id', '=', 'level.id')
-          ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
-          ->with('kinerjaTriwulan')
-          ->with('laporanCapaianPic')
-          ->with('inputRealisasi')
-          ->select('laporan_capaian.*',
-          'indikator.nama_indikator',
-          'periode.periode',
-          'level.nama_level',
-          'satuan.nama_satuan')
-          ->paginate(10);
-          } */
+        
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
                     //'filter' => Request::all('search', 'trashed'),
                     'laporan_capaians' => $select,
@@ -263,7 +248,7 @@ class LaporanCapaianController extends Controller {
     }
 
     public function calculateKinerja(\Illuminate\Http\Request $request) {
-        $id = $request->input('id_laporan_capaian');
-        $laporan_capaian = LaporanCapaian::find($id);
+        //$id = $request->input('id_laporan_capaian');
+        //$laporan_capaian = LaporanCapaian::find($id);
     }
 }

@@ -92,8 +92,8 @@ export default function ListLaporanCapaian({auth}){
         children={(
                 <div className="container mx-auto">                            
                     <Card className="mt-12 mb-8 flex flex-col gap-12">                    
-                    <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
-                            <Typography variant="h6" color="white">
+                    <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
+                            <Typography variant="h4" color="white">
                               Laporan Capaian Kinerja 
                             </Typography>
                         </CardHeader>
@@ -346,7 +346,7 @@ export default function ListLaporanCapaian({auth}){
                                                 <td className="p-4 text-center" key={id}>
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-red-600">
                                                         <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} title="Realisasi Kompositor/Parameter">
-                                                            {realisasi}
+                                                            {(parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})}
                                                         </Link>
                                                     </Typography>
                                                 </td>
@@ -384,38 +384,40 @@ export default function ListLaporanCapaian({auth}){
                                         }
                                         
                                         {kinerja_triwulan.length > 0 ?
-                                            (kinerja_triwulan.map( ({id, triwulan_id, kinerja})=>(
+                                            (kinerja_triwulan.map( ({triwulan_id, kinerja})=>(
                                                 <td className="p-4 text-center" key={id}>
-                                                    <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
-                                                        {kinerja}
+                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-blue-600">
+                                                        <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:triwulan_id})} title="Kinerja">
+                                                            {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:2})}
+                                                        </Link>
                                                     </Typography>
                                                 </td>
                                             ))) : 
                                             (<>
                                             <td>
-                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW I">
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
+                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW I">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
-                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW II">
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
+                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW II">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
-                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW III">
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
+                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW III">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
-                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                                    <Link href={route('input-realisasi.index-indikator', id)} title="Kinerja TW IV">
+                                                <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
+                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW IV">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>

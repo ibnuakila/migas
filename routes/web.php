@@ -24,6 +24,7 @@ use App\Http\Controllers\IndeksController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KompositorController;
+use App\Http\Controllers\InputKinerjaController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -109,15 +110,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
-/*Route::middleware('auth')->group(function () {
-    Route::get('/indikator-periode', [IndikatorPeriodeController::class, 'index'])->name('indikator-periode.index');
-    Route::get('/indikator-periode/edit/{indikatorperiode}', [IndikatorPeriodeController::class, 'edit'])->name('indikator-periode.edit');
-    Route::get('/indikator-periode/create', [IndikatorPeriodeController::class, 'create'])->name('indikator-periode.create');
-    Route::post('/indikator-periode/store', [IndikatorPeriodeController::class, 'store'])->name('indikator-periode.store');
-    Route::put('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'update'])->name('indikator-periode.update');
-    Route::delete('/indikator-periode/{indikatorperiode}', [IndikatorPeriodeController::class, 'destroy'])->name('indikator-periode.destroy');
-    Route::get('/indikator-periode/importindikator', [IndikatorPeriodeController::class, 'importIndikator'])->name('indikator-periode.importindikator');
-});*/
+Route::middleware('auth')->group(function () {
+    Route::get('/input-kinerja', [InputKinerjaController::class, 'index'])->name('input-kinerja.index');
+    Route::get('/input-kinerja/edit/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputKinerjaController::class, 'edit'])->name('input-kinerja.edit');
+    Route::get('/input-kinerja/create', [InputKinerjaController::class, 'create'])->name('input-kinerja.create');
+    Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
+    Route::put('/input-kinerja/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
+    Route::delete('/input-kinerja/{kinerjatriwulan}', [InputKinerjaController::class, 'destroy'])->name('input-kinerja.destroy');
+    Route::post('/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');

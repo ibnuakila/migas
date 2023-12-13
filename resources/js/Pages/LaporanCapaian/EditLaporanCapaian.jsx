@@ -139,12 +139,6 @@ export default function EditLaporanCapaian() {
                                                 {errors.indikator_id &&
                                                         <div className="text-red-400 mt-1">{errors.indikator_id}</div>
                                                 }
-                                                <Select label="Triwulan" id="triwulan" onChange={handleTriwulanChange}
-                                                        value={laporan_capaian.data[0].triwulan_id}
-                                                        error={errors.triwulan_id}>
-                                                    {triwulans.map(({id, triwulan}) =>
-                                                    <Option value={id.toString()} key={id}>{triwulan}</Option>)}                                                     
-                                                </Select>
                                                 <MSelect options={optPic} defaultValue={defPic} label="Pic"
                                                          onChange={(item) => {
                                                                      setOptionPic(item);
@@ -170,38 +164,6 @@ export default function EditLaporanCapaian() {
                                                 {errors.target_format &&
                                                         <div className="text-red-400 mt-1">{errors.target_format}</div>
                                                 }
-                                                <Input label="Realisasi" variant="outlined" id="realisasi"
-                                                       defaultValue={
-                                                               (parseFloat(laporan_capaian.data[0].realisasi)).toLocaleString(undefined, {maximumFractionDigits: 2})}
-                                                       onChange={e => {
-                                                                   setData('realisasi', e.target.value)
-                                                               }}                                                        
-                                                       error={errors.realisasi}/>
-                                                {errors.realisasi &&
-                                                        <div className="text-red-400 mt-1">{errors.realisasi}</div>
-                                                }
-                                                <div className="relative flex w-full">
-                                                    <Input label="Persentasi Kinerja" variant="outlined" id="persentasi"
-                                                           defaultValue={laporan_capaian.data[0].persentasi_kinerja}
-                                                           onChange={e => {
-                                                                       setData('persentasi_kinerja', e.target.value)
-                                                                   }}                                                       
-                                                           error={errors.Periode}
-                                                           className="pr-20"
-                                                           containerProps={{
-                                                                       className: "min-w-0",
-                                                                   }}/>
-                                                    {errors.persentasi_kinerja &&
-                                                        <div className="text-red-400 mt-1">{errors.persentasi_kinerja}</div>
-                                                    }
-                                                    <Button
-                                                        size="sm"
-                                                        color="blue"                                                            
-                                                        className="!absolute right-1 top-1 rounded"
-                                                        >
-                                                        Get
-                                                    </Button>
-                                                </div>
                                                 <Select label="Kategori Kinerja" onChange=""
                                                         defaultValue=""
                                                         error={errors.kategori_kinerja_id}>
@@ -219,25 +181,16 @@ export default function EditLaporanCapaian() {
                                                        error={errors.kinerja}/>
                                                 {errors.kinerja &&
                                                         <div className="text-red-400 mt-1">{errors.kinerja}</div>
-                                                }
-                            
+                                                }                            
                                                 <Input label="Sumber Data" variant="outlined" id="periode" 
                                                        onChange={e => {
                                                                    setData('Periode', e.target.value)
-                                                               }} 
-                            
+                                                               }}                             
                                                        error={errors.sumber_data}/>
                                                 {errors.sumber_data &&
                                                         <div className="text-red-400 mt-1">{errors.sumber_data}</div>
-                                                }
-                                                <Input type="File" label="File" variant="outlined" id="file"
-                                                       defaultValue=""                                                      
-                                                       />
-                                                {errors.file_path &&
-                                                        <div className="text-red-400 mt-1">{errors.file_path}</div>
-                                                }
-                                            </div>                                
-                            
+                                                }                                                
+                                            </div>
                                         </CardBody>
                                         <CardFooter className="space-x-2">  
                                             <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
