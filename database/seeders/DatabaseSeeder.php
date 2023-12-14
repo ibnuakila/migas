@@ -12,33 +12,33 @@ class DatabaseSeeder extends Seeder
 {
     
      private $permissions = [
-            /*'profile-edit',
-            //'profile-update',
+            'profile-edit',
+            'profile-update',
             'profile-delete',
             'periode-list',
             'periode-edit',
             'periode-create',
-            //'periode-store',
-            //'periode-update',
+            'periode-store',
+            'periode-update',
             'periode-delete',
             'indikator-list',
             'indikator-create',
-            //'indikator-store',
+            'indikator-store',
             'indikator-edit',
-            //'indikator-update',
+            'indikator-update',
             'indikator-delete',
             'indikator-kompositor-list',
             'indikator-kompositor-create',
-            //'indikator-kompositor-store',
+            'indikator-kompositor-store',
             'indikator-kompositor-edit',
-            //'indikator-kompositor-update',
+            'indikator-kompositor-update',
             'indikator-kompositor-delete',
             'indikator-kompositor-list-indikator',
             'hitung-kompositor-list',
             'hitung-kompositor-create',
-            //'hitung-kompositor-store',
+            'hitung-kompositor-store',
             'hitung-kompositor-edit',
-            //'hitung-kompositor-update',
+            'hitung-kompositor-update',
             'hitung-kompositor-delete',
             'pic-list',
             'pic-create',
@@ -71,7 +71,11 @@ class DatabaseSeeder extends Seeder
             'kategori-kinerja-list',
             'kategori-kinerja-create',
             'kategori-kinerja-edit',
-            'kategori-kinerja-delete'*/
+            'kategori-kinerja-delete',
+            'input-kinerja-list',
+            'input-kinerja-create',
+            'input-kinerja-edit',
+            'input-kinerja-delete'
         ];
     /**
      * Seed the application's database.
@@ -86,18 +90,22 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        /*foreach ($this->permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }*/
+        foreach ($this->permissions as $permission) {
+            //Permission::create(['name' => $permission]);
+        }
         
         // Create admin User and assign the role to him.
-        $user = \App\Models\User::create([
+        /*$user = \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('P@ssw0rd'),
-        ]);
-        $role = Role::create(['name' => 'Administrator']);
-
+            'pic_id' => 1,
+        ]);*/
+        $user = \App\Models\User::where('id', 1)->first();
+        
+        //$role = Role::create(['name' => 'Administrator']);
+        $role = Role::where('name', 'Administrator')->first();
+        
         $permissions = Permission::pluck('id', 'id')->all();
 
         $role->syncPermissions($permissions);
