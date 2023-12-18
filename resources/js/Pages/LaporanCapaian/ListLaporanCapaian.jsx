@@ -57,11 +57,9 @@ export default function ListLaporanCapaian({auth}){
             
         }
     }
-    function handleChangeIndikator(e) {
-        //const key = e.target.name;
+    function handleChangeIndikator(e) {        
         const value = e.target.value;
-        setTermIndikator(value);
-        //queryString.findikator = term;
+        setTermIndikator(value);        
     }
     function handleChangeLevel(e){
         const value = e.target.value;
@@ -91,12 +89,12 @@ export default function ListLaporanCapaian({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">                            
-                    <Card className="mt-12 mb-8 flex flex-col gap-12">                    
+                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">                    
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
                               Laporan Capaian Kinerja 
                             </Typography>
-                        </CardHeader>
+                    </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
                     <Link href={route('laporan-capaian.create')}>
@@ -396,28 +394,28 @@ export default function ListLaporanCapaian({auth}){
                                             (<>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW I">
+                                                    <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:1})} title="Kinerja TW I">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW II">
+                                                    <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:2})} title="Kinerja TW II">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW III">
+                                                    <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:3})} title="Kinerja TW III">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>
                                             </td>
                                             <td>
                                                 <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                                    <Link href={route('input-kinerja.edit', id)} title="Kinerja TW IV">
+                                                    <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:4})} title="Kinerja TW IV">
                                                         <PencilIcon className="h-4 w-4" />
                                                     </Link>
                                                 </Typography>

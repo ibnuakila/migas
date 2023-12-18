@@ -12,6 +12,7 @@ use App\Http\Resources\LaporanCapaianResource;
 use App\Http\Requests\LaporanCapaianRequest;
 use Illuminate\Support\Facades\DB;
 
+
 class LaporanCapaianController extends Controller {
 
     //

@@ -1,42 +1,17 @@
 import { chartsConfig } from "@/configs/index.js";
 
 const websiteViewsChart = {
-  type: "bar",
-  height: 220,
-  series: [
-    {
-      name: "Views",
-      data: [50, 20, 10, 22, 50, 10, 40],
-    },
-  ],
-  options: {
-    ...chartsConfig,
-    colors: "#388e3c",
-    plotOptions: {
-      bar: {
-        columnWidth: "16%",
-        borderRadius: 5,
-      },
-    },
-    xaxis: {
-      ...chartsConfig.xaxis,
-      categories: ["M", "T", "W", "T", "F", "S", "S"],
-    },
-  },
-};
-
-const dailySalesChart = {
   type: "line",
   height: 220,
   series: [
     {
-      name: "Sales",
-      data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+      name: "Realisasi",
+      data: [50, 40, 100, 120],
     },
   ],
   options: {
     ...chartsConfig,
-    colors: ["#0288d1"],
+    colors: ["blue"],
     stroke: {
       lineCap: "round",
     },
@@ -46,15 +21,41 @@ const dailySalesChart = {
     xaxis: {
       ...chartsConfig.xaxis,
       categories: [
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "TW 1",
+        "TW 2",
+        "TW 3",
+        "TW 4",
+      ],
+    },
+  },
+};
+
+const dailySalesChart = {
+  type: "line",
+  height: 220,
+  series: [
+    {
+      name: "Realisasi",
+      data: [350, 200, 230, 500],
+    },
+  ],
+  options: {
+    ...chartsConfig,
+    colors: ["red"],
+    stroke: {
+      lineCap: "round",
+    },
+    markers: {
+      size: 5,
+    },
+    xaxis: {
+      ...chartsConfig.xaxis,
+      categories: [
+        "TW 1",
+        "TW 2",
+        "TW 3",
+        "TW 4",
+        
       ],
     },
   },
@@ -65,13 +66,13 @@ const completedTaskChart = {
   height: 220,
   series: [
     {
-      name: "Sales",
-      data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+      name: "Realisasi",
+      data: [ 120, 93, 100, 130],
     },
   ],
   options: {
     ...chartsConfig,
-    colors: ["#388e3c"],
+    colors: ["green"],
     stroke: {
       lineCap: "round",
     },
@@ -81,20 +82,15 @@ const completedTaskChart = {
     xaxis: {
       ...chartsConfig.xaxis,
       categories: [
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "TW 1",
+        "TW 2",
+        "TW 3",
+        "TW 4",
       ],
     },
   },
 };
-const completedTasksChart = {
+/*const completedTasksChart = {
   ...completedTaskChart,
   series: [
     {
@@ -102,7 +98,7 @@ const completedTasksChart = {
       data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
     },
   ],
-};
+};*/
 
 export const statisticsChartsData = [
   {
@@ -121,10 +117,10 @@ export const statisticsChartsData = [
   },
   {
     color: "white",
-    title: "Completed Realization",
-    description: "Last Campaign Performance",
+    title: "Indeks Keselamatan",
+    description: "Chart Indeks Keselamatan",
     footer: "just updated",
-    chart: completedTasksChart,
+    chart: completedTaskChart,
   },
 ];
 

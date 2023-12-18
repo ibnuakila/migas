@@ -26,12 +26,13 @@ CubeTransparentIcon,
         Bars2Icon,
         } from "@heroicons/react/24/outline";
 import ApplicationLogo from '../Components/ApplicationLogo';
-import { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
+import { useState, useEffect,  } from 'react';
+import { Link, usePage } from '@inertiajs/react';
 
-export default function Header(auth) {
+export default function Header() {
     const [openNav, setOpenNav] = useState(false);
-
+    const {auth} = usePage().props;
+    console.log(auth.user.name);
     useEffect(() => {
         window.addEventListener(
                 "resize",
@@ -88,8 +89,7 @@ export default function Header(auth) {
                     <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
                     <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
                     <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
-                    <MenuItem><Link href={route('indeks.index')}>Master Indeks</Link></MenuItem>
-                    <MenuItem><Link href={route('kategori-kinerja.index')}>Master Kategori Kinerja</Link></MenuItem>
+                    
                     
                     </MenuList>
                 </Menu>
@@ -114,11 +114,11 @@ export default function Header(auth) {
                 <Typography
                     as="li"
                     variant="small"
-                    color="blue-gray"
+                    color="blue"
                     className="p-1 font-normal"
                     >
                     <a href="#" className="flex items-center">
-                        {auth.user}
+                        
                     </a>
                 </Typography>
             </ul>
@@ -127,7 +127,7 @@ export default function Header(auth) {
     // profile menu component
     const profileMenuItems = [
         {
-            label: "My Profile",
+            label: "Profile of " + auth.user.name ,
             icon: UserCircleIcon,
             link: 'profile.edit'
         },
@@ -221,9 +221,6 @@ export default function Header(auth) {
                             SI<span className="text-blue-600">CAKI</span>
                         </Typography>
                     </div>
-            
-            
-            
             
                     <div className="flex items-center gap-4">
                         <div className="mr-4 hidden lg:block">{navList}</div>

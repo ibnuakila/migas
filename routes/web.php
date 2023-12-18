@@ -29,6 +29,9 @@ use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
 
+use MathPHP\Statistics\Multivariate\PLS;
+use MathPHP\LinearAlgebra\MatrixFactory;
+use MathPHP\Statistics\Regression;
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -59,9 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/home', function () {
-    return Inertia::render('Beranda');
-})->middleware(['auth', 'verified'])->name('home');
+Route::middleware('auth')->group( function () {
+    Route::get('/home', [\App\Http\Controllers\DashboardController::class, 'index'])->name('home');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
@@ -112,7 +115,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/input-kinerja', [InputKinerjaController::class, 'index'])->name('input-kinerja.index');
-    Route::get('/input-kinerja/edit/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputKinerjaController::class, 'edit'])->name('input-kinerja.edit');
+    Route::get('/input-kinerja/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputKinerjaController::class, 'edit'])->name('input-kinerja.edit');
     Route::get('/input-kinerja/create', [InputKinerjaController::class, 'create'])->name('input-kinerja.create');
     Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
     Route::put('/input-kinerja/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
@@ -818,5 +821,14 @@ Route::get('/test-calculate/{id}', function ($id) {
         }
         $data['realisasi'] = round($realisasi, 2);
         //return json_encode($data);
+});
+
+Route::get('/test-regression', function(){
+$points = [[1, 1.00], [1.1, 1.15], [1.2, 1.30]];    
+$regression = new Regression\Linear($points);
+$parameters = $regression->getParameters();          // [m => 1.2209302325581, b => 0.6046511627907]
+$equation   = $regression->getEquation();            // y = 1.2209302325581x + 0.6046511627907
+$y          = $regression->evaluate(1.11);              // Evaluate for y at x = 5 using regression equation
+return $y;
 });
 require __DIR__ . '/auth.php';

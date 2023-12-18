@@ -35,26 +35,33 @@ class IndikatorController extends Controller //implements ICrud
     
     public function index():Response {
         
-        return Inertia::render('Indikator/ListIndikator', [
-            'filter' => Request::all('search', 'level'),
-            'indikators' => 
-                /*Indikator::query()                
-                    ->when(Request::input('search'), function($query, $search){
-                        $query->where('nama_indikator','like', "%{$search}%");
-                    })                    
-                    ->paginate(10)
-                    ->withQueryString()*/
-                Indikator::query()->with('indikatorPics')                
-                    ->when(Request::input('search'), function($query, $search){
-                        $query->where('nama_indikator','like', "%{$search}%");
+        return Inertia::render('Indikator/ListIndikator', [            
+            'indikators' =>                 
+                Indikator::query()
+                    ->join('level', 'indikator.level_id', '=', 'level.id')
+                    ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                    ->with('indikatorPics')
+                    ->when(Request::input('flevel'), function ($query, $search) {
+                        if ($search != '') {
+                            $query->where('level.nama_level', 'like', "%{$search}%");
+                        }
                     })
-                    ->addSelect(['nama_satuan' => Satuan::select('nama_satuan')
-                            ->whereColumn('id','indikator.satuan_id')])
-                    ->addSelect(['nama_level' => Level::select('nama_level')
-                            ->whereColumn('id','indikator.level_id')])                            
-                    ->paginate(10),
-                    //->withQueryString(),
-                'opt_filter' => ['1' => 'Nama', '2' => 'Level']
+                    ->when(Request::input('fpic'), function ($query, $search) {
+                        if ($search != '') {
+                            $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
+                            $query->where('indikator_pic.nama_pic', 'like', "%{$search}%");
+                        }
+                    })
+                    ->when(Request::input('findikator'), function ($query, $search) {
+                        if ($search != '') {
+                            $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                        }
+                    })                    
+                    ->select(
+                        'indikator.*',                       
+                        'level.nama_level',
+                        'satuan.nama_satuan')
+                ->paginate(),                   
                 ]);
     }
 

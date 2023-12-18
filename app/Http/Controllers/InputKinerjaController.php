@@ -10,6 +10,9 @@ use Inertia\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\KinerjaTriwulan;
 use App\Http\Requests\KinerjaTriwulanRequest;
+use MathPHP\Statistics\Multivariate\PLS;
+use MathPHP\LinearAlgebra\MatrixFactory;
+use MathPHP\SampleData;
 
 class InputKinerjaController extends Controller
 {

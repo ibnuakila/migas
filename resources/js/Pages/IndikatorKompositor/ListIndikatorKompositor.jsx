@@ -1,6 +1,8 @@
 import {React, useState, useEffect} from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, 
+    CardHeader,
+    CardBody,
     Typography, 
     Button,
     Dialog,
@@ -51,16 +53,15 @@ export default function ListIndikatorKompositor({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">
-                    <Card className="p-5 h-full w-full overflow-scroll">
-                    <div className="flex justify-between">
+                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                    <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                     {indikator ? ( 
-                        <Typography variant="h3">Kompositor/Parameter Indikator: {indikator.nama_indikator}</Typography> 
+                        <Typography variant="h4">Kompositor/Parameter Indikator: {indikator.nama_indikator}</Typography> 
                         ):(
-                        <Typography variant="h3">Kompositor/Parameter </Typography> 
-                        )}                
-                        
-                        
-                    </div>
+                        <Typography variant="h4">Kompositor/Parameter </Typography> 
+                        )}                        
+                    </CardHeader>
+                    <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
                     {indikator ? (
                         <Link href={route('kompositor.create', indikator.id)}>
@@ -68,7 +69,7 @@ export default function ListIndikatorKompositor({auth}){
                         </Link>):(null)}
                     </div>
                     
-                        <table>
+                        <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
                                     {TABLE_HEAD.map((head) => (
@@ -138,6 +139,7 @@ export default function ListIndikatorKompositor({auth}){
                             </tbody>
                         </table>
                         <Pagination links={kompositors.links} />
+                        </CardBody>
                     </Card>
                 </div>
                 )}

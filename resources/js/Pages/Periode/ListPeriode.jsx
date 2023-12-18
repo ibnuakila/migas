@@ -1,6 +1,8 @@
 
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, 
+    CardHeader,
+    CardBody,
     Typography, 
     Button,
     Dialog,
@@ -61,16 +63,17 @@ export default function ListPeriode({auth}){
         auth = {auth}
         children={(
                 <div className="container mx-auto">
-                    <Card className="p-5 h-full w-full overflow-scroll">
-                    <div className="flex justify-between">
-                        <Typography variant="h3">Data Periode                            
-                        </Typography>
-                        <span><Input variant="outlined" size="md" className="w-45" label="Search for periode" name="periode" onChange={handleChange}/></span>
-                    </div>
+                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                    <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
+                            <Typography variant="h4" color="white">
+                              Periode 
+                            </Typography>
+                    </CardHeader>
+                    <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
-                        <Link href={route('periode.create')}>
+                    <Link href={route('periode.create')}>
                         <Button size="sm" className="ml-2" color="blue">Add</Button>
-                        </Link>
+                    </Link>
                     </div>
                     
                         <table className="w-full min-w-max table-auto text-left">
@@ -135,6 +138,7 @@ export default function ListPeriode({auth}){
                             </tbody>
                         </table>
                         <Pagination links={periodes.links} />
+                        </CardBody>
                     </Card>                    
                     
                 </div>

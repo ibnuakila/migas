@@ -1,6 +1,8 @@
 import {React, useState, useEffect} from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Card, 
+    CardHeader,
+    CardBody,
     Typography, 
     Button,
     Dialog,
@@ -9,87 +11,153 @@ import { Card,
   DialogFooter,
   Input,
   Select} from "@material-tailwind/react";
+import {
+  ArrowDownTrayIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListIndikator({auth}){
     const TABLE_HEAD = ["ID", "Numbering", "Ordering", "Nama Indikator", "Satuan", "Level", "Pic" ,   "Action"];
-    const Filter = [
-        [1, "Nama"],
-        [2, "Level"]        
-    ];
-        
+            
     const { indikators } = usePage().props;
     console.log(indikators);
     const [open, setOpen] = useState(false);
- 
-    const handleOpen = () => {
-        setOpen(!open);
-        alert("OK");
-    }
-    const [term, setTerm] = useState('');
-        
-    function handleChange(e) {
-        //const key = e.target.name;
+    const [termIndikator, setTermIndikator] = useState('');
+    const [termPic, setTermPic] = useState('');
+    const [termSatuan, setTermSatuan] = useState('');
+    const [termLevel, setTermLevel] = useState('');
+    const queryString = {page:indikators.current_page, 
+        findikator:termIndikator, 
+        fpic:termPic,        
+        flevel:termLevel};
+    function handleChangeIndikator(e) {        
         const value = e.target.value;
-
-        /*setValues(values => ({
-          ...values,
-          [key]: value
-        }));*/
-        setTerm(value);
-        //console.log(key + ", " +value);
+        setTermIndikator(value);        
+    }
+    function handleChangeLevel(e){
+        const value = e.target.value;
+        setTermLevel(value);
+    }
+    function handleChangePic(e){
+        const value = e.target.value;
+        setTermPic(value);
     }
     
     useEffect( () => {
         //if(term.length >= 2){
             router.visit('/indikator', {
                 method: 'get',
-                data: { search: term, page:indikators.current_page},
+                data: queryString,
                 replace: true,
                 preserveState: true
             });
         //}
-        //Inertia.get(route(route().current()), query, {
-        //replace: true,
-        //preserveState: true
-      },[term]);
+        
+      },[termIndikator, termPic, termLevel]);
     
     return (
             <AdminLayout 
         auth = {auth}
         children={(
                 <div className="container mx-auto">
-                    <Card className="p-5 h-full w-full overflow-scroll">
-                    <div className="flex justify-between">
-                        <Typography variant="h3">Data Indikator                            
-                        </Typography>
-                        <span>                            
-                            <Input variant="outlined" size="md" className="w-45" label="Search for Indikator" name="namaIndikator" onChange={handleChange}/>
-                        </span>
-                            
-                        
-                    </div>
+                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                    <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
+                            <Typography variant="h4" color="white">
+                              Indikator 
+                            </Typography>
+                    </CardHeader>
+                    <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
-                        <Link href={route('indikator.create')}>
-                        <Button size="sm" className="ml-2" color="blue">Add</Button>
-                        </Link>
+                    <Link href={route('indikator.create')}>
+                        <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
+                    </Link>
                     </div>
-                    
-                        <table>
+                        <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
-                                    {TABLE_HEAD.map((head) => (
-                                    <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                      <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                      >
-                                        {head}
-                                      </Typography>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >ID</Typography>
                                     </th>
-                                  ))}
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Numbering</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Ordering</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Nama Indikator</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Level</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Satuan</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >PIC</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
+                                        >Action</Typography>
+                                    </th>
+                                </tr>
+                                <tr className="border-b-2">
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th className="p-2">
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10" 
+                                            onChange={handleChangeIndikator} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Indikator" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeLevel} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Level" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangePic} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Pic" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>                                                      
@@ -114,15 +182,15 @@ export default function ListIndikator({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_indikator}
                                         </Typography>
-                                      </td>
+                                      </td>                                      
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {nama_satuan}
+                                          {nama_level}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {nama_level}
+                                          {nama_satuan}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">     
@@ -157,6 +225,8 @@ export default function ListIndikator({auth}){
                             </tbody>
                         </table>
                         <Pagination links={indikators.links} />
+                        </CardBody>
+                        
                     </Card>
                 </div>
                 )}
