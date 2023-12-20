@@ -248,8 +248,5 @@ class LaporanCapaianController extends Controller {
         return Redirect::back()->with('message', 'Import Berhasil!');
     }
 
-    public function calculateKinerja(\Illuminate\Http\Request $request) {
-        //$id = $request->input('id_laporan_capaian');
-        //$laporan_capaian = LaporanCapaian::find($id);
-    }
+    
 }

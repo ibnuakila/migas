@@ -228,12 +228,7 @@ class InputRealisasiController extends Controller {
     public function calculateRealization(\Illuminate\Http\Request $request) {
         $input_realisasi_id = $request->input('input_realisasi_id');
         $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
-        //$input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
-        //$indikator_kompositor = \App\Models\Kompositor::where('id', $input_realisasi->kompositor_id)->first();
-        /*$result = DB::table('kompositor')
-                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                        ->where('kompositor.id', $input_realisasi->kompositor_id)
-                        ->get()->first();*/
+        
         $result = InputRealisasi::query()
                 ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                 ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')

@@ -96,7 +96,7 @@ export default function EditIndikator() {
                                                             value={indikator.data.level_id}
                                                             error={errors.level_id}>
                                                         {levels.map(({id, nama_level}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_level}</Option>
+                                                            <Option value={id} key={id}>{nama_level}</Option>
                                                                             ))}
                                                     </Select>
                                                     {errors.level_id && <div className="text-red-400 mt-1">{errors.level_id}</div>}
@@ -106,7 +106,7 @@ export default function EditIndikator() {
                                                             value={indikator.data.satuan_id}
                                                             error={errors.satuan_id}>
                                                         {satuans.map(({id, nama_satuan}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_satuan}</Option>
+                                                            <Option value={id} key={id}>{nama_satuan}</Option>
                                                                             ))}
                                                     </Select>
                                                     {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
@@ -117,7 +117,7 @@ export default function EditIndikator() {
                                                             value={indikator.data.parent_id}
                                                             error={errors.parent_id}>
                                                         {parents.map(({id, numbering, nama_indikator}) => (
-                                                            <Option value={id.toString()} key={id}>{numbering + " | " + nama_indikator}</Option>
+                                                            <Option value={id} key={id}>{numbering + " | " + nama_indikator}</Option>
                                                                             ))}
                                                     </Select>
                                                     {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}

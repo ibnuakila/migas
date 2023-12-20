@@ -102,7 +102,24 @@ class InputKinerjaController extends Controller
      */
     public function update(KinerjaTriwulanRequest $request, )
     {
-        //
+        $validated = $request->validate();
+        $kinerja_triwulan = KinerjaTriwulan::where('laporan_capaian_id',$request->laporan_capaian_id)
+                ->where('triwulan_id', $request->triwulan_id)->first();
+        if($kinerja_triwulan !== null){
+            KinerjaTriwulan::create($validated);
+        }else{
+            KinerjaTriwulan::where('laporan_capaian_id',$request->laporan_capaian_id)
+                ->where('triwulan_id', $request->triwulan_id)
+                    ->update($validated);
+            
+        }
+        $message = '';
+        if($update_status_1 && $update_status_2){
+            $message = "Update berahasil!";
+        }else{
+            $message = "Update gagal!";
+        }
+        return Redirect::back()->with('message', $message);
     }
 
     /**
@@ -141,6 +158,7 @@ class InputKinerjaController extends Controller
                 case "Deviasi Kuantitas Ekspor LNG skema hulu dari kuantitas yang direkomendasikan":
                     break;
                 case "Indeks Ketersediaan BBM":
+                    
                     break;
                 case "Produksi BBM dan Hasil Olahan":
                     break;

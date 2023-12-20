@@ -30,7 +30,7 @@ class KompositorRequest extends FormRequest
             'jenis_kompositor_id' => ['required'],
             'indikator_id' => ['required'],
             //'type_kompositor' => ['required'],
-            'kalkulasi' => ['nullable'],
+            //'kalkulasi' => ['nullable'],
             'sumber_kompositor' => ['required']
         ];
     }

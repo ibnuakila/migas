@@ -18,21 +18,25 @@ import AdminLayout from '@/Layouts/AdminLayout';
 export default function EditKompositor(props) {
     console.log(props);
     const kompositor = props.kompositor;
+    const parameter = props.parameter;
     const kompositors = props.kompositors;
     const auth = props.auth;
     const jenis_kompositor = props.jenis_kompositor;
     const indikator = props.indikator;
     const indeks = props.indeks;
     const parameters = props.parameters;
+    const sumber_kompositor = props.sumber_kompositor;
     const {data, setData, put, errors,delete:destroy, processing} = useForm({
-        indikator_id: indikator.data[0].id || '',
+        indikator_id: indikator.data.id || '',
         nama_kompositor: kompositor.data.nama_kompositor || '',
-        kalkulasi: kompositor.data.kalkulasi || '',
+        kalkulasi: parameter.kalkulasi || '',
         satuan: kompositor.data.satuan || '',
         indeks_id: kompositor.data.indeks_id || '0',
         jenis_kompositor_id: kompositor.data.jenis_kompositor_id || '',
         sumber_kompositor: kompositor.data.sumber_kompositor ||'',
-        kompositor_id: kompositor.data.id
+        kompositor_id: kompositor.data.id,        
+        value: parameter.value || '',
+        parameter_id: parameter.id || ''
     });
     
     const [optionIndeks, setOptionIndeks] = useState('');
@@ -44,10 +48,7 @@ export default function EditKompositor(props) {
     /*if(kompositor.data.jenis_kompositor_id == 3){
         setIsParameter(true);
     }*/
-    window.addEventListener('load' , function(e){
-        console.log('The page has fully loaded');
-        //setIsParameter(true);
-    });
+    
     
     function handleLoad() {
         console.log('The page has fully loaded');
@@ -112,13 +113,13 @@ export default function EditKompositor(props) {
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Indikator" variant="outlined" id="nama-indikator" 
-                                                    defaultValue={indikator.data[0].nama_indikator} disabled
+                                                    defaultValue={indikator.data.nama_indikator} disabled
                                                        error=""/>  
                                                 {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Select label="Sumber Kompositor" id="type-kompositor" value="New" disabled
-                                                    value={kompositor.data.sumber_kompositor}
+                                                <Select label="Sumber Kompositor" id="type-kompositor" disabled
+                                                    value={kompositor.data.sumber_kompositor_id}
                                                     onChange={ (e)=> {
                                                             if(e === 'New'){
                                                                 setNewKompositor(true);
@@ -135,9 +136,9 @@ export default function EditKompositor(props) {
                                                             }
                                                             setData('sumber_kompositor', e);
                                                         }}>
-                                                    <Option value="New">New</Option>
-                                                    <Option value="Existing Indikator">Existing Indikator</Option>
-                                                    <Option value="Existing Kompositor">Existing Kompositor</Option>
+                                                    {sumber_kompositor.map(({id, nama_sumber_kompositor}) => (
+                                                            <Option value={id} key={id}>{nama_sumber_kompositor}</Option>
+                                                                            ))}
                                                 </Select>
                                             </div>
                                             
@@ -157,7 +158,7 @@ export default function EditKompositor(props) {
                                                             onChange={handleChangeKompositor}                                                            
                                                             error={errors.kompositor_id}>
                                                         {kompositors.map(({id, nama_kompositor}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_kompositor}</Option>
+                                                            <Option value={id} key={id}>{nama_kompositor}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
@@ -168,7 +169,7 @@ export default function EditKompositor(props) {
                                                             value={kompositor.data.indeks_id}
                                                             error={errors.indeks_id}>
                                                         {indeks.map(({id, nama_indeks}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_indeks}</Option>
+                                                            <Option value={id} key={id}>{nama_indeks}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
@@ -188,7 +189,7 @@ export default function EditKompositor(props) {
                                                         value={kompositor.data.jenis_kompositor_id}
                                                         error={errors.indeks_id}>                            
                                                     {jenis_kompositor.map(({id, nama_jenis_kompositor}) => (
-                                                            <Option value={id.toString()} key={id}>{nama_jenis_kompositor}</Option>
+                                                            <Option value={id} key={id}>{nama_jenis_kompositor}</Option>
                                                                             ))}                           
                                                 </Select>
                                                 {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
@@ -201,10 +202,10 @@ export default function EditKompositor(props) {
                                                             setData('parameter_id', e);
                                                             }
                                                         }
-                                                        value={1}
+                                                        value={parameter.id}
                                                         >
                                                         {parameters.map(({id, nama_parameter, nama_indeks}) => (
-                                                            <Option value={id.toString()} key={id} label={nama_parameter}>{nama_parameter + " (" + nama_indeks + ")"}</Option>
+                                                            <Option value={id} key={id} label={nama_parameter}>{nama_parameter + " (" + nama_indeks + ")"}</Option>
                                                                             ))}  
                                                     </Select>
                                                 </div>
@@ -213,9 +214,18 @@ export default function EditKompositor(props) {
                                                             onChange={e => {
                                                                         setData('kalkulasi', e.target.value)
                                                                     }}
-                                                            defaultValue={kompositor.data.kalkulasi}
+                                                            defaultValue={parameter.kalkulasi}
                                                            error={errors.kalkulasi}/>  
                                                     {errors.kalkulasi && <div className="text-red-400 mt-1">{errors.kalkulasi}</div>}
+                                                </div>
+                                                        <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Input label="Value" variant="outlined" id="value" 
+                                                            defaultValue={parameter.value}
+                                                            onChange={e => {
+                                                                        setData('value', e.target.value)
+                                                                    }}
+                                                           error={errors.value}/>  
+                                                    {errors.value && <div className="text-red-400 mt-1">{errors.value}</div>}
                                                 </div>
                                             </>
                                                 ):(null)}

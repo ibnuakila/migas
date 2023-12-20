@@ -24,6 +24,7 @@ export default function FormKompositor(props) {
     const indikators = props.indikators;
     const indeks = props.indeks;
     const parameters = props.parameters;
+    const sumber_kompositor = props.sumber_kompositor;
     const {data, setData, post, errors, processing} = useForm({
         indikator_id: indikator.data.id || '',
         nama_kompositor: '',
@@ -33,7 +34,9 @@ export default function FormKompositor(props) {
         jenis_kompositor_id: '',
         sumber_kompositor: '',
         kompositor_id: '',
-        parameter_id: ''
+        parameter_id: '',
+        kalkulasi: '',
+        value: ''
     });
     console.log(props);
     const [optionIndeks, setOptionIndeks] = useState('');
@@ -130,9 +133,9 @@ export default function FormKompositor(props) {
                                                         }
                                                         setData('sumber_kompositor', e);
                                                     }}>
-                                                    <Option value="New">New</Option>
-                                                    <Option value="Existing Indikator">Existing Indikator</Option>
-                                                    <Option value="Existing Kompositor">Existing Kompositor</Option>
+                                                    {sumber_kompositor.map(({id, nama_sumber_kompositor}) => (
+                                                            <Option value={id} key={id}>{nama_sumber_kompositor}</Option>
+                                                                            ))}
                                                 </Select>
                                             </div>
                                             {newKompositor ? (
@@ -178,6 +181,14 @@ export default function FormKompositor(props) {
                                                            error={errors.kalkulasi}/>  
                                                     {errors.kalkulasi && <div className="text-red-400 mt-1">{errors.kalkulasi}</div>}
                                                 </div>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Input label="Value" variant="outlined" id="value" 
+                                                            onChange={e => {
+                                                                        setData('value', e.target.value)
+                                                                    }}
+                                                           error={errors.value}/>  
+                                                    {errors.value && <div className="text-red-400 mt-1">{errors.value}</div>}
+                                                </div>
                                             </>
                                                 ):(null)}
                                             {newKompositor ? (
@@ -186,10 +197,13 @@ export default function FormKompositor(props) {
                                                         onChange={e => {
                                                                     setData('nama_kompositor', e.target.value)
                                                                 }}
-                                                        onFocus={(e)=>{                                                            
-                                                            let param = document.getElementById("parameter").textContent;                                                            
-                                                            e.target.value = param;
-                                                            setData('nama_kompositor', param);
+                                                        onFocus={(e)=>{
+                                                            if(newKompositor){
+                                                                let param = document.getElementById("parameter").textContent;                                                            
+                                                                e.target.value = param;
+                                                                setData('nama_kompositor', param);
+                                                            }
+                                                            
                                                         }}
                                                                 defaultValue = {namaKompositor}
                                                        error={errors.nama_kompositor}/>  
