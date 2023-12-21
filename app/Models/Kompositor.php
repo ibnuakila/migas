@@ -17,7 +17,7 @@ class Kompositor extends Model
         'satuan',
         'indeks_id',
         'jenis_kompositor_id',
-        'sumber_kompositor'
+        'sumber_kompositor_id'
     ];
     
     public function inputRealisasi(){

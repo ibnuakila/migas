@@ -29,14 +29,26 @@ export default function EditKompositor(props) {
     const {data, setData, put, errors,delete:destroy, processing} = useForm({
         indikator_id: indikator.data.id || '',
         nama_kompositor: kompositor.data.nama_kompositor || '',
-        kalkulasi: parameter.kalkulasi || '',
+        kalkulasi: (parameter) => {
+            if(parameter !== null){
+                return parameter.kalkulasi;
+            }
+        },
         satuan: kompositor.data.satuan || '',
         indeks_id: kompositor.data.indeks_id || '0',
         jenis_kompositor_id: kompositor.data.jenis_kompositor_id || '',
-        sumber_kompositor: kompositor.data.sumber_kompositor ||'',
+        sumber_kompositor_id: kompositor.data.sumber_kompositor ||'',
         kompositor_id: kompositor.data.id,        
-        value: parameter.value || '',
-        parameter_id: parameter.id || ''
+        value: (parameter) => {
+            if(parameter !== null){
+                return parameter.value;
+            }
+        },
+        parameter_id: (parameter) => {
+            if(parameter !== null){
+                return parameter.id;
+            }
+        },
     });
     
     const [optionIndeks, setOptionIndeks] = useState('');
@@ -45,6 +57,7 @@ export default function EditKompositor(props) {
     const [existingKompositor, setExistingKompositor] = useState(false);
     const [isParameter, setIsParameter] = useState(false);
     const [existingIndikator, setExistingIndikator] = useState(false);
+    const [existingParameter, setExistingParameter] = useState(false);
     /*if(kompositor.data.jenis_kompositor_id == 3){
         setIsParameter(true);
     }*/
@@ -121,20 +134,28 @@ export default function EditKompositor(props) {
                                                 <Select label="Sumber Kompositor" id="type-kompositor" disabled
                                                     value={kompositor.data.sumber_kompositor_id}
                                                     onChange={ (e)=> {
-                                                            if(e === 'New'){
+                                                            if(e === 1){
                                                                 setNewKompositor(true);
                                                                 setExistingIndikator(false);
-                                                                setExistingKompositor(false);            
-                                                            }else if(e === 'Existing Indikator'){
+                                                                setExistingKompositor(false);  
+                                                                setExistingParameter(false);
+                                                            }else if(e === 2){
                                                                 setNewKompositor(false);
                                                                 setExistingIndikator(true);
                                                                 setExistingKompositor(false);
-                                                            }else{//existing kompositor
+                                                                setExistingParameter(false);
+                                                            }else if(e === 3){//existing kompositor
                                                                 setNewKompositor(false);
                                                                 setExistingIndikator(false);
                                                                 setExistingKompositor(true);
+                                                                setExistingParameter(false);
+                                                            }else if(e === 4){//existing parameter
+                                                                setNewKompositor(false);
+                                                                setExistingIndikator(false);
+                                                                setExistingKompositor(false);
+                                                                setExistingParameter(true);
                                                             }
-                                                            setData('sumber_kompositor', e);
+                                                            setData('sumber_kompositor_id', e);
                                                         }}>
                                                     {sumber_kompositor.map(({id, nama_sumber_kompositor}) => (
                                                             <Option value={id} key={id}>{nama_sumber_kompositor}</Option>
