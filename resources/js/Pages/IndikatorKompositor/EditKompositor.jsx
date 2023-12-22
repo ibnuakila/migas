@@ -27,35 +27,23 @@ export default function EditKompositor(props) {
     const parameters = props.parameters;
     const sumber_kompositor = props.sumber_kompositor;
     const {data, setData, put, errors,delete:destroy, processing} = useForm({
-        indikator_id: indikator.data.id || '',
+        indikator_id: indikator.data.id || '',        
         nama_kompositor: kompositor.data.nama_kompositor || '',
-        kalkulasi: (parameter) => {
-            if(parameter !== null){
-                return parameter.kalkulasi;
-            }
-        },
+        kalkulasi: parameter ? parameter.kalkulasi : null,
         satuan: kompositor.data.satuan || '',
         indeks_id: kompositor.data.indeks_id || '0',
         jenis_kompositor_id: kompositor.data.jenis_kompositor_id || '',
-        sumber_kompositor_id: kompositor.data.sumber_kompositor ||'',
+        sumber_kompositor_id: kompositor.data.sumber_kompositor_id ||'',
         kompositor_id: kompositor.data.id,        
-        value: (parameter) => {
-            if(parameter !== null){
-                return parameter.value;
-            }
-        },
-        parameter_id: (parameter) => {
-            if(parameter !== null){
-                return parameter.id;
-            }
-        },
+        value: parameter ? parameter.value : null,
+        parameter_id: parameter ? parameter.id : null,
     });
     
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');
     const [newKompositor, setNewKompositor] = useState(true);
     const [existingKompositor, setExistingKompositor] = useState(false);
-    const [isParameter, setIsParameter] = useState(false);
+    const [isParameter, setIsParameter] = useState(kompositor.data.jenis_kompositor_id == 3 ? true : false);
     const [existingIndikator, setExistingIndikator] = useState(false);
     const [existingParameter, setExistingParameter] = useState(false);
     /*if(kompositor.data.jenis_kompositor_id == 3){
@@ -117,12 +105,7 @@ export default function EditKompositor(props) {
                                     </Typography>
                                 </CardHeader>                                    
                                 <CardBody>
-                                    <form action="" id="form-kompositor" onClick={ (e) => {
-                                        console.log("Form loaded sucessfully!");
-                                        if(kompositor.data.jenis_kompositor_id == 3){
-                                            setIsParameter(true);
-                                        }
-                                    }}>
+                                    <form action="" id="form-kompositor" >
                                         <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
                                                 <Input label="Nama Indikator" variant="outlined" id="nama-indikator" 

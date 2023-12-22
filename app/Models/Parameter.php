@@ -14,6 +14,7 @@ class Parameter extends Model
     protected $fillable = [
         'nama_parameter',
         'value',
-        'indeks_id'
+        'indeks_id',
+        'kalkulasi'
     ];
 }
