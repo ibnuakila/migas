@@ -86,6 +86,16 @@ class InputRealisasiController extends Controller {
                             ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                             ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                             ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                            ->when(Request::input('findeks'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('indeks.nama_indeks', 'like', "%{$search}%");
+                                }
+                            })
+                            ->when(Request::input('fkompositor'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('kompositor.nama_kompositor', 'like', "%{$search}%");
+                                }
+                            })
                             ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
                             ->where('input_realisasi.triwulan_id', $triwulan->id)
                             ->select('input_realisasi.*',
@@ -115,6 +125,16 @@ class InputRealisasiController extends Controller {
                             ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                             ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                             ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                            ->when(Request::input('findeks'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('indeks.nama_indeks', 'like', "%{$search}%");
+                                }
+                            })
+                            ->when(Request::input('fkompositor'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('kompositor.nama_kompositor', 'like', "%{$search}%");
+                                }
+                            })
                             ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
                             ->where('input_realisasi.triwulan_id', $triwulan->id)
                             ->select('input_realisasi.*',
@@ -123,14 +143,14 @@ class InputRealisasiController extends Controller {
                                     'realisasi_kompositor.nilai',
                                     'kompositor.nama_kompositor',
                                     'kompositor.satuan',
-                                    'kompositor.kalkulasi',
-                                    'kompositor.sumber_kompositor',
+                                    'kompositor.id as kompositor_id',
+                                    'kompositor.sumber_kompositor_id',
                                     'indeks.nama_indeks',
                                     'jenis_kompositor.nama_jenis_kompositor'
                             )
                             ->with('inputRealisasiPic')
                             ->with('realisasiKompositor')
-                            ->paginate(),
+                            ->get(),
         ]);
     }
 
@@ -141,7 +161,8 @@ class InputRealisasiController extends Controller {
     }
 
     public function update(InputRealisasi $inputrealisasi, InputRealisasiRequest $request) {
-        //update input realisasi
+        //update input realisasi * cek kembali jangan langsung update kecuali agregasi indikator
+        //jika nama kompositor == dengan nama indikator
         $update_status_1 = $inputrealisasi->update($request->validated());
         
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[

@@ -13,6 +13,10 @@ import { Card,
   Alert} from "@material-tailwind/react";
 import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
+import {
+  ArrowDownTrayIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 
 export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC","Periode", "Action"];
@@ -26,28 +30,33 @@ export default function ListInputRealisasi({auth}){
     const [open, setOpen] = useState(true);
     const { flash } = usePage().props;    
     const [term, setTerm] = useState('');
-       
-    function handleChange(e) {
-        //const key = e.target.name;
+    const [termIndeks, setTermIndeks] = useState('');
+    const [termKompositor, setTermKompositor] = useState('');
+    const queryString = { 
+        findeks:termIndeks, 
+        fkompositor:termKompositor,
+        };
+    function handleChangeIndeks(e){
         const value = e.target.value;
-        
-        setTerm(value);
-        //console.log(key + ", " +value);
+        setTermIndeks(value);
+    }
+    
+    function handleChangeKompositor(e){
+        const value = e.target.value;
+        setTermKompositor(value);
     }
     
     useEffect( () => {
         //if(term.length >= 2){
-            /*router.visit('/indikator', {
+            router.visit('/input-realisasi/laporancapaiantriwulan/' + laporan_capaian.id + '/triwulan/' + triwulan.id, {
                 method: 'get',
-                data: { search: term, page:indikators.current_page},
+                data: queryString,
                 replace: true,
                 preserveState: true
-            });*/
+            });
         //}
-        //Inertia.get(route(route().current()), query, {
-        //replace: true,
-        //preserveState: true
-      },[term]);
+        
+    },[termIndeks, termKompositor]);
     
     function handleImport(){
         if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
@@ -100,14 +109,37 @@ export default function ListInputRealisasi({auth}){
                                     </th>
                                   ))}
                                 </tr>
+                                <tr className="border-b-2">
+                                    <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeIndeks} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Indeks" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeKompositor} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Kompositor" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    
+                                </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({ id, nama_indeks, nama_kompositor, nama_jenis_kompositor, nilai,  
+                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai,  
                                     satuan, triwulan, input_realisasi_pic, periode, realisasi_kompositor_id}) => (
-                                    <tr key={id} className="even:bg-blue-gray-50/50">
+                                    <tr key={kompositor_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {id}
+                                          {kompositor_id}
                                         </Typography>
                                       </td>
                                       <td className="p-4">                                      
@@ -165,7 +197,7 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                     </tr>
                                   ))}
-                                {data.length === 0 && (
+                                {input_realisasis.length === 0 && (
                                     <tr>
                                       <td className="px-6 py-4 border-t" colSpan="4">
                                         No data found.
@@ -174,7 +206,7 @@ export default function ListInputRealisasi({auth}){
                                 )}
                             </tbody>
                         </table>
-                        <Pagination links={input_realisasis.links} />
+                        
                         </CardBody>
                     </Card>
                 </div>

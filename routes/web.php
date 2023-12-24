@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/kompositor/{kompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
     Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('kompositor.index-indikator');
     Route::get('/kompositor/agregasi-kompositor/{indeks}', [KompositorController::class, 'agregasiKompositor'])->name('kompositor.agregasi-kompositor');
+    Route::get('/kompositor/getparameter/{kompositor}', [KompositorController::class, 'getParameter'])->name('kompositor.getparameter');
 });
 
 Route::middleware('auth')->group(function () {
@@ -139,13 +140,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/input-realisasi/index-indikator/{laporancapaian}', [InputRealisasiController::class, 'indexIndikator'])->name('input-realisasi.index-indikator');
     Route::get('/input-realisasi/create', [InputRealisasiController::class, 'create'])->name('input-realisasi.create');
     Route::post('/input-realisasi/store', [InputRealisasiController::class, 'store'])->name('input-realisasi.store');
-    Route::get('/input-realisasi/inputrealisasi/{inputrealisasi}/realisasikompositor/{realisasikompositor}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
-    Route::put('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
-    Route::delete('/input-realisasi/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
+    Route::get('/input-realisasi/edit/inputrealisasi/{inputrealisasi}/realisasikompositor/{realisasikompositor}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
+    Route::put('/input-realisasi/update/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
+    Route::delete('/input-realisasi/delete/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
     Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
-    Route::get('/input-realisasi/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputRealisasiController::class, 'laporanCapaianTriwulan'])->name('input-realisasi.laporan-capaian-triwulan');
+    Route::get('/input-realisasi/laporancapaiantriwulan/{laporancapaian}/triwulan/{triwulan}', [InputRealisasiController::class, 'laporanCapaianTriwulan'])->name('input-realisasi.laporan-capaian-triwulan');
 });
 
 Route::middleware('auth')->group(function () {

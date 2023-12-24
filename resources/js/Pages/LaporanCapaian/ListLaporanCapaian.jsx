@@ -35,6 +35,7 @@ export default function ListLaporanCapaian({auth}){
     const [termPic, setTermPic] = useState('');
     const [termPeriode, setTermPeriode] = useState('');
     const [termLevel, setTermLevel] = useState('');
+    const [tempTarget, setTempTarget] = useState(0);
     const { flash } = usePage().props;
     const queryString = {page:laporan_capaians.current_page, 
         findikator:termIndikator, 
@@ -84,6 +85,17 @@ export default function ListLaporanCapaian({auth}){
         //}
         
       },[termIndikator, termPic, termLevel, termPeriode]);
+      
+    function handleClickRealisasi(e){
+        e.preventDefault();
+        console.log(e);
+        if(data.target == 0){
+            
+            alert("Pastikan anda telah menentukan nilai target!");
+        }else{
+            return true;
+        }
+    }
     return (
         <AdminLayout 
         auth = {auth}
@@ -298,7 +310,7 @@ export default function ListLaporanCapaian({auth}){
                             <tbody>                                                      
                                 {data.map(({id, indikator_id, numbering, nama_indikator, nama_level, nama_satuan, target, laporan_capaian_pic,
                                     input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja_id,status_kinerja, periode}) => (
-                                    <tr key={indikator_id} className="even:bg-blue-gray-50/50">
+                                    <tr key={id+numbering} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
                                           {indikator_id}
@@ -342,8 +354,11 @@ export default function ListLaporanCapaian({auth}){
                                         {input_realisasi.length > 0 ?
                                             (input_realisasi.map( ({ realisasi, triwulan_id})=>(
                                                 <td className="p-4 text-center" key={id}>
-                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-red-600">
-                                                        <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} title="Realisasi Kompositor/Parameter">
+                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-red-600"
+                                                        
+                                                    >
+                                                        <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} 
+                                                        title="Realisasi Kompositor/Parameter" onClick={null}>
                                                             {(parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})}
                                                         </Link>
                                                     </Typography>

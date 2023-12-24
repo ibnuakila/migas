@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Requests\KompositorRequest;
@@ -116,11 +117,22 @@ class KompositorController extends Controller
     
     public function indexIndikator(\App\Models\Indikator $indikator) {
          return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
-             'kompositors' => DB::table('kompositor')
+             'kompositors' => Kompositor::query()
                  ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                  ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                  ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
                  ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->when(Request::input('findeks'), function ($query, $search) {
+                        if ($search != '') {
+                            $query->where('indeks.nama_indeks', 'like', "%{$search}%");
+                        }
+                    })
+                    ->when(Request::input('fkompositor'), function ($query, $search) {
+                        if ($search != '') {
+                            $query->where('kompositor.nama_kompositor', 'like', "%{$search}%");
+                        }
+                    })
+                    //->with('parameter')
                  ->select(
                          'kompositor.*',
                          'indikator.nama_indikator',
@@ -134,7 +146,7 @@ class KompositorController extends Controller
          ]);
     }
 
-    public function store(Request $request) {
+    public function store(\Illuminate\Http\Request $request) {
         
         if($request->input('sumber_kompositor_id') == '1'){
             //validasi
@@ -256,7 +268,7 @@ class KompositorController extends Controller
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
     }
 
-    public function update(Kompositor $kompositor, \Illuminate\Http\Request $request) {//perbaiki lagi
+    public function update(Kompositor $kompositor, \Illuminate\Support\Facades\Request $request) {//perbaiki lagi
         /*$validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
                     'nama_kompositor' => ['required'],
                     'satuan' => ['required'],
@@ -445,5 +457,18 @@ class KompositorController extends Controller
                  ->get(),             
              //'indikator' => $indikator,
          ]);
+    }
+    
+    public function getParameter(Kompositor $kompositor){
+        $kompo_param = \App\Models\KompositorParameter::where('kompositor_id', $kompositor->id)->first();
+        $parameter = \App\Models\Parameter::where('id', $kompo_param->parameter_id)->first();
+        if($parameter !== null){
+            $data['response'] = true;
+            $data['value'] = $parameter->value;
+        }else{
+            $data['response'] = false;
+            $data['value'] = $parameter->value;
+        }
+        return json_encode($data);
     }
 }

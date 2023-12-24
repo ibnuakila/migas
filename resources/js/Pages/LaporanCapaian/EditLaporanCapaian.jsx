@@ -23,6 +23,9 @@ export default function EditLaporanCapaian() {
     const optPic = pics.map(pic => {
         return {value: pic.id, label: pic.nama_pic};
     })
+    const defPic = defPics.map((pic) => {
+        return {value: pic.pic_id, label: pic.nama_pic};
+    })
     const {data, setData, put, errors, processing} = useForm({
         id: laporan_capaian.data[0].id || '',
         //indikator_periode_id: laporan_capaian.data.indikator_periode_id || '',
@@ -37,6 +40,7 @@ export default function EditLaporanCapaian() {
         persentasi_kinerja: laporan_capaian.data[0].persentasi_kinerja || '',
         sumber_data: laporan_capaian.data[0].sumber_data || '',
         file_path: laporan_capaian.data[0].file_path || '',
+        laporan_capaian_pic: defPics || '',
         pics: optPic || ''
     });
     console.log(usePage().props);
@@ -47,9 +51,7 @@ export default function EditLaporanCapaian() {
     const [selectedValue, setSelectedValue] = useState([]);
     const [optionTriwulan, setOptionTriwulan] = useState([]);
     const [targetFormat, setTargetFormat] = useState([]);
-    const defPic = defPics.map((pic) => {
-        return {value: pic.pic_id, label: pic.nama_pic};
-    })
+    
 
     const handleSave = (e) => {
         e.preventDefault();
@@ -142,7 +144,7 @@ export default function EditLaporanCapaian() {
                                                 <MSelect options={optPic} defaultValue={defPic} label="Pic"
                                                          onChange={(item) => {
                                                                      setOptionPic(item);
-                                                                     setData('pics', item)
+                                                                     setData('laporan_capaian_pic', item)
                                                                  }}
                                                          />
                                                 {errors.pic_id &&
@@ -151,9 +153,10 @@ export default function EditLaporanCapaian() {
                                                 <Input label="Target" variant="outlined" id="target" 
                                                        defaultValue={laporan_capaian.data[0].target} 
                                                        onChange={(e)=> setData('target', e.target.value)}
+                                                       error={errors.target}
                                                        />
-                                                {errors.terget &&
-                                                        <div className="text-red-400 mt-1">{errors.terget}</div>
+                                                {errors.target &&
+                                                        <div className="text-red-400 mt-1">{errors.target}</div>
                                                 }
                                                 <Select label="Format Target" onChange={handleTargetFormatChange}
                                                         defaultValue={laporan_capaian.data[0].target_format}

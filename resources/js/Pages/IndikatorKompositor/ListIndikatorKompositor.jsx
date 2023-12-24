@@ -10,43 +10,52 @@ import { Card,
   DialogBody,
   DialogFooter,
   Input} from "@material-tailwind/react";
+import {
+  ArrowDownTrayIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { Link, usePage, router } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListIndikatorKompositor({auth}){
-    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
+    //const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
  
     const { kompositors, indikator } = usePage().props;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
- 
+    const [termIndeks, setTermIndeks] = useState('');
+    const [termKompositor, setTermKompositor] = useState('');
+    const queryString = { 
+        findeks:termIndeks, 
+        fkompositor:termKompositor,
+        };
     const handleOpen = () => {
         setOpen(!open);
         alert("OK");
     }
     const [term, setTerm] = useState('');
         
-    function handleChange(e) {
-        //const key = e.target.name;
+    function handleChangeIndeks(e){
         const value = e.target.value;
-        
-        setTerm(value);
-        //console.log(key + ", " +value);
+        setTermIndeks(value);
+    }
+    
+    function handleChangeKompositor(e){
+        const value = e.target.value;
+        setTermKompositor(value);
     }
     
     useEffect( () => {
         //if(term.length >= 2){
-            /*router.visit('/indikator', {
+            router.visit('/kompositor/index-indikator/'+indikator.id, {
                 method: 'get',
-                data: { search: term, page:indikators.current_page},
+                data: queryString,
                 replace: true,
                 preserveState: true
-            });*/
+            });
         //}
-        //Inertia.get(route(route().current()), query, {
-        //replace: true,
-        //preserveState: true
-      },[term]);
+        
+    },[termIndeks, termKompositor]);
     
     return (
             <AdminLayout 
@@ -72,17 +81,55 @@ export default function ListIndikatorKompositor({auth}){
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
-                                    {TABLE_HEAD.map((head) => (
-                                    <th key={head} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                      <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                      >
-                                        {head}
-                                      </Typography>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Id
+                                        </Typography>
                                     </th>
-                                  ))}
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Indeks
+                                        </Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Nama Kompositor
+                                        </Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Jenis Kompositor
+                                        </Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Satuan
+                                        </Typography>
+                                    </th>                                    
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Action
+                                        </Typography>
+                                    </th>
+                                </tr>
+                                <tr className="border-b-2">
+                                    <th></th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeIndeks} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Indeks" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th>
+                                        <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
+                                        onChange={handleChangeKompositor} labelProps={{
+                                            className: "hidden",
+                                            }} placeholder="Kompositor" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>                                                      
@@ -97,8 +144,7 @@ export default function ListIndikatorKompositor({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_indeks}
                                         </Typography>                                                                                
-                                      </td>
-                                      
+                                      </td>                                      
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray"                                            
                                          className="font-normal text-blue-600">
@@ -106,12 +152,10 @@ export default function ListIndikatorKompositor({auth}){
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                      {nama_jenis_kompositor == 'Agregasi' ? (
-                                                <Link href={route('kompositor.agregasi-kompositor', indeks_id)}>
-                                                    <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
-                                                        {nama_jenis_kompositor}
-                                                    </Typography>
-                                                </Link>
+                                        {nama_jenis_kompositor == 'Agregasi' ? (                                                
+                                            <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
+                                                {nama_jenis_kompositor}
+                                            </Typography>                                                
                                             ):(
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_jenis_kompositor}
@@ -122,7 +166,7 @@ export default function ListIndikatorKompositor({auth}){
                                           {satuan}
                                         </Typography>                                                                                
                                       </td>
-                                      
+                                                                           
                                                                             
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">

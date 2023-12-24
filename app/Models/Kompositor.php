@@ -35,4 +35,8 @@ class Kompositor extends Model
     public function kompositorOfKompositor(){
         return $this->hasMany(KompositorOfKompositor::class);
     }
+    
+    public function parameter(){
+        return $this->hasManyThrough(Parameter::class, KompositorParameter::class);
+    }
 }

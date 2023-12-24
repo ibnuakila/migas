@@ -45,6 +45,8 @@ export default function EditRealisasi(props) {
     const [optionPeriode, setOptionPeriode] = useState('');
     const [selectedValue, setSelectedValue] = useState([]);
     const [realisasFormat, setRealisasiFormat] = useState('');
+    const [isAgregasi, setIsAgregasi] = useState(kompositor.jenis_kompositor_id == 2 ? true:false);
+    const [isParameter, setIsParameter] = useState(kompositor.jenis_kompositor_id == 3 ? true:false);
     const [open, setOpen] = useState(true);
     
     const handleSave = (e) => {
@@ -84,29 +86,57 @@ export default function EditRealisasi(props) {
     
     
     function handleCalculate(){
-        if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {            
-            axios.post(route('input-realisasi.calculate-realization'), 
-            {input_realisasi_id:input_realisasi.id, realisasi_kompositor_id:realisasi_kompositor.id})
-                    .then(res => {
-                        console.log(res);
-                        if(res.message != ''){
-                            alert(res.data.realisasi);
-                        //}else{
-                            let realisasi = document.getElementById('realisasi');
-                            realisasi.value = res.data.realisasi;
-                            //realisasi.setAttribute('value', res.data.result);
-                            setData('realisasi', res.data.realisasi);
-                        }
-                    })
-                    .catch((err) => {
-                        if(err.response){
-                            alert("Error: " + err.response.data.message);
-                        }else if(err.request){
-                            alert(err.request);
-                        }else{
-                            alert(err.message);
-                        }
-                    })
+        if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
+            alert(kompositor.jenis_kompositor_id);
+            if(isAgregasi){
+                axios.post(route('input-realisasi.calculate-realization'), 
+                {input_realisasi_id:input_realisasi.id, realisasi_kompositor_id:realisasi_kompositor.id})
+                        .then(res => {
+                            console.log(res);
+                            if(res.message != ''){
+                                alert(res.data.realisasi);
+                            //}else{
+                                let realisasi = document.getElementById('realisasi');
+                                realisasi.value = res.data.realisasi;
+                                //realisasi.setAttribute('value', res.data.result);
+                                setData('realisasi', res.data.realisasi);
+                            }
+                        })
+                        .catch((err) => {
+                            if(err.response){
+                                alert("Error: " + err.response.data.message);
+                            }else if(err.request){
+                                alert(err.request);
+                            }else{
+                                alert(err.message);
+                            }
+                        })
+            }else if(isParameter){
+                axios.get(route('kompositor.getparameter', kompositor.id), 
+                {kompositor_id:kompositor.id})
+                        .then(res => {
+                            console.log(res);
+                            if(res.data.response){
+                                alert(res.data.value);
+                            //}else{
+                                let realisasi = document.getElementById('realisasi');
+                                realisasi.value = res.data.value;
+                                //realisasi.setAttribute('value', res.data.result);
+                                setData('realisasi', res.data.value);
+                            }
+                        })
+                        .catch((err) => {
+                            if(err.response){
+                                alert("Error: " + err.response.data.message);
+                            }else if(err.request){
+                                alert(err.request);
+                            }else{
+                                alert(err.message);
+                            }
+                        })
+            }else{
+                alert('Undefine jenis kompositor');
+            }
             
         }
     }
@@ -162,7 +192,7 @@ export default function EditRealisasi(props) {
                                                             value={input_realisasi.triwulan_id}
                                                             error={errors.triwulan_id}>
                                                         {triwulans.map(({id, triwulan}) => (
-                                                            <Option value={id.toString()} key={id}>{triwulan}</Option>
+                                                            <Option value={id} key={id}>{triwulan}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.triwulan_id && <div className="text-red-400 mt-1">{errors.triwulan_id}</div>}
@@ -177,12 +207,18 @@ export default function EditRealisasi(props) {
                                                           className: "min-w-0",
                                                         }}                                                        
                                                         />
-                                                        {kompositor.jenis_kompositor_id > 1? (<Button
+                                                        {kompositor.jenis_kompositor_id == 2 ? (<Button
                                                             size="sm"
                                                             color="blue"                                                            
                                                             className="!absolute right-1 top-1 rounded"
                                                             onClick={handleCalculate}
-                                                          >Get</Button>):("")}
+                                                          >Get Agregasi</Button>):("")}
+                                                        {kompositor.jenis_kompositor_id == 3 ? (<Button
+                                                          size="sm"
+                                                          color="blue"                                                            
+                                                          className="!absolute right-1 top-1 rounded"
+                                                          onClick={handleCalculate}
+                                                        >Get Parameter</Button>):("")}
                                                 {errors.realisasi && <div className="text-red-400 mt-1">{errors.realisasi}</div>}
                                             </div>
                                             <div>
@@ -212,7 +248,7 @@ export default function EditRealisasi(props) {
                                                     value={laporan_capaian.periode_id}
                                                     error={errors.periode_id}>
                                                         {periodes.map(({id, periode}) => (
-                                                            <Option value={id.toString()} key={id}>{periode}</Option>
+                                                            <Option value={id} key={id}>{periode}</Option>
                                                                             ))}                                                      
                                                 </Select>
                                                     {errors.periode_id && 
