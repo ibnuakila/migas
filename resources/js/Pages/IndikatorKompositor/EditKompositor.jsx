@@ -14,6 +14,7 @@ Button,
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import MSelect from '../../Components/MSelect';
 
 export default function EditKompositor(props) {
     console.log(props);
@@ -26,6 +27,12 @@ export default function EditKompositor(props) {
     const indeks = props.indeks;
     const parameters = props.parameters;
     const sumber_kompositor = props.sumber_kompositor;
+    const pics = props.pics;
+    const defPics = props.def_pics;
+    const optPic = pics.map(pic => {
+        return {value: pic.id, label: pic.nama_pic};
+    })
+    
     const {data, setData, put, errors,delete:destroy, processing} = useForm({
         indikator_id: indikator.data.id || '',        
         nama_kompositor: kompositor.data.nama_kompositor || '',
@@ -37,19 +44,20 @@ export default function EditKompositor(props) {
         kompositor_id: kompositor.data.id,        
         value: parameter ? parameter.value : null,
         parameter_id: parameter ? parameter.id : null,
+        pics: defPics
     });
     
     const [optionIndeks, setOptionIndeks] = useState('');
-    const [optionJenisKompositor, setOptionJenisKompositor] = useState('');
-    const [newKompositor, setNewKompositor] = useState(true);
-    const [existingKompositor, setExistingKompositor] = useState(false);
+    const [optionJenisKompositor, setOptionJenisKompositor] = useState('');    
     const [isParameter, setIsParameter] = useState(kompositor.data.jenis_kompositor_id == 3 ? true : false);
-    const [existingIndikator, setExistingIndikator] = useState(false);
-    const [existingParameter, setExistingParameter] = useState(false);
-    /*if(kompositor.data.jenis_kompositor_id == 3){
-        setIsParameter(true);
-    }*/
     
+    const [newKompositor, setNewKompositor] = useState(kompositor.data.sumber_kompositor_id == 1 ? true : false);
+    const [existingIndikator, setExistingIndikator] = useState(kompositor.data.sumber_kompositor_id == 2 ? true : false);
+    const [existingKompositor, setExistingKompositor] = useState(kompositor.data.sumber_kompositor_id == 3 ? true : false);    
+    const [existingParameter, setExistingParameter] = useState(kompositor.data.sumber_kompositor_id == 4 ? true : false);
+    
+    const [selectedValue, setSelectedValue] = useState([]);
+   
     
     function handleLoad() {
         console.log('The page has fully loaded');
@@ -161,8 +169,8 @@ export default function EditKompositor(props) {
                                                 <Select label="Select Kompositor" id="indeks"
                                                             onChange={handleChangeKompositor}                                                            
                                                             error={errors.kompositor_id}>
-                                                        {kompositors.map(({id, nama_kompositor}) => (
-                                                            <Option value={id} key={id}>{nama_kompositor}</Option>
+                                                        {kompositors.map(({id, nama_kompositor, jenis_kompositor_id}) => (
+                                                            <Option value={id} key={id}>{nama_kompositor + " | " + jenis_kompositor_id}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
@@ -233,7 +241,18 @@ export default function EditKompositor(props) {
                                                 </div>
                                             </>
                                                 ):(null)}
-                                            
+                                            <div className="sm:w-full md:w-full lg:w-full">
+                                                 <MSelect id="pic" options={optPic} defaultValue={defPics} 
+                                                    onChange={(item) => {
+                                                        setSelectedValue(item); 
+                                                        setData('pics', item)
+                                                        console.log(selectedValue)
+                                                    }}
+                                                 />
+                                                    {errors.pic_id && 
+                                                        <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                                    }
+                                            </div>
                                             
                                         </div>
                                         

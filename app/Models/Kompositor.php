@@ -39,4 +39,9 @@ class Kompositor extends Model
     public function parameter(){
         return $this->hasManyThrough(Parameter::class, KompositorParameter::class);
     }
+    
+    public function kompositorPics()
+    {
+        return $this->hasMany(KompositorPic::class);
+    }
 }

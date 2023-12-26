@@ -19,9 +19,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function ListInputRealisasi({auth}){
-    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC","Periode", "Action"];
+    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
  
-    const { input_realisasis, indikator, laporan_capaian, triwulan } = usePage().props;
+    const { input_realisasis, indikator, laporan_capaian, triwulan, realisasi_kompositor_pics } = usePage().props;
     const {
         data,
         //meta: { links }
@@ -67,11 +67,29 @@ export default function ListInputRealisasi({auth}){
                     if(flash.message){
                         alert(flash.message);
                     }
-                    router.reload();
+                    //router.reload();
                     },
             });
             
         }
+    }
+    function Icon() {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        );
     }
     return (
             <AdminLayout 
@@ -79,8 +97,12 @@ export default function ListInputRealisasi({auth}){
         children={(
                 <div className="container mx-auto">
                     {flash.message && (
-                        <Alert color="blue" open={open} 
-                        onClose={() => setOpen(false)} className="my-3">{flash.message}</Alert>
+                        <Alert open={open} icon={<Icon />} onClose={() => {
+                                setOpen(false); router.reload();
+                            }} 
+                            color="black" className="my-3 shadow-lg">
+                            {flash.message}
+                        </Alert>
                     )}
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
@@ -128,14 +150,12 @@ export default function ListInputRealisasi({auth}){
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    
+                                    <th></th>                                   
                                 </tr>
                             </thead>
                             <tbody>                                                      
                                 {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai,  
-                                    satuan, triwulan, input_realisasi_pic, periode, realisasi_kompositor_id}) => (
+                                    satuan, triwulan, realisasi_kompositor_pics, realisasi_kompositor_id}) => (
                                     <tr key={kompositor_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -174,17 +194,12 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td>
                                         <div className="flex">
-                                            {input_realisasi_pic.map( ({id, nama_pic}) => (
+                                            {realisasi_kompositor_pics.map( ({id, nama_pic}) => (
                                                 <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
                                                     {nama_pic}
                                                 </Typography>) )}
                                         </div>
-                                      </td>
-                                      <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {periode}
-                                        </Typography>                                                                                
-                                      </td>
+                                      </td>                                  
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">
                                           <Link href={route('input-realisasi.edit', {inputrealisasi:id, realisasikompositor:realisasi_kompositor_id})} title="Edit">

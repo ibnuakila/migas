@@ -32,7 +32,7 @@ import { Link, usePage } from '@inertiajs/react';
 export default function Header() {
     const [openNav, setOpenNav] = useState(false);
     const {auth} = usePage().props;
-    console.log(auth.user.name);
+    //console.log(auth.user.name);
     useEffect(() => {
         window.addEventListener(
                 "resize",

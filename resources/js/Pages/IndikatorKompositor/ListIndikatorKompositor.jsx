@@ -20,7 +20,7 @@ import Pagination from '@/Components/Pagination';
 export default function ListIndikatorKompositor({auth}){
     //const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
  
-    const { kompositors, indikator } = usePage().props;
+    const { kompositors, indikator, kompositor_pics } = usePage().props;
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
     const [termIndeks, setTermIndeks] = useState('');
@@ -105,7 +105,12 @@ export default function ListIndikatorKompositor({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Satuan
                                         </Typography>
-                                    </th>                                    
+                                    </th> 
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            PIC
+                                        </Typography>
+                                    </th> 
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Action
@@ -129,11 +134,11 @@ export default function ListIndikatorKompositor({auth}){
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, indeks_id,nama_indeks, jenis_kompositor_id }) => (
+                                {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, indeks_id,nama_indeks, jenis_kompositor_id, kompositor_pics }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -166,7 +171,16 @@ export default function ListIndikatorKompositor({auth}){
                                           {satuan}
                                         </Typography>                                                                                
                                       </td>
-                                                                           
+                                      <td>
+                                        <div className="flex">
+                                            {kompositor_pics.length > 0 ? (
+                                            kompositor_pics.map( ({id, nama_pic}) => (
+                                                <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                    {nama_pic}
+                                                </Typography>) )
+                                                ):null}
+                                        </div>
+                                      </td>
                                                                             
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium">

@@ -89,11 +89,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/kompositor/create/{indikator}', [KompositorController::class, 'create'])->name('kompositor.create');
     Route::post('/kompositor/store', [KompositorController::class, 'store'])->name('kompositor.store');
     Route::get('/kompositor/edit/{kompositor}', [KompositorController::class, 'edit'])->name('kompositor.edit');
-    Route::put('/kompositor/{kompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
-    Route::delete('/kompositor/{kompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
+    Route::put('/kompositor/update/{kompositor}', [KompositorController::class, 'update'])->name('kompositor.update');
+    Route::delete('/kompositor/delete/{kompositor}', [KompositorController::class, 'destroy'])->name('kompositor.destroy');
     Route::get('/kompositor/index-indikator/{indikator}', [KompositorController::class, 'indexIndikator'])->name('kompositor.index-indikator');
     Route::get('/kompositor/agregasi-kompositor/{indeks}', [KompositorController::class, 'agregasiKompositor'])->name('kompositor.agregasi-kompositor');
     Route::get('/kompositor/getparameter/{kompositor}', [KompositorController::class, 'getParameter'])->name('kompositor.getparameter');
+    Route::get('/kompositor/getofkompositor/{kompositor}', [KompositorController::class, 'getOfKompositor'])->name('kompositor.getofkompositor');
 });
 
 Route::middleware('auth')->group(function () {

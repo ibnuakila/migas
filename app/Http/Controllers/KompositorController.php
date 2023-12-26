@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
+//use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Requests\KompositorRequest;
@@ -29,7 +29,7 @@ class KompositorController extends Controller
         ]);
     }
 
-    public function destroy(Kompositor $kompositor, \Illuminate\Support\Facades\Request $request) {
+    public function destroy(Kompositor $kompositor,  Request $request) {
         $indikator_id = 0;
         if($kompositor->jenis_kompositor_id == 1){//input
             $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
@@ -88,13 +88,28 @@ class KompositorController extends Controller
             'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikator_kompositor->indikator_id)->first()),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all(),
-            'parameter' => \App\Models\Parameter::where('id', $kompositor_parameter->parameter_id)->first(),               
+            'parameter' => $kompositor_parameter !== null ? \App\Models\Parameter::where('id', $kompositor_parameter->parameter_id)->first():null,               
             'parameters' => DB::table('parameter')
                 ->join('indeks', 'parameter.indeks_id', '=', 'indeks.id')
                 ->select('parameter.*', 'indeks.nama_indeks')
                 ->get(),
-            'sumber_kompositor' => \App\Models\SumberKompositor::all()
+            'sumber_kompositor' => \App\Models\SumberKompositor::all(),
+            'def_pics' => ($this->getPics($kompositor)),
+            'pics' => \App\Models\PIC::all(),
          ]);
+    }
+    
+    function getPics($kompositor) {
+        //$indikator_kompositor = \App\Models\Kompositor::where('id', $inputrealisasi->kompositor_id)->first();
+        $temp_res = \App\Models\KompositorPic::query()
+                        ->where('kompositor_id', '=', $kompositor->id)->get();
+        $def_pics = [];
+        $i = 0;
+        foreach ($temp_res as $row) {
+            $def_pics[$i] = ['value' => $row->pic_id, 'label' => $row->nama_pic];
+            $i++;
+        }
+        return $def_pics;
     }
 
     public function index() {
@@ -115,19 +130,20 @@ class KompositorController extends Controller
          ]);
     }
     
-    public function indexIndikator(\App\Models\Indikator $indikator) {
+    public function indexIndikator(\App\Models\Indikator $indikator, Request $request) {
          return Inertia::render('IndikatorKompositor/ListIndikatorKompositor',[
              'kompositors' => Kompositor::query()
                  ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                  ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                  ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
                  ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                    ->when(Request::input('findeks'), function ($query, $search) {
+                 ->with('kompositorPics')
+                    ->when($request->input('findeks'), function ($query, $search) {
                         if ($search != '') {
                             $query->where('indeks.nama_indeks', 'like', "%{$search}%");
                         }
                     })
-                    ->when(Request::input('fkompositor'), function ($query, $search) {
+                    ->when($request->input('fkompositor'), function ($query, $search) {
                         if ($search != '') {
                             $query->where('kompositor.nama_kompositor', 'like', "%{$search}%");
                         }
@@ -146,7 +162,7 @@ class KompositorController extends Controller
          ]);
     }
 
-    public function store(\Illuminate\Http\Request $request) {
+    public function store(Request $request) {
         
         if($request->input('sumber_kompositor_id') == '1'){
             //validasi
@@ -265,52 +281,27 @@ class KompositorController extends Controller
             }
         }
         
+        if($kompositor !== null){
+            $pics = $request->input('pics');
+            if (is_array($pics)) {
+                DB::table('kompositor_pic')
+                        ->where('kompositor_id', '=', $kompositor->id)
+                        ->delete();
+                foreach ($pics as $pic) {
+                    $data = ['kompositor_id' => $kompositor->id,
+                        'pic_id' => $pic['value'],
+                        'nama_pic' => $pic['label']];
+                    DB::table('kompositor_pic')->insert($data);
+                }
+            }
+        }
+        
         return Redirect::route('kompositor.index-indikator',$request->input('indikator_id'));
     }
 
-    public function update(Kompositor $kompositor, \Illuminate\Support\Facades\Request $request) {//perbaiki lagi
-        /*$validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
-                    'nama_kompositor' => ['required'],
-                    'satuan' => ['required'],
-                    'indeks_id' => ['required'],
-                    'jenis_kompositor_id' => ['required'],
-                    'sumber_kompositor' => ['required']
-                ]);
-        $kompositor->update($validator->validated());
-            if($request->input('jenis_kompositor_id')=='2'){//agregasi                
-                $data_indeks = ['nama_indeks' => $request->input('nama_kompositor'),
-                    'parent_id' => $request->input('indeks_id')];
-                DB::table('indeks')
-                        ->where('nama_indeks', '=', $request->input('nama_kompositor'))
-                        ->where('parent_id', '=', $request->input('indeks_id'))
-                        ->delete();
-                \App\Models\Indeks::create($data_indeks);
-            }elseif($request->input('jenis_kompositor_id')=='3'){//parameter
-                $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
-                    'value' => ['required'],
-                    'kalkulasi' => ['required'],
-                    'indeks_id' => ['required'],                   
-                ]);
-                $validated = $validator->validated();
-                $data_param = ['parameter_id' => $request->input('parameter_id'),
-                    'kompositor_id' => $request->input('kompositor_id')];
-                DB::table('kompositor_parameter')
-                        ->where('parameter_id', '=', $request->input('parameter_id'))
-                        ->where('kompositor_id', '=', $request->input('kompositor_id'))
-                        ->delete();
-                \App\Models\KompositorParameter::create($data_param);
-                
-                $parameter = \App\Models\Parameter::where('id', $data_param['parameter_id'])
-                        ->update([
-                            'nama_parameter' => $request->input('nama_kompositor'),
-                            'kalkulasi' => $request->input('kalkulasi'),
-                            'value' => $request->input('value'),
-                            'indeks_id' => $request->input('indeks_id')]);
-            }
-        /*$data = ['indikator_id' => $request->input('indikator_id'),
-            'kompositor_id' => $object->id];
-        IndikatorKompositor::create($data);*/
-        if($request->input('sumber_kompositor_id') == '1'){
+    public function update(Kompositor $kompositor, Request $request) {//perbaiki lagi
+        
+        if($request->input('sumber_kompositor_id') == '1'){//new
             //validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
                 'kompositor_id' => ['required'],
@@ -387,9 +378,9 @@ class KompositorController extends Controller
                 'nama_kompositor' => str($ref_kompositor->nama_kompositor),
                 'satuan' => str($ref_kompositor->satuan),
                 'indeks_id' => $request->input('indeks_id'),
-                'jenis_kompositor_id' => $ref_kompositor->jenis_kompositor_id, //diubah
+                'jenis_kompositor_id' => $request->input('jenis_kompositor_id'), //diubah
                 'indikator_id' => $ref_kompositor->indikator_id,                
-                'sumber_kompositor_id' => str($request->input('sumber_kompositor_id'))
+                'sumber_kompositor_id' => ($request->input('sumber_kompositor_id'))
             ];
             //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
             $ref_kompositor->update($ref_kom_data);
@@ -438,6 +429,19 @@ class KompositorController extends Controller
                     'kompositor_id' => $kompositor->id]);
             }
         }
+        
+        $pics = $request->input('pics');
+        if (is_array($pics)) {
+            DB::table('kompositor_pic')
+                    ->where('kompositor_id', '=', $kompositor->id)
+                    ->delete();
+            foreach ($pics as $pic) {
+                $data = ['kompositor_id' => $kompositor->id,
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
+                DB::table('kompositor_pic')->insert($data);
+            }
+        }
         return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
     }
     
@@ -468,6 +472,19 @@ class KompositorController extends Controller
         }else{
             $data['response'] = false;
             $data['value'] = $parameter->value;
+        }
+        return json_encode($data);
+    }
+    
+    public function getOfKompositor(Kompositor $kompositor){
+        $kompo_of_kompo = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+        $kompositor = \App\Models\RealisasiKompositor::where('kompositor_id', $kompo_of_kompo->ref_kompositor_id)->first();
+        if($kompositor !== null){
+            $data['response'] = true;
+            $data['value'] = $kompositor->nilai;
+        }else{
+            $data['response'] = false;
+            $data['value'] = $kompositor->nilai;
         }
         return json_encode($data);
     }
