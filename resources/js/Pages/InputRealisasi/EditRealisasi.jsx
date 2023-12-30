@@ -56,15 +56,8 @@ export default function EditRealisasi(props) {
         return {value:pic.id, label:pic.nama_pic};
     })
     const handleSave = (e) => {
-        //let realisasi = document.getElementById('realisasi');
-        //alert(realisasi.value);
-        //setData('realisasi', realisasi.value);
-        //setData('nilai', realisasi.value);
         e.preventDefault();
-        put(route('input-realisasi.update', input_realisasi.id));        
-        /*if(flash.message){
-            alert(flash.message);
-        } */       
+        put(route('input-realisasi.update', input_realisasi.id));
     }
     
     function handleChangeTriwulan(e) {
@@ -87,7 +80,7 @@ export default function EditRealisasi(props) {
     
     function handleChangeRealisasi(e){
         console.log('handleChangeRealisasi triggered');
-        setData('realisasi', e.target.value);
+        setData('realisasi', parseFloat(e.target.value).toFixed(2));
         //setData('nilai', e.target.value);
     }
     
@@ -106,7 +99,7 @@ export default function EditRealisasi(props) {
                                 let realisasi = document.getElementById('realisasi');
                                 realisasi.value = parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2});
                                 //realisasi.setAttribute('value', res.data.result);
-                                setData('realisasi', res.data.realisasi);
+                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
                                 //setData('nilai', res.data.realisasi);
                             }
                         })
@@ -130,7 +123,7 @@ export default function EditRealisasi(props) {
                                 let realisasi = document.getElementById('realisasi');
                                 realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, {maximumFractionDigits:2}) ;;
                                 //setData('nilai', res.data.value);
-                                setData('realisasi', res.data.value);
+                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
                                 console.log(data);
                                 
                             }
@@ -155,7 +148,7 @@ export default function EditRealisasi(props) {
                                 let realisasi = document.getElementById('realisasi');
                                 realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, {maximumFractionDigits:2}) ;;
                                 //setData('nilai', res.data.value);
-                                setData('realisasi', res.data.value);
+                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
                                 console.log(data);
                                 
                             }

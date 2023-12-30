@@ -15,7 +15,7 @@ class KinerjaTriwulan extends Model
         'laporan_capaian_id',                
         'triwulan_id',
         'kinerja',
-        
+        'kinerja_format'
     ];
     
     public function laporanCapaian(){

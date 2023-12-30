@@ -41,7 +41,7 @@ export default function EditLaporanCapaian() {
         sumber_data: laporan_capaian.data[0].sumber_data || '',
         file_path: laporan_capaian.data[0].file_path || '',
         laporan_capaian_pic: defPics || '',
-        pics: optPic || ''
+        //pics: optPic || ''
     });
     console.log(usePage().props);
     
@@ -130,7 +130,7 @@ export default function EditLaporanCapaian() {
                                                 <Select label="Select Periode" id="periode" onChange={handlePeriodeChange}
                                                         value={laporan_capaian.data[0].periode_id}
                                                         error={errors.periode_id}>
-                                                    {periodes.map(({id, periode, status}) => <Option value={id.toString()} key={id}>{periode + " (" + status + ")"}</Option>)}                                                                                                           
+                                                    {periodes.map(({id, periode, status}) => <Option value={id} key={id}>{periode + " (" + status + ")"}</Option>)}                                                                                                           
                                                 </Select>
                                                 {errors.periode_id &&
                                                         <div className="text-red-400 mt-1">{errors.periode_id}</div>

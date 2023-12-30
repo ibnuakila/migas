@@ -10,9 +10,7 @@ use Inertia\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\KinerjaTriwulan;
 use App\Http\Requests\KinerjaTriwulanRequest;
-use MathPHP\Statistics\Multivariate\PLS;
-use MathPHP\LinearAlgebra\MatrixFactory;
-use MathPHP\SampleData;
+use MathPHP\Statistics\Regression;
 
 class InputKinerjaController extends Controller
 {
@@ -83,13 +81,14 @@ class InputKinerjaController extends Controller
      */
     public function edit(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan)
     {
+        
         return Inertia::render('InputKinerja/EditKinerja', [                
                 'laporan_capaian' => $laporancapaian,
                 'kinerja' => KinerjaTriwulan::where('laporan_capaian_id', $laporancapaian->id)
                         ->where('triwulan_id', $triwulan->id)->first(),
                 'triwulans' => \App\Models\Triwulan::all(),
-                'indikator' => \App\Models\Indikator::where('id', $laporancapaian->id)->first(),
-                
+                'indikator' => \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first(),
+                'data_format' => \App\Models\DataFormat::all()
         ]);
     }
 
@@ -100,22 +99,14 @@ class InputKinerjaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(KinerjaTriwulanRequest $request, )
+    public function update(KinerjaTriwulan $kinerjatriwulan ,KinerjaTriwulanRequest $request)
     {
-        $validated = $request->validate();
-        $kinerja_triwulan = KinerjaTriwulan::where('laporan_capaian_id',$request->laporan_capaian_id)
-                ->where('triwulan_id', $request->triwulan_id)->first();
-        if($kinerja_triwulan !== null){
-            KinerjaTriwulan::create($validated);
-        }else{
-            KinerjaTriwulan::where('laporan_capaian_id',$request->laporan_capaian_id)
-                ->where('triwulan_id', $request->triwulan_id)
-                    ->update($validated);
-            
-        }
-        $message = '';
-        if($update_status_1 && $update_status_2){
-            $message = "Update berahasil!";
+        //$validate = $request->val
+        $validated = $request->validated();
+        
+        $update_status_1 = $kinerjatriwulan->update($validated);        
+        if($update_status_1){
+            $message = "Update berhasil!";
         }else{
             $message = "Update gagal!";
         }
@@ -137,17 +128,48 @@ class InputKinerjaController extends Controller
     {
         $laporan_capaian_id = $request->input('laporan_capaian_id');
         $triwulan_id = $request->input('triwulan_id');
-        $obj_laporan_capaian = \App\Models\LaporanCapaian::where('id', $laporan_capaian_id)->first();
+        $obj_laporan_capaian = \App\Models\LaporanCapaian::where('id', $laporan_capaian_id)->first();        
         $obj_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $laporan_capaian_id)
                 ->where('triwulan_id', $triwulan_id)->first();
-        
+        $data['laporan_capaian'] = $obj_laporan_capaian;
         $indikator = \App\Models\Indikator::where('id', $obj_laporan_capaian->indikator_id)->first();
-        if($indikator !== null){
+        if($indikator !== null && $obj_laporan_capaian->target !== null){
             switch (trim($indikator->nama_indikator)){
                 //IKSP I
                 case "Indeks Ketersediaan Migas":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = 0;
+                    if($realisasi > 1.3){
+                        $kinerja = 1 - (abs($realisasi - 1.3)/ 1.3);
+                    }else if($realisasi > 1){
+                        $points = [
+                                    [1.00, 1],
+                                    [1.15, 1.1],
+                                    [1.30, 1.2]
+                                ];   
+                        $regression = new Regression\Linear($points);
+                        $parameters = $regression->getParameters();          // [m => 1.2209302325581, b => 0.6046511627907]
+                        $equation   = $regression->getEquation();            // y = 1.2209302325581x + 0.6046511627907
+                        $y          = $regression->evaluate($realisasi);  
+                        $kinerja    = $y;
+                    }else{
+                        $kinerja = $realisasi / $target;
+                    }
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Indeks Ketersediaan Hulu Migas":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = 0;
+                    if($realisasi < 1){
+                        $kinerja = $realisasi / $target;
+                    }elseif(1 <= $realisasi && $realisasi < 1.2){
+                        $kinerja = 1 + (abs($realisasi - $target)/ $target);
+                    }else{
+                        $kinerja = 120/100;
+                    }
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi Minyak dan Gas Bumi ":
                     break;
@@ -158,7 +180,26 @@ class InputKinerjaController extends Controller
                 case "Deviasi Kuantitas Ekspor LNG skema hulu dari kuantitas yang direkomendasikan":
                     break;
                 case "Indeks Ketersediaan BBM":
-                    
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = 0;
+                    if($realisasi > 1.3){
+                        $kinerja = 1 - (abs($realisasi - 1.3)/ 1.3);
+                    }else if($realisasi > 1){
+                        $points = [
+                                    [1.00, 1],
+                                    [1.15, 1.1],
+                                    [1.30, 1.2]
+                                ];   
+                        $regression = new Regression\Linear($points);
+                        $parameters = $regression->getParameters();          // [m => 1.2209302325581, b => 0.6046511627907]
+                        $equation   = $regression->getEquation();            // y = 1.2209302325581x + 0.6046511627907
+                        $y          = $regression->evaluate($realisasi);  
+                        $kinerja    = $y;
+                    }else{
+                        $kinerja = $realisasi / $target;
+                    }
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi BBM dan Hasil Olahan":
                     break;
@@ -173,6 +214,26 @@ class InputKinerjaController extends Controller
                 case "Deviasi Realisasi Pencampuran BBN Jenis Biodiesel terhadap Target Mandatory Pencampuran BBN jenis Biodiesel":
                     break;
                 case "Indeks Ketersediaan LPG":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = 0;
+                    if($realisasi > 1.3){
+                        $kinerja = 1 - (abs($realisasi-1.3)/1.3);
+                    }elseif($realisasi > 1){
+                        $points = [
+                                    [1.00, 1],
+                                    [1.15, 1.1],
+                                    [1.30, 1.2]
+                                ];   
+                        $regression = new Regression\Linear($points);
+                        $parameters = $regression->getParameters();          // [m => 1.2209302325581, b => 0.6046511627907]
+                        $equation   = $regression->getEquation();            // y = 1.2209302325581x + 0.6046511627907
+                        $y          = $regression->evaluate($realisasi);  
+                        $kinerja    = $y;
+                    }else{
+                        $kinerja = $realisasi / $target;
+                    }
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi LPG":
                     break;
@@ -185,6 +246,17 @@ class InputKinerjaController extends Controller
                 case "Persentase Realisasi Volume LPG Bersubsidi terhadap Kuota Yang Ditetapkan":
                     break;
                 case "Indeks Ketersediaan LNG":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = 0;
+                    if($realisasi < 1){
+                        $kinerja = $realisasi / $target;
+                    }elseif(1 <= $realisasi && $realisasi < 1.2){
+                        $kinerja = 1 + (abs($realisasi - $target)/ $target);
+                    }else{
+                        $kinerja = 120/100;
+                    }
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi LNG":
                     break;
@@ -227,8 +299,9 @@ class InputKinerjaController extends Controller
                     break;
             }
         }else{
-            
+            $data['response'] = 'Target belum diisi';
+            $data['kinerja'] = 0;
         }
-        
+        return json_encode($data);
     }
 }

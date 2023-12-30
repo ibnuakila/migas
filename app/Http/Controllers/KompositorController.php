@@ -15,17 +15,30 @@ use Illuminate\Support\Facades\DB;
 class KompositorController extends Controller
 {
     public function create(\App\Models\Indikator $indikator) {
+        
         return Inertia::render('IndikatorKompositor/FormKompositor',[
             'indikator' => new \App\Http\Resources\IndikatorResource($indikator),
-            'indikators' => \App\Models\Indikator::all(),
+            'indikators' => \App\Models\Indikator::query()
+                ->with('level')
+                ->join('indikator_kompositor', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                ->join('kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                ->where('kompositor.jenis_kompositor_id', 2)
+                ->whereColumn('kompositor.nama_kompositor', 'indikator.nama_indikator')
+                ->select('indikator.*', 'indikator_kompositor.kompositor_id', 'kompositor.nama_kompositor')
+                ->get(),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all(),
-            'kompositors' => Kompositor::all(),
+            'kompositors' => Kompositor::query()->with('jenisKompositor')
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            ->where('indikator_kompositor.indikator_id', $indikator->id)                            
+                            ->get(),
             'parameters' => DB::table('parameter')
                 ->join('indeks', 'parameter.indeks_id', '=', 'indeks.id')
                 ->select('parameter.*', 'indeks.nama_indeks')
                 ->get(),
-            'sumber_kompositor' => \App\Models\SumberKompositor::all()
+            'sumber_kompositor' => \App\Models\SumberKompositor::all(),
+            //'def_pics' => ($this->getPics($kompositor)),
+            'pics' => \App\Models\PIC::all(),
         ]);
     }
 
@@ -84,7 +97,10 @@ class KompositorController extends Controller
         return Inertia::render('IndikatorKompositor/EditKompositor',[
             'kompositor' => new \App\Http\Resources\KompositorResource(
                     $kompositor->with('kompositorParameter')->where('id','=',$kompositor->id)->get()->first()),
-            'kompositors' => Kompositor::all(),
+            'kompositors' => Kompositor::query()
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            ->where('indikator_kompositor.indikator_id', $indikator_kompositor->indikator_id)
+                            ->get(),
             'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id',$indikator_kompositor->indikator_id)->first()),
             'indeks' => \App\Models\Indeks::all(),
             'jenis_kompositor' => \App\Models\JenisKompositor::all(),
@@ -163,7 +179,7 @@ class KompositorController extends Controller
     }
 
     public function store(Request $request) {
-        
+        $kompositor=null;
         if($request->input('sumber_kompositor_id') == '1'){
             //validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
@@ -214,14 +230,33 @@ class KompositorController extends Controller
                 
             }
             
-        }elseif($request->input('sumber_kompositor_id') == '2'){//existing indikator
+        }elseif($request->input('sumber_kompositor_id') == '2'){//existing indikator *perlu evaluasi
             //tambahkan validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                 'indikator_id' => 'required',
-                'kompositor_id' => 'required'
+                'kompositor_id' => 'required',
+                'indeks_id' => 'required'
+            ])->validate();
+            //get existing kompositor
+            $indikator_kompositor = 
+            $kompositor = Kompositor::where('id', $request->input('kompositor_id'))->first();
+            
+            $ref_kom_data = [
+                'nama_kompositor' => str($kompositor->nama_kompositor),
+                'satuan' => str($kompositor->satuan),
+                'indeks_id' => $request->input('indeks_id'),
+                'jenis_kompositor_id' => $kompositor->jenis_kompositor_id, //diubah
+                'indikator_id' => $request->input('indikator_id'),                
+                'sumber_kompositor_id' => str($request->input('sumber_kompositor_id'))
+            ];
+            //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
+            $new_kompositor = Kompositor::create($ref_kom_data);
+            //insert indikator-kompositor
+            //$validated = $validator->validated();            
+            IndikatorKompositor::create([
+                'indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $new_kompositor->id
             ]);
-            $validated = $validator->validated();            
-            IndikatorKompositor::create($validated);
             
         }elseif($request->input('sumber_kompositor_id') == '3'){//existing kompositor
             //tambahkan validasi
@@ -256,22 +291,31 @@ class KompositorController extends Controller
             //insert kompositor
             //validasi
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
+                'parameter_id' => ['required'],
                 'nama_kompositor' => ['required'],
-                'satuan' => ['required'],
                 'indeks_id' => ['required'],
-                'jenis_kompositor_id' => ['required'],
+                'satuan' => ['required'],
                 'indikator_id' => ['required'],                
                 'sumber_kompositor_id' => ['required'],
-                
-            ]);
-            $validated = $validator->validated();
-            //insert kompositor
-            $kompositor = Kompositor::create($validated);
+                'indikator_id' => ['required']
+            ])->validate();
             
-            \Illuminate\Support\Facades\Validator::make($request->all(),[
-                'parameter_id' => ['required']])->validate();
             //cari data parameter existing
             $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
+            
+            //insert kompositor
+            $kompositor = Kompositor::create([
+                'nama_kompositor' => $request->input('nama_kompositor'),
+                'jenis_kompositor_id' => '3',
+                'indeks_id' => $request->input('indeks_id'),
+                'satuan' => $request->input('satuan'),
+                'sumber_kompositor_id' => $request->input('sumber_kompositor_id')
+            ]);
+            
+            //insert indikator-kompositor
+            $data = ['indikator_id' => $request->input('indikator_id'),
+                'kompositor_id' => $kompositor->id];
+            IndikatorKompositor::create($data);
             
             //insert kompositor-parameter
             if($parameter !== null){

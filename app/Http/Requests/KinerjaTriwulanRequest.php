@@ -26,7 +26,8 @@ class KinerjaTriwulanRequest extends FormRequest
         return [
             'laporan_capaian_id' => ['required'],                
             'triwulan_id' => ['required'],
-            'kinerja' => ['nullable']
+            'kinerja' => ['nullable'],
+            'kinerja_format' => ['required']
         ];
     }
 }

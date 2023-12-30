@@ -44,4 +44,8 @@ class Kompositor extends Model
     {
         return $this->hasMany(KompositorPic::class);
     }
+    
+    public function jenisKompositor(){
+        return $this->belongsTo(JenisKompositor::class);
+    }
 }

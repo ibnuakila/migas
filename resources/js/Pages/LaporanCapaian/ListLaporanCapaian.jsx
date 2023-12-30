@@ -401,7 +401,7 @@ export default function ListLaporanCapaian({auth}){
                                                 <td className="p-4 text-center" key={id}>
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-blue-600">
                                                         <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:triwulan_id})} title="Kinerja">
-                                                            {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:2})}
+                                                            {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
                                                         </Link>
                                                     </Typography>
                                                 </td>

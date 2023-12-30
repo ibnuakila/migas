@@ -17,27 +17,25 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 
 export default function EditLaporanCapaian() {
-    const {auth, laporan_capaian, indikator, kinerja, triwulans} = usePage().props;
+    const {auth, laporan_capaian, indikator, kinerja, triwulans, data_format, flash} = usePage().props;
     console.log(usePage().props);
     const {data, setData, put, errors, processing} = useForm({
-        id: laporan_capaian.id || '',        
-        triwulan_id: laporan_capaian.triwulan_id || '',        
-        kinerja: laporan_capaian.kinerja || '',        
-        kategori_kinerja_id: laporan_capaian.kategori_kinerja_id || '',
-        indikator_id: laporan_capaian.indikator_id || '',        
+        id: kinerja.id || '',        
+        triwulan_id: kinerja.triwulan_id || '',        
+        kinerja: kinerja.kinerja || '',        
+        laporan_capaian_id: kinerja.laporan_capaian_id || '',        
+        kinerja_format: kinerja.kinerja_format || ''
     });
     
-    
+    const [open, setOpen] = useState(true);
     const [optionPeriode, setOptionPeriode] = useState('');
     const [optionIndikator, setOptionIndikator] = useState('');    
-    
+    const [kinerjaFormat, setKinerjaFormat] = useState('');
     const [optionTriwulan, setOptionTriwulan] = useState([]);
     
-    
-
     const handleSave = (e) => {
         e.preventDefault();
-        put(route('input-kinerja.update', laporan_capaian.data[0].id));
+        put(route('input-kinerja.update', kinerja.id));
     };
     
 
@@ -54,13 +52,13 @@ export default function EditLaporanCapaian() {
         
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi kinerja?')) {            
-            axios.post(route('input-kinerja.calculate-kinerja'), {laporancapaian:laporan_capaian.id, triwulan:kinerja.triwulan_id})
+            axios.post(route('input-kinerja.calculate-kinerja'), {laporan_capaian_id:laporan_capaian.id, triwulan_id:kinerja.triwulan_id})
                     .then(res => {
                         console.log(res);
-                        if(res.message != ''){
+                        if(res.data.response !== ''){                            
                             alert(res.data.kinerja);                        
-                            let realisasi = document.getElementById('persentasi');
-                            realisasi.value = res.data.kinerja;
+                            let kinerja = document.getElementById('kinerja');
+                            kinerja.value = res.data.kinerja;
                             //realisasi.setAttribute('value', res.data.result);
                             setData('kinerja', res.data.kinerja);
                         }
@@ -77,13 +75,42 @@ export default function EditLaporanCapaian() {
         }
     }
     
+    const handleChangeKinerjaFormat = (e) => {
+        setKinerjaFormat({selectValue: e});
+        setData('kinerja_format', e);
+    }
+    
+    function Icon() {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        );
+    }
+    
     return (
             <AdminLayout 
                 auth = {auth}
                 children={(
                                 <div className="container mx-auto">
-                                    <Card className="p-5 h-full w-45">
-                            
+                                        {flash.message && (
+                                    <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
+                                        color="black" className="my-3 shadow-lg">
+                                        {flash.message}
+                                    </Alert>
+                                )}
+                                    <Card className="p-5 h-full w-45">                            
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
                                             Edit Kinerja
@@ -105,7 +132,7 @@ export default function EditLaporanCapaian() {
                                                         <div className="text-red-400 mt-1">{errors.target_format}</div>
                                                 }
                                                 <div className="relative flex w-full">
-                                                    <Input label="Kinerja" variant="outlined" id="realisasi"                                                         
+                                                    <Input label="Kinerja" variant="outlined" id="kinerja"                                                         
                                                             defaultValue={kinerja.kinerja}
                                                             onChange=""
                                                             error={errors.kinerja}
@@ -122,13 +149,23 @@ export default function EditLaporanCapaian() {
                                                               >Get</Button>
                                                     {errors.kinerja && <div className="text-red-400 mt-1">{errors.kinerja}</div>}
                                                 </div>
+                                                <div>
+                                                    <Select label="Kinerja Format" onChange={handleChangeKinerjaFormat}
+                                                            value={kinerja.kinerja_format}
+                                                            error={errors.kinerja_format}>                                                    
+                                                            {data_format.map(({id, format}) => (
+                                                                <Option value={id} key={id}>{format}</Option>
+                                                                            ))}                                                     
+                                                    </Select>
+                                                    {errors.kinerja_format && <div className="text-red-400 mt-1">{errors.kinerja_format}</div>}
+                                                </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Select label="Triwulan" id="indeks"
                                                                 onChange={handleTriwulanChange}
                                                                 value={kinerja.triwulan_id}
                                                                 error={errors.triwulan_id}>
                                                             {triwulans.map(({id, triwulan}) => (
-                                                                <Option value={id.toString()} key={id}>{triwulan}</Option>
+                                                                <Option value={id} key={id}>{triwulan}</Option>
                                                                                 ))}
                                                     </Select>
                                                     {errors.triwulan_id && <div className="text-red-400 mt-1">{errors.triwulan_id}</div>}
@@ -140,7 +177,7 @@ export default function EditLaporanCapaian() {
                                             <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
                                                 Delete
                                             </Button>
-                                            <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
+                                            <Button variant="gradient" type="submit" color="green" onClick={handleSave}>
                                                 Save
                                             </Button>
                                         </CardFooter>

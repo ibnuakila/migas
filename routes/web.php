@@ -120,8 +120,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/input-kinerja/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputKinerjaController::class, 'edit'])->name('input-kinerja.edit');
     Route::get('/input-kinerja/create', [InputKinerjaController::class, 'create'])->name('input-kinerja.create');
     Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
-    Route::put('/input-kinerja/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
-    Route::delete('/input-kinerja/{kinerjatriwulan}', [InputKinerjaController::class, 'destroy'])->name('input-kinerja.destroy');
+    Route::put('/input-kinerja/update/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
+    Route::delete('/input-kinerja/delete/{kinerjatriwulan}', [InputKinerjaController::class, 'destroy'])->name('input-kinerja.destroy');
     Route::post('/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
 });
 
@@ -204,35 +204,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
-/*Route::middleware('auth')->group(function () {
-    Route::get('/hasil-evaluasi', [HasilEvaluasiController::class, 'index'])->name('hasil-evaluasi.index');
-    Route::get('/hasil-evaluasi/edit{HasilEvalasi}/', [HasilEvaluasiController::class, 'edit'])->name('hasil-evaluasi.edit');
-    Route::get('/hasil-evaluasi/create', [HasilEvaluasiController::class, 'create'])->name('hasil-evaluasi.create');
-    Route::post('/hasil-evaluasi/store', [HasilEvaluasiController::class, 'store'])->name('hasil-evaluasi.store');
-    Route::put('/hasil-evaluasi/{HasilEvaluasi}', [HasilEvaluasiController::class, 'update'])->name('hasil-evaluasi.update');
-    Route::delete('/hasil-evaluasi/{HasilEvaluasi}', [HasilEvaluasiController::class, 'destroy'])->name('hasil-evaluasi.destroy');
-});*/
 
-/*Route::middleware('auth')->group(function () {
-    Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'index'])->name('kategori-dokumen.index');
-    Route::get('/kategori-dokumen/edit/{KategoriDokumen}', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
-    Route::get('/kategori-dokumen/create', [KategoriDokumenController::class, 'create'])->name('kategori-dokumen.create');
-    Route::post('/kategori-dokumen/store', [KategoriDokumenController::class, 'store'])->name('kategori-dokumen.store');
-    Route::put('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
-    Route::delete('/kategori-dokumen/{KategoriDokumen}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
-});*/
-
-/*Route::middleware('auth')->group(function () {
-    Route::get('/instrument-kinerja', [InstrumentKinerjaController::class, 'index'])->name('instrument-kinerja.index');
-    Route::get('/instrument-kinerja/create-komponen', [InstrumentKinerjaController::class, 'createKomponen'])->name('instrument-kinerja.create-komponen');
-    Route::post('/instrument-kinerja/store-komponen', [InstrumentKinerjaController::class, 'storeKomponen'])->name('instrument-kinerja.store-komponen');
-    Route::get('/instrument-kinerja/edit-komponen/{komponen}', [InstrumentKinerjaController::class, 'editKomponen'])->name('instrument-kinerja.edit-komponen');
-    Route::put('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'updateKomponen'])->name('instrument-kinerja.update-komponen');
-    Route::delete('/instrument-kinerja/{komponen}', [InstrumentKinerjaController::class, 'destroyKomponen'])->name('instrument-kinerja.destroy-komponen');
-
-    Route::get('/instrument-kinerja/create-sub-komponen/{komponen}', [InstrumentKinerjaController::class, 'createSubKomponen'])->name('instrument-kinerja.create-sub-komponen');
-    Route::post('/instrument-kinerja/store-sub-komponen', [InstrumentKinerjaController::class, 'storeSubKomponen'])->name('instrument-kinerja.store-sub-komponen');
-});*/
 
 Route::get('/test', function () {
     
@@ -462,156 +434,7 @@ Route::get('/test-import/', function () {
     //return $data;
 });
 
-Route::get('/test-calculation/{id}', function ($id) {
-    /* $hitung_kompositors = DB::table('hitung_kompositor')
-      ->groupBy('lvl', 'indikator_kompositor_id')
-      ->having('indikator_kompositor_id', '=', $id)
-      ->select('hitung_kompositor.lvl', 'hitung_kompositor.indikator_kompositor_id')
-      ->get();
-      $data['group_by'] = $hitung_kompositors; */
 
-    $left_operand = 0;
-    $right_operand = 0;
-    $operator = '';
-    $result = 0;
-    $select_0 = getData(['p_field_id' => 0, 'indikator_kompositor_id' => $id]);
-    print_r($select_0);
-    if ($select_0->count() > 0) {
-        //looping level 0 ------------------------------------------------------------
-        foreach ($select_0 as $level_0) {
-            if ($level_0->f_type == 'Operator') {
-                $operator = $level_0->field;
-                $select_1 = getData(['p_field_id' => $level_0->id, 'indikator_kompositor_id' => $id]);
-                print_r($select_1);
-                if ($select_1->count() > 0) {
-                    $operator_1 = '';
-                    $left_operand_1 = 0;
-                    $right_operand_1 = 0;
-                    //looping level 1 -------------------------------------------------------
-                    foreach ($select_1 as $level_1) {
-                        if ($level_1->f_type == 'Operator') {
-                            $operator_1 = $level_1->field;
-                            if ($left_operand == 0) {
-                                $left_operand = $operator_1;
-                            } else {
-                                $right_operand = $operator_1;
-                            }
-                            $select_2 = getData(['p_field_id' => $level_1->id, 'indikator_kompositor_id' => $id]);
-                            print_r($select_2);
-                            if ($select_2->count() > 0) {
-                                $operator_2 = '';
-                                $left_operand_2 = 0;
-                                $right_operand_2 = 0;
-                                //looping level 2 -------------------------------------------
-                                foreach ($select_2 as $level_2) {
-                                    if ($level_2->f_type == 'Operator') {
-                                        $operator_2 = $level_2->field;
-                                        if ($left_operand_1 == 0) {
-                                            $left_operand_1 = $operator_2;
-                                        } else {
-                                            $right_operand_1 = $operator_2;
-                                        }
-                                        $select_3 = getData(['p_field_id' => $level_2->id, 'indikator_kompositor_id' => $id]);
-                                        print_r($select_3);
-                                        if ($select_3->count() > 0) {
-                                            $operator_3 = '';
-                                            $left_operand_3 = 0;
-                                            $right_operand_3 = 0;
-                                            //looping level 3 -------------------------------------------
-                                            foreach ($select_3 as $level_3) {
-                                                if ($level_3->f_type == 'Operator') {
-                                                    $operator_3 = $level_3->field;
-                                                    if ($left_operand_2 == 0) {
-                                                        $left_operand_2 = $operator_3;
-                                                    } else {
-                                                        $right_operand_2 = $operator_3;
-                                                    }
-                                                } elseif ($level_3->f_type == 'Input') {
-                                                    //$left_operand_3 = $level_3->field;
-                                                    if ($left_operand_3 == 0) {
-                                                        $left_operand_3 = $level_3->field;
-                                                    } else {
-                                                        $right_operand_3 = $level_3->field;
-                                                    }
-                                                    if ($operator_2 == '/') {
-                                                        $operator_2 = $left_operand_3 / $right_operand_3;
-                                                    } elseif ($operator_2 == '*') {
-                                                        $operator_2 = $left_operand_3 * $right_operand_3;
-                                                    } elseif ($operator_2 == '+') {
-                                                        $operator_2 = $left_operand_3 + $right_operand_3;
-                                                    } elseif ($operator_2 == '-') {
-                                                        $operator_2 = $left_operand_3 - $right_operand_3;
-                                                    }
-                                                } elseif ($level_3->f_type == 'Value') {
-                                                    
-                                                }
-                                            }// end looping level 3 -------------------------------------
-                                            echo 'operator_3: ' . $operator_3 . ', left_operand_3: ' . $left_operand_3 . ', right_operand_3: ' . $right_operand_3 . '</br>';
-                                        }
-                                    } elseif ($level_2->f_type == 'Input') {
-                                        if ($left_operand_2 == 0) {
-                                            $left_operand_2 = $level_2->field;
-                                        } else {
-                                            $right_operand_2 = $level_2->field;
-                                        }
-                                        if ($operator_1 == '/') {
-                                            $operator_1 = $left_operand_2 / $right_operand_2;
-                                        } elseif ($operator_1 == '*') {
-                                            $operator_1 = $left_operand_2 * $right_operand_2;
-                                        } elseif ($operator_2 == '+') {
-                                            $operator_1 = $left_operand_2 + $right_operand_2;
-                                        } elseif ($operator_2 == '-') {
-                                            $operator_1 = $left_operand_2 - $right_operand_2;
-                                        }
-                                    } elseif ($level_2->f_type == 'Value') {
-                                        
-                                    }
-                                }// end looping level 2 ------------------------------------
-                                echo 'operator_2: ' . $operator_2 . ', left_operand_2: ' . $left_operand_2 . ', right_operand_2: ' . $right_operand_2 . '</br>';
-                            }
-                        } elseif ($level_1->f_type == 'Input') {
-                            if ($left_operand == 0) {
-                                $left_operand = $level_1->field;
-                            } else {
-                                $right_operand = $level_1->field;
-                            }
-                            if ($operator == '/') {
-                                $operator = $left_operand_1 / $right_operand_1;
-                            } elseif ($operator_1 == '*') {
-                                $operator = $left_operand_1 * $right_operand_1;
-                            } elseif ($operator_2 == '+') {
-                                $operator = $left_operand_1 + $right_operand_1;
-                            } elseif ($operator_2 == '-') {
-                                $operator = $left_operand_1 - $right_operand_1;
-                            }
-                        } elseif ($level_1->f_type == 'Value') {
-                            
-                        }
-                    }//end looping level 1 --------------------------------------------------
-                    echo 'operator_1: ' . $operator_1 . ', left_operand_1: ' . $left_operand_1 . ', right_operand_1: ' . $right_operand_1 . '</br>';
-                }
-            } elseif ($level_1->f_type == 'Input') {
-                
-            } elseif ($level_1->f_type == 'Value') {
-                
-            }
-        }//end looping level 0 ------------------------------------------------------
-    }
-
-
-    echo 'operator: ' . $operator . ', left_operand: ' . $left_operand . ', right_operand: ' . $right_operand;
-
-    /* if ($operator == '/') {
-      $result = $left_operand / $right_operand;
-      } elseif ($operator == '*') {
-      $result = $left_operand * $right_operand;
-      } elseif ($operator == '+') {
-      $result = $left_operand + $right_operand;
-      } elseif ($operator == '-') {
-      $result = $left_operand - $right_operand;
-      } */
-    //echo 'Result: '.$result;
-});
 
 function getData($params) {
     $select = DB::table('hitung_kompositor')
@@ -826,11 +649,20 @@ Route::get('/test-calculate/{id}', function ($id) {
 });
 
 Route::get('/test-regression', function(){
-$points = [[1, 1.00], [1.1, 1.15], [1.2, 1.30]];    
+//$points = [[1, 1.00], [1.1, 1.15], [1.2, 1.30]];    
+$points = [
+    [1.00, 1],
+    [1.15, 1.1],
+    [1.30, 1.2]
+];
 $regression = new Regression\Linear($points);
 $parameters = $regression->getParameters();          // [m => 1.2209302325581, b => 0.6046511627907]
 $equation   = $regression->getEquation();            // y = 1.2209302325581x + 0.6046511627907
-$y          = $regression->evaluate(1.11);              // Evaluate for y at x = 5 using regression equation
-return $y;
+$y          = $regression->evaluate(1.25); 
+$ci         = $regression->ci(5, 0.5);               // Confidence interval for x = 5 with p-value of 0.5
+$pi         = $regression->pi(5, 0.5); 
+// Prediction interval for x = 5 with p-value of 0.5; Optional number of trials parameter.// Evaluate for y at x = 5 using regression equation
+$percentage = $y * 100;
+return $y.' = '. number_format($percentage, 2);
 });
 require __DIR__ . '/auth.php';

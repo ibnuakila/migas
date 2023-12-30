@@ -15,4 +15,8 @@ class JenisKompositor extends Model
         'id',
         'nama_jenis_kompositor'
     ];
+    
+    public function kompositor(){
+        return $this->hasMany(Kompositor::class);
+    }
 }

@@ -80,6 +80,7 @@ class LaporanCapaianController extends Controller {
                         'periode.periode',
                         'level.nama_level',
                         'satuan.nama_satuan')
+                ->orderBy('indikator.level_id')
                 ->paginate();
         
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
@@ -107,8 +108,8 @@ class LaporanCapaianController extends Controller {
                     ->delete();
             foreach ($pics as $pic) {
                 $data = ['laporan_capaian_id' => $laporancapaian->id,
-                    'pic_id' => $pic['value'],
-                    'nama_pic' => $pic['label']];
+                    'pic_id' => $pic['pic_id'],
+                    'nama_pic' => $pic['nama_pic']];
                 DB::table('laporan_capaian_pic')->insert($data);
             }
         }

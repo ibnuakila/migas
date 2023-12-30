@@ -63,11 +63,8 @@ export default function ListInputRealisasi({auth}){
             router.visit('/input-realisasi/import-kompositor/' , {
                 method: 'get',
                 data:{laporan_capaian_id:laporan_capaian.id, triwulan_id:triwulan.id},
-                onFinish: visit => {
-                    if(flash.message){
-                        alert(flash.message);
-                    }
-                    //router.reload();
+                onFinish: visit => {                    
+                    router.reload();
                     },
             });
             
