@@ -84,7 +84,9 @@ export default function Header() {
                         </Typography>
                     </MenuHandler>
                     <MenuList>
-                    <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>
+                    {auth.role == 'Administrator' ? (
+                        <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>):null
+                    }
                     <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
                     <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
                     <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
@@ -93,24 +95,26 @@ export default function Header() {
                     
                     </MenuList>
                 </Menu>
-                <Menu>
-                    <MenuHandler>
-                        <Typography
-                            as="li"
-                            variant="small"
-                            color="blue-gray"
-                            className="p-1 font-normal"
-                            >
-                            <a href="#" className="flex items-center hover:text-amber-700">
-                                Settings
-                            </a>
-                        </Typography>
-                    </MenuHandler>
-                    <MenuList>
-                    <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>
-                    <MenuItem><Link href={route('role.index')}>Roles</Link></MenuItem>
-                    </MenuList>
-                </Menu>
+                {auth.role == 'Administrator' ? (
+                    <Menu>
+                        <MenuHandler>
+                            <Typography
+                                as="li"
+                                variant="small"
+                                color="blue-gray"
+                                className="p-1 font-normal"
+                                >
+                                <a href="#" className="flex items-center hover:text-amber-700">
+                                    Settings
+                                </a>
+                            </Typography>
+                        </MenuHandler>
+                        <MenuList>
+                        <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>
+                        <MenuItem><Link href={route('role.index')}>Roles</Link></MenuItem>
+                        </MenuList>
+                    </Menu>):null
+                }
                 <Typography
                     as="li"
                     variant="small"
@@ -118,7 +122,7 @@ export default function Header() {
                     className="p-1 font-normal"
                     >
                     <a href="#" className="flex items-center">
-                        
+                        {auth.user.email}
                     </a>
                 </Typography>
             </ul>

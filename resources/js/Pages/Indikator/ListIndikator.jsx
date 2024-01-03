@@ -7,10 +7,11 @@ import { Card,
     Button,
     Dialog,
     DialogHeader,
-  DialogBody,
-  DialogFooter,
-  Input,
-  Select} from "@material-tailwind/react";
+    DialogBody,
+    DialogFooter,
+    Input,
+    Select,
+    Alert,} from "@material-tailwind/react";
 import {
   ArrowDownTrayIcon,
   MagnifyingGlassIcon,
@@ -21,9 +22,9 @@ import Pagination from '@/Components/Pagination';
 export default function ListIndikator({auth}){
     const TABLE_HEAD = ["ID", "Numbering", "Ordering", "Nama Indikator", "Satuan", "Level", "Pic" ,   "Action"];
             
-    const { indikators } = usePage().props;
-    console.log(indikators);
-    const [open, setOpen] = useState(false);
+    const { indikators, flash } = usePage().props;
+    console.log(usePage().props);
+    const [open, setOpen] = useState(true);
     const [termIndikator, setTermIndikator] = useState('');
     const [termPic, setTermPic] = useState('');
     const [termSatuan, setTermSatuan] = useState('');
@@ -44,7 +45,7 @@ export default function ListIndikator({auth}){
         const value = e.target.value;
         setTermPic(value);
     }
-    
+        
     useEffect( () => {
         //if(term.length >= 2){
             router.visit('/indikator', {
@@ -56,12 +57,35 @@ export default function ListIndikator({auth}){
         //}
         
       },[termIndikator, termPic, termLevel]);
-    
+    function Icon() {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        );
+    }
     return (
             <AdminLayout 
         auth = {auth}
         children={(
                 <div className="container mx-auto">
+                {flash.message && (
+                    <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
+                        color="black" className="my-3 shadow-lg">
+                        {flash.message}
+                    </Alert>
+                )}
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
@@ -201,8 +225,6 @@ export default function ListIndikator({auth}){
                                                 </Typography>) )}
                                         </div>                                                                                                                      
                                       </td>
-                                      
-                                      
                                       
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium pr-1 text-red-300">

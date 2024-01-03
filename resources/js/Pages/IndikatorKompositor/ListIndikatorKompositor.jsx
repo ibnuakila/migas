@@ -20,7 +20,7 @@ import Pagination from '@/Components/Pagination';
 export default function ListIndikatorKompositor({auth}){
     //const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis Kompositor", "Satuan",   "Action"];
  
-    const { kompositors, indikator, kompositor_pics } = usePage().props;
+    const { kompositors, indikator, kompositor_pics, flash } = usePage().props;    
     console.log(usePage().props);
     const [open, setOpen] = useState(false);
     const [termIndeks, setTermIndeks] = useState('');
