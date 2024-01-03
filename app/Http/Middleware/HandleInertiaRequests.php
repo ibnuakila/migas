@@ -30,18 +30,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $request->user()//->only('id', 'name', 'email'),
-            ],
-            'flash' => [
-                'message' => fn () => $request->session()->get('message')
-            ],
-            'ziggy' => function () use ($request) {
-                return array_merge((new Ziggy)->toArray(), [
-                    'location' => $request->url(),
-                ]);
-            },
-        ]);
+        
+            return array_merge(parent::share($request), [
+                'auth' => function() use ($request){
+                    if($request->user() !== null){
+                        return array_merge([
+                            'user' => $request->user()->only('id', 'name', 'email'),                            
+                            'role' => $request->user()->getRoleNames(),
+                        ]);
+                    }
+                },
+                'flash' => [
+                    'message' => fn () => $request->session()->get('message')
+                ],
+                'ziggy' => function () use ($request) {
+                    return array_merge((new Ziggy)->toArray(), [
+                        'location' => $request->url(),
+                    ]);
+                },
+            ]);
+        
     }
 }
