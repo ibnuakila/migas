@@ -98,25 +98,25 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/hitung-kompositor/{indikatorkompositor}', [HitungKompositorController::class, 'index'])->name('hitung-kompositor.index');
+    Route::get('/hitung-kompositor/index/{indikatorkompositor}', [HitungKompositorController::class, 'index'])->name('hitung-kompositor.index');
     Route::get('/hitung-kompositor/create/{indikatorkompositor}', [HitungKompositorController::class, 'create'])->name('hitung-kompositor.create');
     Route::post('/hitung-kompositor/store', [HitungKompositorController::class, 'store'])->name('hitung-kompositor.store');
     Route::get('/hitung-kompositor/edit/{hitungkompositor}', [HitungKompositorController::class, 'edit'])->name('hitung-kompositor.edit');
-    Route::put('/hitung-kompositor/{hitungkompositor}', [HitungKompositorController::class, 'update'])->name('hitung-kompositor.update');
-    Route::delete('/hitung-kompositor/{hitungkompositor}', [HitungKompositorController::class, 'destroy'])->name('hitung-kompositor.destroy');
+    Route::put('/hitung-kompositor/update/{hitungkompositor}', [HitungKompositorController::class, 'update'])->name('hitung-kompositor.update');
+    Route::delete('/hitung-kompositor/delete/{hitungkompositor}', [HitungKompositorController::class, 'destroy'])->name('hitung-kompositor.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/pic', [PICController::class, 'index'])->name('pic.index');
+    Route::get('/pic/index', [PICController::class, 'index'])->name('pic.index');
     Route::get('/pic/create', [PICController::class, 'create'])->name('pic.create');
     Route::post('/pic/store', [PICController::class, 'store'])->name('pic.store');
     Route::get('/pic/edit/{pic}', [PICController::class, 'edit'])->name('pic.edit');
-    Route::put('/pic/{pic}', [PICController::class, 'update'])->name('pic.update');
-    Route::delete('/pic/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
+    Route::put('/pic/update/{pic}', [PICController::class, 'update'])->name('pic.update');
+    Route::delete('/pic/delete/{pic}', [PICController::class, 'destroy'])->name('pic.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/input-kinerja', [InputKinerjaController::class, 'index'])->name('input-kinerja.index');
+    Route::get('/input-kinerja/index', [InputKinerjaController::class, 'index'])->name('input-kinerja.index');
     Route::get('/input-kinerja/laporancapaian/{laporancapaian}/triwulan/{triwulan}', [InputKinerjaController::class, 'edit'])->name('input-kinerja.edit');
     Route::get('/input-kinerja/create', [InputKinerjaController::class, 'create'])->name('input-kinerja.create');
     Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
@@ -126,14 +126,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/laporan-capaian', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
+    Route::get('/laporan-capaian/index', [LaporanCapaianController::class, 'index'])->name('laporan-capaian.index');
     Route::get('/laporan-capaian/edit/{laporancapaian}', [LaporanCapaianController::class, 'edit'])->name('laporan-capaian.edit');
     Route::get('/laporan-capaian/create', [LaporanCapaianController::class, 'create'])->name('laporan-capaian.create');
     Route::post('/laporan-capaian/store', [LaporanCapaianController::class, 'store'])->name('laporan-capaian.store');
-    Route::put('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
-    Route::delete('/laporan-capaian/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
+    Route::put('/laporan-capaian/update/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
+    Route::delete('/laporan-capaian/delete/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
     Route::get('/laporan-capaian/importindikator', [LaporanCapaianController::class, 'importIndikator'])->name('laporan-capaian.importindikator');
-    Route::get('/laporan-capaian/calculatekinerja', [LaporanCapaianController::class, 'calculateKinerja'])->name('laporan-capaian.calculatekinerja');
 });
 
 Route::middleware('auth')->group(function () {
@@ -151,57 +150,57 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/satuan', [SatuanController::class, 'index'])->name('satuan.index');
+    Route::get('/satuan/index', [SatuanController::class, 'index'])->name('satuan.index');
     Route::get('/satuan/edit/{satuan}', [SatuanController::class, 'edit'])->name('satuan.edit');
     Route::get('/satuan/create', [SatuanController::class, 'create'])->name('satuan.create');
     Route::post('/satuan/store', [SatuanController::class, 'store'])->name('satuan.store');
-    Route::put('/satuan/{satuan}', [SatuanController::class, 'update'])->name('satuan.update');
-    Route::delete('/satuan/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
+    Route::put('/satuan/update/{satuan}', [SatuanController::class, 'update'])->name('satuan.update');
+    Route::delete('/satuan/delete/{satuan}', [SatuanController::class, 'destroy'])->name('satuan.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/level', [LevelController::class, 'index'])->name('level.index');
+    Route::get('/level/index', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/edit/{level}', [LevelController::class, 'edit'])->name('level.edit');
     Route::get('/level/create', [LevelController::class, 'create'])->name('level.create');
     Route::post('/level/store', [LevelController::class, 'store'])->name('level.store');
-    Route::put('/level/{level}', [LevelController::class, 'update'])->name('level.update');
-    Route::delete('/level/{level}', [LevelController::class, 'destroy'])->name('level.destroy');
+    Route::put('/level/update/{level}', [LevelController::class, 'update'])->name('level.update');
+    Route::delete('/level/delete/{level}', [LevelController::class, 'destroy'])->name('level.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/indeks', [IndeksController::class, 'index'])->name('indeks.index');
+    Route::get('/indeks/index', [IndeksController::class, 'index'])->name('indeks.index');
     Route::get('/indeks/edit/{indeks}', [IndeksController::class, 'edit'])->name('indeks.edit');
     Route::get('/indeks/create', [IndeksController::class, 'create'])->name('indeks.create');
     Route::post('/indeks/store', [IndeksController::class, 'store'])->name('indeks.store');
-    Route::put('/indeks/{indeks}', [IndeksController::class, 'update'])->name('indeks.update');
-    Route::delete('/indeks/{indeks}', [IndeksController::class, 'destroy'])->name('indeks.destroy');
+    Route::put('/indeks/update/{indeks}', [IndeksController::class, 'update'])->name('indeks.update');
+    Route::delete('/indeks/delete/{indeks}', [IndeksController::class, 'destroy'])->name('indeks.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/kategori-kinerja', [KategoriKinerjaController::class, 'index'])->name('kategori-kinerja.index');
+    Route::get('/kategori-kinerja/index', [KategoriKinerjaController::class, 'index'])->name('kategori-kinerja.index');
     Route::get('/kategori-kinerja/edit/{KategoriKinerja}', [KategoriKinerjaController::class, 'edit'])->name('kategori-kinerja.edit');
     Route::get('/kategori-kinerja/create', [KategoriKinerjaController::class, 'create'])->name('kategori-kinerja.create');
     Route::post('/kategori-kinerja/store', [KategoriKinerjaController::class, 'store'])->name('kategori-kinerja.store');
-    Route::put('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'update'])->name('kategori-kinerja.update');
-    Route::delete('/kategori-kinerja/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
+    Route::put('/kategori-kinerja/update/{KategoriKinerja}', [KategoriKinerjaController::class, 'update'])->name('kategori-kinerja.update');
+    Route::delete('/kategori-kinerja/delete/{KategoriKinerja}', [KategoriKinerjaController::class, 'destroy'])->name('kategori-kinerja.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
+    Route::get('/role/index', [RoleController::class, 'index'])->name('role.index');
     Route::get('/role/edit/{role}', [RoleController::class, 'edit'])->name('role.edit');
     Route::get('/role/create', [RoleController::class, 'create'])->name('role.create');
     Route::post('/role/store', [RoleController::class, 'store'])->name('role.store');
-    Route::put('/role/{role}', [RoleController::class, 'update'])->name('role.update');
-    Route::delete('/role/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
+    Route::put('/role/update/{role}', [RoleController::class, 'update'])->name('role.update');
+    Route::delete('/role/delete/{role}', [RoleController::class, 'destroy'])->name('role.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/index', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
-    Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
-    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 
