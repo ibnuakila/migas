@@ -201,6 +201,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/create-role', [UserController::class, 'createRole'])->name('user.create-role');
 });
 
 
