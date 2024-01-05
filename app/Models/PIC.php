@@ -16,8 +16,13 @@ class PIC extends Model
         'keterangan'
     ];
     
-    public function indikatorPeriodePic($param) {
+    public function indikatorPeriodePic() {
         return $this->belongsToMany(IndikatorPeriodePic::class);
+    }
+    
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
     
     
