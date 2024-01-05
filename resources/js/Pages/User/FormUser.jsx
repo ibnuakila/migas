@@ -17,17 +17,39 @@ import AdminLayout from '@/Layouts/AdminLayout';
 
 export default function FormUser() {
     console.log(usePage().props);
-    const {auth, pics} = usePage().props;
+    const {auth, pics, roles} = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
         name: '',
         email: '',
         password: '',
+        role: '',
         pic_id: '',
     });
+    const [confirm, setConfirm] = useState(false);
+    const [optionRole, setOptionRole] = useState(0);
+    const [optionPic, setOptionPic] = useState(0);
     const handleSave = (e) => {
         e.preventDefault();
         post(route('user.store'));        
     };
+    const confirmPassword = (e) => {
+        var pass1 = document.getElementById('password').value;
+        var pass2 = e.target.value;
+        console.log(pass2);
+        if(pass1.length == pass2.length){
+            if(pass1 == pass2){
+                setConfirm(true);
+            }
+        }
+    }
+    function handleChangeRole(e) {
+        setOptionRole({selectValue: e});
+        setData('role', e);        
+    }
+    function handleChangePic(e) {
+        setOptionPic({selectValue: e});
+        setData('pic_id', e);        
+    }
     return (
     <AdminLayout 
                 auth = {auth}
@@ -72,24 +94,37 @@ export default function FormUser() {
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Input label="Confirm Password" variant="outlined" id="confirm-password" type="password"
-                                                            onChange={e => {
-                                                                //setData('password', e.target.value)
-                                                            }}
+                                                           onChange={confirmPassword} onBlur={ e => {
+                                                               if(!confirm){
+                                                                   alert("Password tidak sama!");
+                                                                   e.target.focus;
+                                                               }
+                                                               console.log('confirm is '+confirm);
+                                                           }}
                                                            error={errors.password}/>
                                                            {errors.password && <div className="text-red-400 mt-1">{errors.password}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select PIC" onChange=""
+                                                    <Select label="Select Role" onChange={handleChangeRole}
                                                             value=""
-                                                            error={errors.pic}>
+                                                            error={errors.role}>
+                                                        {roles.map(({id, name}) => (
+                                                            <Option value={id.toString()} key={id}>{name}</Option>
+                                                                            ))}
+                                                    </Select>
+                                                    {errors.role && <div className="text-red-400 mt-1">{errors.role}</div>}
+                                                </div>
+                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                    <Select label="Select PIC" onChange={handleChangePic}
+                                                            value=""
+                                                            error={errors.pic_id}>
                                                         {pics.map(({id, nama_pic}) => (
                                                             <Option value={id.toString()} key={id}>{nama_pic}</Option>
                                                                             ))}
                                                     </Select>
-                                                    {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
+                                                    {errors.pic_id && <div className="text-red-400 mt-1">{errors.pic_id}</div>}
                                                 </div>
                                             </div>
-                                
                                 
                                         </CardBody>
                                         <CardFooter className="space-x-2 ">
