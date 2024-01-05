@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     
      private $permissions = [
-            //'user-list',
+            'user-list',
             'user-create',
             'user-edit',
             'user-delete',
