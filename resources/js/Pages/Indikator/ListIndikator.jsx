@@ -48,7 +48,7 @@ export default function ListIndikator({auth}){
         
     useEffect( () => {
         //if(term.length >= 2){
-            router.visit('/indikator', {
+            router.visit('/indikator/index', {
                 method: 'get',
                 data: queryString,
                 replace: true,
@@ -89,7 +89,7 @@ export default function ListIndikator({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                              Indikator 
+                              Daftar Indikator 
                             </Typography>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">

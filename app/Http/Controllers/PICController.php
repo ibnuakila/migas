@@ -15,7 +15,8 @@ class PICController extends Controller //implements ICrud
 {
     //
     public function create() {
-        return Inertia::render('Pic/FormPic');
+        return Inertia::render('Pic/FormPic',[
+                'parent' => PIC::all()]);
     }
 
     
@@ -40,7 +41,8 @@ class PICController extends Controller //implements ICrud
 
     public function edit(PIC $pic) {
         return Inertia::render('Pic/EditPic', [
-            'pic' => new PicResource($pic)            
+            'pic' => new PicResource($pic),
+            'parent' => PIC::all()
         ]);
     }
 

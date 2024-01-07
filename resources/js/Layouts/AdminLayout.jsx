@@ -13,13 +13,14 @@ export default function AdminLayout( {auth, children}){
             <section className="max-h-full h-450 bg-cyan-50">                     
                 <div className="container px-5 pt-10 pb-5 mx-auto flex flex-wrap ">  
                     <div className="flex py-2 mb-2">
-                        <Typography variant="h6"><Link href="/home" className="text-gray-400">APP &nbsp;|
-                            &nbsp;</Link></Typography>
+                        <Typography variant="h6">
+                            <Link href="/home" className="text-gray-400">APP &nbsp;|&nbsp;</Link>
+                        </Typography>
                         {path.length <= 2 ? (
-                                    <Typography variant="h6">&nbsp;
-                                        <Link href={"/" + path[1]} className="text-blue-300">{path[1].toString().toLocaleUpperCase()}</Link>
-                                    </Typography>
-                                            ) : (
+                            <Typography variant="h6">&nbsp;
+                                <Link href={"/" + path[1]} className="text-blue-300">{path[1].toString().toLocaleUpperCase()}</Link>
+                            </Typography>
+                            ) : (
                             <Typography variant="h6">
                                 <Link href={"/" + path[1]} className="text-blue-300">{path[1].toString().toLocaleUpperCase()}</Link>
                                 &nbsp;|                        

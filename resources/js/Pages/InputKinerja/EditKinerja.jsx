@@ -105,11 +105,11 @@ export default function EditLaporanCapaian() {
                 children={(
                                 <div className="container mx-auto">
                                         {flash.message && (
-                                    <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
-                                        color="black" className="my-3 shadow-lg">
-                                        {flash.message}
-                                    </Alert>
-                                )}
+                                            <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
+                                                color="black" className="my-3 shadow-lg">
+                                                {flash.message}
+                                            </Alert>
+                                        )}
                                     <Card className="p-5 h-full w-45">                            
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">

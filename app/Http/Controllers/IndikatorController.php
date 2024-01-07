@@ -60,6 +60,15 @@ class IndikatorController extends Controller {
                                         $query->where('indikator.nama_indikator', 'like', "%{$search}%");
                                     }
                                 })
+                                ->when($request->user(), function($query) use ($request){
+                                    $roles = $request->user()->getRoleNames();
+                                    if($roles[0] !=='Administrator'){
+                                        $user_id = $request->user()->only('id');
+                                        $user = \App\Models\User::where('id',$user_id)->first();
+                                        $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
+                                        $query->where('indikator_pic.pic_id', '=', $user->pic_id);
+                                    }
+                                })
                                 ->select(
                                         'indikator.*',
                                         'level.nama_level',

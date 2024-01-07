@@ -13,6 +13,7 @@ class PIC extends Model
     public $timestamps = false;
     protected $fillable = [
         'nama_pic',
+        'parent_id',
         'keterangan'
     ];
     

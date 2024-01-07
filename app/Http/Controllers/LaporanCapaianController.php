@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Request;
+//use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +44,7 @@ class LaporanCapaianController extends Controller {
         ]);
     }
 
-    public function index() {
+    public function index(Request $request) {
         
         $select = LaporanCapaian::query()
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
@@ -53,25 +54,34 @@ class LaporanCapaianController extends Controller {
                 ->with('kinerjaTriwulan')
                 ->with('laporanCapaianPic')
                 ->with('inputRealisasi')
-                ->when(Request::input('flevel'), function ($query, $search) {
+                ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                     if ($search != '') {
                         $query->where('level.nama_level', 'like', "%{$search}%");
                     }
                 })
-                ->when(Request::input('fpic'), function ($query, $search) {
+                ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
                     if ($search != '') {
                         $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
                         $query->where('laporan_capaian_pic.nama_pic', 'like', "%{$search}%");
                     }
                 })
-                ->when(Request::input('findikator'), function ($query, $search) {
+                ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
                     if ($search != '') {
                         $query->where('indikator.nama_indikator', 'like', "%{$search}%");
                     }
                 })
-                ->when(Request::input('fperiode'), function ($query, $search) {
+                ->when(\Illuminate\Support\Facades\Request::input('fperiode'), function ($query, $search) {
                     if ($search != '') {
                         $query->where('periode.periode', '=', "{$search}");
+                    }
+                })
+                ->when($request->user(), function($query) use ($request){
+                    $roles = $request->user()->getRoleNames();
+                    if($roles[0] !=='Administrator'){
+                        $user_id = $request->user()->only('id');
+                        $user = \App\Models\User::where('id',$user_id)->first();
+                        $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
+                        $query->where('laporan_capaian_pic.pic_id', '=', $user->pic_id);
                     }
                 })
                 ->select('laporan_capaian.*',

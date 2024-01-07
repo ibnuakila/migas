@@ -110,8 +110,7 @@ export default function Header() {
                             </Typography>
                         </MenuHandler>
                         <MenuList>
-                        <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>
-                        <MenuItem><Link href={route('role.index')}>Roles</Link></MenuItem>
+                        <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>                        
                         </MenuList>
                     </Menu>):null
                 }

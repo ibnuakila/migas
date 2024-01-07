@@ -67,16 +67,16 @@ Route::middleware('auth')->group( function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
+    Route::get('/periode/index', [PeriodeController::class, 'index'])->name('periode.index');
     Route::get('/periode/edit/{periode}', [PeriodeController::class, 'edit'])->name('periode.edit');
     Route::get('/periode/create', [PeriodeController::class, 'create'])->name('periode.create');
     Route::post('/periode/store', [PeriodeController::class, 'store'])->name('periode.store');
-    Route::put('/periode/{periode}', [PeriodeController::class, 'update'])->name('periode.update');
-    Route::delete('/periode/{periode}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
+    Route::put('/periode/update/{periode}', [PeriodeController::class, 'update'])->name('periode.update');
+    Route::delete('/periode/delete/{periode}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/indikator', [IndikatorController::class, 'index'])->name('indikator.index');
+    Route::get('/indikator/index', [IndikatorController::class, 'index'])->name('indikator.index');
     Route::get('/indikator/create', [IndikatorController::class, 'create'])->name('indikator.create');
     Route::post('/indikator/store', [IndikatorController::class, 'store'])->name('indikator.store');
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
@@ -665,4 +665,26 @@ $pi         = $regression->pi(5, 0.5);
 $percentage = $y * 100;
 return $y.' = '. number_format($percentage, 2);
 });
+
+Route::get('/test-user', function(Illuminate\Http\Request $request){
+    
+    //$pic = $user->pic;
+    $data['user'] = $request->user();
+    //$data['pic'] = $pic;
+    $data['role'] = $request->user()->getRoleNames();
+    $sql = App\Models\LaporanCapaian::query()
+            ->when($request->user()->getRoleNames(), function($query) use($request){
+                $roles = $request->user()->getRoleNames();
+                if($roles[0] !=='Administrator'){
+                    $user_id = $request->user()->only('id');
+                    $user = \App\Models\User::where('id',$user_id)->first();
+                    $query->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id');
+                    $query->where('laporan_capaian_pic.pic_id', '=', $user->pic_id);
+                }
+            })
+            ->get();
+    $data['laporan_capaian'] = $sql;
+    return $data;
+});
+
 require __DIR__ . '/auth.php';

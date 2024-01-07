@@ -51,7 +51,7 @@ export default function ListSatuan({auth}){
       
     useEffect( () => {
         //if(term.length >= 2){
-            router.visit('/satuan', {
+            router.visit('/satuan/index', {
                 method: 'get',
                 data: { search: term, page:satuans.current_page},
                 replace: true,
@@ -71,7 +71,7 @@ export default function ListSatuan({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                              Satuan 
+                              Daftar Satuan 
                             </Typography>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">

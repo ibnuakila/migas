@@ -237,10 +237,7 @@ class UserController extends Controller
             $user->assignRole([$role->id]);
             $message = "User Created!";
             return Redirect::back()->with('message', $message);
-        /*}else{
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }*/
+        
     }
 
     /**
@@ -269,11 +266,16 @@ class UserController extends Controller
     public function edit(User $user, Request $request)
     {
         $this->authorize('user-edit');
-        //if($request->user()->hasPermissionTo('user-edit')){
-            return "Hello from user index";
-        /*}else{
-            return "Unauthorized Access!";
-        }*/
+        
+        return Inertia::render('User/EditUser',[
+            'user' => User::where('id', $user->id)
+                    ->with('roles')
+                    ->with('pic')
+                    ->first(),
+            'pics' => \App\Models\PIC::all(),
+            'roles' => \Spatie\Permission\Models\Role::all()
+        ]);
+        
     }
 
     /**
@@ -286,11 +288,26 @@ class UserController extends Controller
     public function update(User $user, Request $request)
     {
         $this->authorize('user-edit');
-        //if($request->user()->hasPermissionTo('user-edit')){
-            return "Hello from user index";
-        /*}else{
-            return "Unauthorized Access!";
-        }*/
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(),[
+            'name' => ['required'],
+            'email' => ['required'],
+            //'password' => ['required'],
+            'pic_id' => ['required'],
+            'role' => ['required']
+        ])->validate();
+        //insert user
+        $user->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            //'password' => Hash::make($request->input('password')),
+            'pic_id' => $request->input('pic_id'),
+        ]);
+
+        //role
+        $role = \Spatie\Permission\Models\Role::findById($request->input('role'));
+        $user->syncRoles([$role->id]);
+        $message = "User Updated!";
+        return Redirect::back()->with('message', $message);
     }
 
     /**
@@ -301,11 +318,14 @@ class UserController extends Controller
      */
     public function destroy(User $user, Request $request)
     {
-        if($request->user()->hasPermissionTo('user-delete')){
-            return "Hello from user index";
-        }else{
-            return "Unauthorized Access!";
-        }
+        $this->authorize('user-delete');
+        $temp_user = User::where('id', $user->id)
+                    ->with('roles')
+                    ->first();
+        $role = $temp_user->roles[0]['id'];
+        $user->removeRole($role);
+        $user->delete();
+        return Redirect::route('user.index');
     }
     
     public function createRole()
