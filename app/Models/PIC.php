@@ -13,11 +13,17 @@ class PIC extends Model
     public $timestamps = false;
     protected $fillable = [
         'nama_pic',
+        'parent_id',
         'keterangan'
     ];
     
-    public function indikatorPeriodePic($param) {
+    public function indikatorPeriodePic() {
         return $this->belongsToMany(IndikatorPeriodePic::class);
+    }
+    
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
     
     

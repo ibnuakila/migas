@@ -15,7 +15,7 @@ import Pagination from '@/Components/Pagination';
 
 export default function ListPic( {auth}){
     const {pics} = usePage().props;
-    const TABLE_HEAD = ["ID", "Nama PIC", "Keterangan", "Action"];
+    const TABLE_HEAD = ["ID", "Nama PIC", "Parent", "Keterangan", "Action"];
 
 
     const [open, setOpen] = useState(false);
@@ -40,7 +40,7 @@ export default function ListPic( {auth}){
                                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                             <Typography variant="h4" color="white">
-                                                PIC 
+                                               Daftar PIC 
                                             </Typography>
                                         </CardHeader>
                                         <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
@@ -67,7 +67,7 @@ export default function ListPic( {auth}){
                                                     </tr>
                                                 </thead>
                                                 <tbody>                                                      
-                                                    {pics.data.map(({ id, nama_pic, keterangan }) => (
+                                                    {pics.data.map(({ id, nama_pic, parent_id, keterangan }) => (
                                                             <tr key={id} className="even:bg-blue-gray-50/50">
                                                                 <td className="p-4">
                                                                     <Typography variant="small" color="blue-gray" className="font-normal">
@@ -77,6 +77,11 @@ export default function ListPic( {auth}){
                                                                 <td className="p-4">
                                                                     <Typography variant="small" color="blue-gray" className="font-normal">
                                                                         {nama_pic}
+                                                                    </Typography>
+                                                                </td>
+                                                                <td className="p-4">
+                                                                    <Typography variant="small" color="blue-gray" className="font-normal">
+                                                                        {parent_id}
                                                                     </Typography>
                                                                 </td>
                                                                 <td className="p-4">                                      

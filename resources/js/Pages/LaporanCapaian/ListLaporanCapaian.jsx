@@ -76,7 +76,7 @@ export default function ListLaporanCapaian({auth}){
     }
       useEffect( () => {
         //if(term.length >= 2){
-            router.visit('/laporan-capaian', {
+            router.visit('/laporan-capaian/index', {
                 method: 'get',
                 data: queryString,
                 replace: true,
@@ -104,14 +104,12 @@ export default function ListLaporanCapaian({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">                    
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                              Laporan Capaian Kinerja 
+                              Daftar Laporan Capaian Kinerja 
                             </Typography>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
-                    <Link href={route('laporan-capaian.create')}>
-                        <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
-                    </Link>
+                    
                     <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator</Button>
                     </div>
                     
@@ -345,7 +343,7 @@ export default function ListLaporanCapaian({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                             <div className="flex">
                                             {laporan_capaian_pic.map( ({id, nama_pic}) => (
-                                                <Typography key={id} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                <Typography key={id+nama_pic} variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
                                                     {nama_pic}
                                                 </Typography>) )}
                                             </div>
@@ -353,7 +351,7 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                         {input_realisasi.length > 0 ?
                                             (input_realisasi.map( ({ realisasi, triwulan_id})=>(
-                                                <td className="p-4 text-center" key={id}>
+                                                <td className="p-4 text-center" key={id+triwulan_id}>
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-red-600"
                                                         
                                                     >
@@ -398,7 +396,7 @@ export default function ListLaporanCapaian({auth}){
                                         
                                         {kinerja_triwulan.length > 0 ?
                                             (kinerja_triwulan.map( ({triwulan_id, kinerja})=>(
-                                                <td className="p-4 text-center" key={id}>
+                                                <td className="p-4 text-center" key={id+triwulan_id}>
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-blue-600">
                                                         <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:triwulan_id})} title="Kinerja">
                                                             {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}

@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\DB;
 class IndikatorController extends Controller {
     //
     public function create(Request $request) {
-        if ($request->user()->hasPermissionTo('indikator-create')) {
+        $this->authorize('indikator-create');
+        
             return Inertia::render('Indikator/FormIndikator', [
                         'satuans' => \App\Models\Satuan::all(),
                         'levels' => \App\Models\Level::all(),
@@ -31,14 +32,12 @@ class IndikatorController extends Controller {
                                 ->get(),
                         'pics' => \App\Models\PIC::all()
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function index(Request $request): Response {
-        if ($request->user()->hasPermissionTo('indikator-list')) {
+        $this->authorize('indikator-list');
+        
             return Inertia::render('Indikator/ListIndikator', [
                         'indikators' =>
                                 Indikator::query()
@@ -61,20 +60,27 @@ class IndikatorController extends Controller {
                                         $query->where('indikator.nama_indikator', 'like', "%{$search}%");
                                     }
                                 })
+                                ->when($request->user(), function($query) use ($request){
+                                    $roles = $request->user()->getRoleNames();
+                                    if($roles[0] !=='Administrator'){
+                                        $user_id = $request->user()->only('id');
+                                        $user = \App\Models\User::where('id',$user_id)->first();
+                                        $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
+                                        $query->where('indikator_pic.pic_id', '=', $user->pic_id);
+                                    }
+                                })
                                 ->select(
                                         'indikator.*',
                                         'level.nama_level',
                                         'satuan.nama_satuan')
                                 ->paginate(),
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function update(Indikator $indikator, IndikatorRequest $request) {
-        if ($request->user()->hasPermissionTo('indikator-edit')) {
+        $this->authorize('indikator-edit');
+        
             $request->validate(['pics' => ['required']]);
             $indikator->update(
                     $request->validated()
@@ -92,28 +98,24 @@ class IndikatorController extends Controller {
                 }
             }
             return Redirect::route('indikator.index')->with('success', 'Indikator updated.');
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function destroy(Indikator $indikator, Request $request) {
-        if ($request->user()->hasPermissionTo('indikator-delete')) {
+        $this->authorize('indikator-delete');
+        
             //$ind_pic = $indikator->indikatorPics();
             foreach ($indikator->indikatorPics as $pic) {
                 $pic->delete();
             }
             $indikator->delete();
             return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function edit(Indikator $indikator, Request $request) {
-        if ($request->user()->hasPermissionTo('indikator-edit')) {
+        $this->authorize('indikator-edit');
+        
             return Inertia::render('Indikator/EditIndikator', [
                         'indikator' => new IndikatorResource($indikator),
                         'satuans' => \App\Models\Satuan::all(),
@@ -127,10 +129,7 @@ class IndikatorController extends Controller {
                         'pics' => \App\Models\PIC::all(),
                         'def_pics' => ($this->getPics($indikator))
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     function getPics($indikator) {
@@ -150,7 +149,8 @@ class IndikatorController extends Controller {
     }
 
     public function store(IndikatorRequest $request) {
-        if ($request->user()->hasPermissionTo('indikator-create')) {
+        $this->authorize('indikator-create');
+        
             $request->validate(['pics' => ['required']]);
             $validIndikator = $request->validated();
             $indikator = Indikator::create($validIndikator);
@@ -167,10 +167,7 @@ class IndikatorController extends Controller {
                 }
             }
             return Redirect::route('indikator.index');
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function storeIndikatorKompositor(IndikatorKompositorRequest $request) {

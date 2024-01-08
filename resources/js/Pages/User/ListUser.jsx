@@ -16,19 +16,18 @@ import Pagination from '@/Components/Pagination';
 import { Link, usePage, router } from '@inertiajs/react';
 
 
-export default function ListLevel({auth}){ 
-    const { levels } = usePage().props;
-    const { filter } = usePage().props;
-    //console.log(usePage().props);
+export default function ListUser({auth}){ 
+    const { users } = usePage().props;
+    //const { filter } = usePage().props;
+    console.log(usePage().props);
     const {
         data,
-        meta: { links }
-      } = levels;
+        //meta: { links }
+      } = users;
     
-    const TABLE_HEAD = ["ID", "Nama Level", "Action"];
+    const TABLE_HEAD = ["ID", "Nama User", "Email", "Role", "PIC","Action"];
  
-    const [open, setOpen] = useState(false);
-    const [edit, setEdit] = useState(false);
+    
     const [values, setValues] = useState({
         //role: filters.role || '', // role is used only on users page
         //search: filter.search || '',
@@ -45,20 +44,7 @@ export default function ListLevel({auth}){
         //console.log(key + ", " +value);
       }
       
-    useEffect( () => {
-        //if(term.length >= 2){
-            router.visit('/level/index', {
-                method: 'get',
-                data: { search: term, page:levels.current_page},
-                replace: true,
-                preserveState: true
-            });
-        //}
-        //Inertia.get(route(route().current()), query, {
-        //replace: true,
-        //preserveState: true
-      },[term]);
-    
+        
     return (
         <AdminLayout 
         auth = {auth}
@@ -67,12 +53,12 @@ export default function ListLevel({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                              Daftar Level 
+                                Daftar User
                             </Typography>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
-                        <Link href={route('level.create')}>
+                        <Link href={route('user.create')}>
                         <Button size="sm" className="ml-2" color="blue">Add</Button>
                         </Link>
                     </div>
@@ -94,7 +80,7 @@ export default function ListLevel({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {levels.data.map(({id, nama_level}) => (
+                                {users.map(({id, name, email, roles, pic}) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -103,13 +89,27 @@ export default function ListLevel({auth}){
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
-                                          {nama_level}
+                                          {name}
                                         </Typography>
                                       </td>
-                                      
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {email}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {roles[0].name}
+                                        </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal">
+                                          {pic.nama_pic}
+                                        </Typography>
+                                      </td>
                                       <td className="p-4">
                                         <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal text-center">
-                                        <Link href={route('level.edit', id)}>
+                                        <Link href={route('user.edit', id)}>
                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                           </svg>
@@ -118,7 +118,7 @@ export default function ListLevel({auth}){
                                       </td>
                                     </tr>
                                   ))}
-                            {levels.data.length === 0 && (
+                            {users.length === 0 && (
                               <tr>
                                 <td className="px-6 py-4 border-t" colSpan="4">
                                   No contacts found.
@@ -127,7 +127,7 @@ export default function ListLevel({auth}){
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={links} />
+                        <Pagination links={users.links} />
                         </CardBody>
                     </Card>                    
                     

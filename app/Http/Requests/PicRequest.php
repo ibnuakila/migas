@@ -25,7 +25,8 @@ class PicRequest extends FormRequest
     {
         return [
             'nama_pic' => ['required'],
-            'keterangan' => ['required']
+            'keterangan' => ['required'],
+            'parent_id' => ['required']
         ];
     }
 }

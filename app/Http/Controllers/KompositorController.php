@@ -16,7 +16,8 @@ class KompositorController extends Controller {
     //var $request = Illuminate\Http\Request;
     
     public function create(\App\Models\Indikator $indikator, Request $request) {
-        if ($request->user()->hasPermissionTo('kompositor-create')) {
+        $this->authorize('kompositor-create');
+        
             return Inertia::render('IndikatorKompositor/FormKompositor', [
                         'indikator' => new \App\Http\Resources\IndikatorResource($indikator),
                         'indikators' => \App\Models\Indikator::query()
@@ -41,14 +42,12 @@ class KompositorController extends Controller {
                         //'def_pics' => ($this->getPics($kompositor)),
                         'pics' => \App\Models\PIC::all(),
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+       
     }
 
     public function destroy(Kompositor $kompositor, Request $request) {
-        if ($request->user()->hasPermissionTo('kompositor-delete')) {
+        $this->authorize('kompositor-delete');
+        
             $indikator_id = 0;
             if ($kompositor->jenis_kompositor_id == 1) {//input
                 $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
@@ -93,14 +92,12 @@ class KompositorController extends Controller {
                 $kompositor->delete();
             }
             return Redirect::route('kompositor.index-indikator', $indikator_id);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function edit(Kompositor $kompositor, Request $request) {
-        if ($request->user()->hasPermissionTo('kompositor-edit')) {
+        $this->authorize('kompositor-edit');
+        
             //$ind_kompositor = IndikatorKompositor::where()
             $indikator_kompositor = $kompositor->indikatorKompositor()->firstOrNew();
             $kompositor_parameter = \App\Models\KompositorParameter::where('kompositor_id', $kompositor->id)->first();
@@ -123,10 +120,7 @@ class KompositorController extends Controller {
                         'def_pics' => ($this->getPics($kompositor)),
                         'pics' => \App\Models\PIC::all(),
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     function getPics($kompositor) {
@@ -161,7 +155,8 @@ class KompositorController extends Controller {
     }
 
     public function indexIndikator(\App\Models\Indikator $indikator, Request $request) {
-        if ($request->user()->hasPermissionTo('kompositor-list-of-indikator')) {
+        $this->authorize('kompositor-list-of-indikator');
+        
             return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
                         'kompositors' => Kompositor::query()
                                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
@@ -191,14 +186,12 @@ class KompositorController extends Controller {
                                 ->get(),
                         'indikator' => $indikator,
             ]);
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function store(Request $request) {
-        if ($request->user()->hasPermissionTo('kompositor-create')) {
+        $this->authorize('kompositor-create');
+        
             $kompositor = null;
             if ($request->input('sumber_kompositor_id') == '1') {
                 //validasi
@@ -356,14 +349,12 @@ class KompositorController extends Controller {
             }
 
             return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function update(Kompositor $kompositor, Request $request) {//
-        if ($request->user()->hasPermissionTo('kompositor-create')) {
+        $this->authorize('kompositor-create');
+        
             if ($request->input('sumber_kompositor_id') == '1') {//new
                 //validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -499,10 +490,7 @@ class KompositorController extends Controller {
                 }
             }
             return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
-        } else {
-            $message = "Unauthorized Access!";
-            return Redirect::back()->with('message', $message);
-        }
+        
     }
 
     public function agregasiKompositor(\App\Models\Indeks $indeks) {

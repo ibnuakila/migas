@@ -1,4 +1,4 @@
-import logo from "../../../public/logo-esdm.jpeg";
+import logo from "../../../public/logo-esdm.png";
 
 export default function ApplicationLogo({width, height}) {
     return (
