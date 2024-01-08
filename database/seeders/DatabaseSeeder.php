@@ -12,15 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     
      private $permissions = [
-            'user-list',
-            'user-create',
-            'user-edit',
-            'user-delete',
-         
-            'profile-edit',
-            'profile-update',
-            'profile-delete',
-         
+            
             'periode-list',
             'periode-edit',
             'periode-create',            
@@ -84,7 +76,16 @@ class DatabaseSeeder extends Seeder
             'input-kinerja-create',
             'input-kinerja-edit',
             'input-kinerja-delete',
-            'input-kinerja-calculate-kinerja'
+            'input-kinerja-calculate-kinerja',
+         
+            'user-list',
+            'user-create',
+            'user-edit',
+            'user-delete',
+         
+            'profile-edit',
+            'profile-update',
+            'profile-delete',
         ];
     /**
      * Seed the application's database.
@@ -112,7 +113,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $user = \App\Models\User::where('id', 1)->first();
         
-        $role = Role::create(['name' => 'Administrator']);
+        //$role = Role::create(['name' => 'Administrator']);
         $role = Role::where('name', 'Administrator')->first();
         
         $permissions = Permission::pluck('id', 'id')->all();

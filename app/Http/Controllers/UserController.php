@@ -330,12 +330,12 @@ class UserController extends Controller
     
     public function createRole()
     {
-        //$role = \Spatie\Permission\Models\Role::create(['name' => 'User']);
+        $role = \Spatie\Permission\Models\Role::create(['name' => 'User']);
         //$role = Role::where('name', 'Administrator')->first();
         
         //$permissions = Permission::pluck('id', 'id')->all();
 
-        //$role->syncPermissions($this->user_permissions);
+        $role->syncPermissions($this->user_permissions);
         return "Role Created";
     }
 }

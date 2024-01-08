@@ -687,4 +687,9 @@ Route::get('/test-user', function(Illuminate\Http\Request $request){
     return $data;
 });
 
+Route::get('/clear-cache', function(){
+    \Illuminate\Support\Facades\Cache::flush();
+    return "Cache cleared";
+});
+
 require __DIR__ . '/auth.php';
