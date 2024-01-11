@@ -436,13 +436,13 @@ Route::get('/test-import/', function () {
 
 
 
-function getData($params) {
+/*function getData($params) {
     $select = DB::table('hitung_kompositor')
             ->where('p_field_id', '=', $params['p_field_id'])
             ->where('indikator_kompositor_id', '=', $params['indikator_kompositor_id'])
             ->get();
     return $select;
-}
+}*/
 
 Route::get('/test-formula', function () {
     /* $select = DB::table('formula_table')
