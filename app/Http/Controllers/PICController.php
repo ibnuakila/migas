@@ -23,7 +23,7 @@ class PICController extends Controller //implements ICrud
     public function index(): Response {
         return Inertia::render('Pic/ListPic', [
             'pics' => PIC::query()
-                ->paginate(10)
+                ->paginate()
                 ]);
     }
 
