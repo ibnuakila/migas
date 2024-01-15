@@ -22,7 +22,7 @@ export default function ListSatuan({auth}){
     console.log(usePage().props);
     const {
         data,
-        meta: { links }
+        //meta: { links }
       } = satuans;
     
     const TABLE_HEAD = ["ID", "Nama Satuan", "Action"];
@@ -131,7 +131,7 @@ export default function ListSatuan({auth}){
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={links} />
+                        <Pagination links={satuans.links} />
                         </CardBody>
                     </Card>                    
                     
