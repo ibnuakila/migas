@@ -31,12 +31,9 @@ class SatuanController extends Controller //implements ICrud
     public function index() {
         return Inertia::render('Satuan/ListSatuan', [
             'filter' => Request::all('search', 'trashed'),
-            'satuans' => new SatuanCollection(
-                    Satuan::
-                    //->filter(Request::only('search', 'trashed'))
-                    paginate(10)
-                    ->appends(Request::all())
-            )
+            'satuans' => Satuan::query()
+                    ->paginate()                    
+            
         ]);
     }
 
