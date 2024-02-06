@@ -47,14 +47,14 @@ export default function ListIndikator({auth}){
     }
         
     useEffect( () => {
-        //if(term.length >= 2){
+        if(termIndikator.length >= 3 || termPic.length >= 3 || termLevel.length >= 3){
             router.visit('/indikator/index', {
                 method: 'get',
                 data: queryString,
                 replace: true,
                 preserveState: true
             });
-        //}
+        }
         
       },[termIndikator, termPic, termLevel]);
     function Icon() {

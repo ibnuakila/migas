@@ -38,12 +38,14 @@ function ListIndikator({ auth }) {
     setTermPic(value);
   }
   useEffect(() => {
-    router.visit("/indikator/index", {
-      method: "get",
-      data: queryString,
-      replace: true,
-      preserveState: true
-    });
+    if (termIndikator.length >= 3 || termPic.length >= 3 || termLevel.length >= 3) {
+      router.visit("/indikator/index", {
+        method: "get",
+        data: queryString,
+        replace: true,
+        preserveState: true
+      });
+    }
   }, [termIndikator, termPic, termLevel]);
   function Icon() {
     return /* @__PURE__ */ jsx(
