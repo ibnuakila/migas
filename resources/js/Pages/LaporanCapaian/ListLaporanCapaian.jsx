@@ -75,14 +75,14 @@ export default function ListLaporanCapaian({auth}){
         setTermPeriode(value);
     }
       useEffect( () => {
-        //if(term.length >= 2){
+        if(termIndikator.length >= 3 || termPic.length >= 3 || termLevel.length >= 3 || termPeriode.length >= 3){
             router.visit('/laporan-capaian/index', {
                 method: 'get',
                 data: queryString,
                 replace: true,
                 preserveState: true
             });
-        //}
+        }
         
       },[termIndikator, termPic, termLevel, termPeriode]);
       

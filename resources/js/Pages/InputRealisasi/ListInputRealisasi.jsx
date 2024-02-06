@@ -47,14 +47,14 @@ export default function ListInputRealisasi({auth}){
     }
     
     useEffect( () => {
-        //if(term.length >= 2){
+        if(termKompositor.length >= 3 || termIndeks.length >= 3){
             router.visit('/input-realisasi/laporancapaiantriwulan/' + laporan_capaian.id + '/triwulan/' + triwulan.id, {
                 method: 'get',
                 data: queryString,
                 replace: true,
                 preserveState: true
             });
-        //}
+        }
         
     },[termIndeks, termKompositor]);
     
@@ -63,9 +63,9 @@ export default function ListInputRealisasi({auth}){
             router.visit('/input-realisasi/import-kompositor/' , {
                 method: 'get',
                 data:{laporan_capaian_id:laporan_capaian.id, triwulan_id:triwulan.id},
-                onFinish: visit => {                    
+                /*onFinish: visit => {                    
                     router.reload();
-                    },
+                    },*/
             });
             
         }
@@ -95,7 +95,7 @@ export default function ListInputRealisasi({auth}){
                 <div className="container mx-auto">
                     {flash.message && (
                         <Alert open={open} icon={<Icon />} onClose={() => {
-                                setOpen(false); router.reload();
+                                setOpen(false); //router.reload();
                             }} 
                             color="black" className="my-3 shadow-lg">
                             {flash.message}

@@ -36,8 +36,7 @@ export default function FormKompositor(props) {
         jenis_kompositor_id: '',
         sumber_kompositor_id: '',
         kompositor_id: '',
-        parameter_id: '',
-        kalkulasi: '',
+        parameter_id: '',        
         value: ''
     });
     console.log(props);
