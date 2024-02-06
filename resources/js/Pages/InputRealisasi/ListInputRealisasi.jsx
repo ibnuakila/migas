@@ -47,7 +47,7 @@ export default function ListInputRealisasi({auth}){
     }
     
     useEffect( () => {
-        if(termKompositor.length >= 2){
+        if(termKompositor.length >= 3 || termIndeks.length >= 3){
             router.visit('/input-realisasi/laporancapaiantriwulan/' + laporan_capaian.id + '/triwulan/' + triwulan.id, {
                 method: 'get',
                 data: queryString,
@@ -95,7 +95,7 @@ export default function ListInputRealisasi({auth}){
                 <div className="container mx-auto">
                     {flash.message && (
                         <Alert open={open} icon={<Icon />} onClose={() => {
-                                setOpen(false); router.reload();
+                                setOpen(false); //router.reload();
                             }} 
                             color="black" className="my-3 shadow-lg">
                             {flash.message}
