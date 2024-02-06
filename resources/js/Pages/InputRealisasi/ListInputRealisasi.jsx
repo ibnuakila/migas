@@ -47,14 +47,14 @@ export default function ListInputRealisasi({auth}){
     }
     
     useEffect( () => {
-        //if(term.length >= 2){
+        if(termKompositor.length >= 2){
             router.visit('/input-realisasi/laporancapaiantriwulan/' + laporan_capaian.id + '/triwulan/' + triwulan.id, {
                 method: 'get',
                 data: queryString,
                 replace: true,
                 preserveState: true
             });
-        //}
+        }
         
     },[termIndeks, termKompositor]);
     

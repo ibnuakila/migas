@@ -32,12 +32,14 @@ function ListInputRealisasi({ auth }) {
     setTermKompositor(value);
   }
   useEffect(() => {
-    router.visit("/input-realisasi/laporancapaiantriwulan/" + laporan_capaian.id + "/triwulan/" + triwulan.id, {
-      method: "get",
-      data: queryString,
-      replace: true,
-      preserveState: true
-    });
+    if (termKompositor.length >= 2) {
+      router.visit("/input-realisasi/laporancapaiantriwulan/" + laporan_capaian.id + "/triwulan/" + triwulan.id, {
+        method: "get",
+        data: queryString,
+        replace: true,
+        preserveState: true
+      });
+    }
   }, [termIndeks, termKompositor]);
   function handleImport() {
     if (confirm("Apakah Anda yakin akan mengimport data indikator?")) {
