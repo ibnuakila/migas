@@ -11,7 +11,7 @@ export default function AdminLayout( {auth, children}){
             <>                
             <Header auth={auth}/>
             <section className="max-h-full h-450 bg-cyan-50">                     
-                <div className="container px-5 pt-10 pb-5 mx-auto flex flex-wrap ">  
+                <div className="container px-1 pt-10 pb-5 mx-auto flex flex-wrap ">  
                     <div className="flex py-2 mb-2">
                         <Typography variant="h6">
                             <Link href="/home" className="text-gray-400">APP &nbsp;|&nbsp;</Link>
@@ -29,9 +29,10 @@ export default function AdminLayout( {auth, children}){
                             </Typography>
                                     )}
                     </div>
-                    {children}
+                    
                 </div>                    
             </section>
+            <section className="max-h-full bg-cyan-50"> {children} </section> 
             <section className="w-1/1 p-4 h-auto">
                 <footer className="footer bg-white relative pt-1 border-b-2 border-blue-200">
                     <div className="container mx-auto px-6">

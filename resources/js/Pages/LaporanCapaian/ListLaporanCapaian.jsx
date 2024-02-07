@@ -102,7 +102,7 @@ export default function ListLaporanCapaian({auth}){
         children={(
                 <>
                 <Head title="Laporan Capaian" />
-                <div className="container mx-auto">                            
+                <div className="mx-1">                            
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">                    
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
