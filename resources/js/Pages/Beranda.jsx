@@ -35,7 +35,7 @@ import { CheckCircleIcon,
     ClockIcon,
     CalendarIcon} from "@heroicons/react/24/solid";
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage, Head } from '@inertiajs/react';
 
 export default function Beranda( {props}) {
     console.log(usePage().props);
@@ -89,6 +89,8 @@ export default function Beranda( {props}) {
 ];
     return (
             <AdminLayout props = {props} children={(
+                        <>
+                        <Head title="Home" />
                         <div className="mt-12">
                            <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
                                {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
@@ -126,6 +128,7 @@ export default function Beranda( {props}) {
                                         ))}
                            </div>                            
                        </div>
+                       </>
                                 )}>
             
             </AdminLayout>

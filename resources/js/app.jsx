@@ -7,7 +7,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import React from 'react';
 import { ThemeProvider } from "@material-tailwind/react";
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Application';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

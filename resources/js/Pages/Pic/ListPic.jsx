@@ -10,7 +10,7 @@ import { Card,
         DialogBody,
         DialogFooter,
         Input} from "@material-tailwind/react";
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage, router, Head } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListPic( {auth}){
@@ -36,6 +36,8 @@ export default function ListPic( {auth}){
             <AdminLayout 
                 auth = {auth}
                 children={(
+                        <>
+                            <Head title="Pic" />
                                 <div className="container mx-auto max-w-screen-lg py-12">
                                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
@@ -106,6 +108,7 @@ export default function ListPic( {auth}){
                                         </CardBody>
                                     </Card>
                                 </div>
+                            </>
                                 )}
                 >
             
