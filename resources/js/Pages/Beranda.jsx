@@ -27,7 +27,7 @@ import { StatisticsChart } from "@/widgets/charts/index.js";
 import {
 //statisticsCardsData,
 //statisticsChartsData,
-        projectsTableData,
+projectsTableData,
         ordersOverviewData,
         } from "@/data";
 import { CheckCircleIcon,
@@ -39,11 +39,11 @@ import { chartsConfig } from "@/configs/index.js";
 
 export default function Beranda( {props}) {
     console.log(usePage().props);
-    const {periode, indikator_count, 
+    const {periode, indikator_count,
         user_count, pic_count,
         indeks_migas, indeks_aksesibilitas,
         indeks_keselamatan} = usePage().props;
-    
+
     const last_periode = periode.periode - 1;
     const statisticsCardsData = [
         {
@@ -208,7 +208,7 @@ export default function Beranda( {props}) {
             <AdminLayout props = {props} children={(
                                 <>
                                 <Head title="Home" />
-                       <div className="mt-12">
+                       <div className="container mx-auto">
                            <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
                                {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
                                                                     <StatisticsCard
@@ -219,10 +219,10 @@ export default function Beranda( {props}) {
                                                                                                     className: "w-6 h-6 text-white",
                                                                                                 })}
                                                                         footer={
-                                                                                                        <Typography className="font-normal text-blue-gray-600">
-                                                                                                            <strong className={footer.color}>{footer.value}</strong>
-                                                                                                            &nbsp;{footer.label}
-                                                                                                        </Typography>
+                                                                                <Typography className="font-normal text-blue-gray-600">
+                                                                                    <strong className={footer.color}>{footer.value}</strong>
+                                                                                    &nbsp;{footer.label}
+                                                                                </Typography>
                                                                         }
                                                                         />
                                                                         ))}

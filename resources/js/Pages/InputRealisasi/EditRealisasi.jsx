@@ -30,7 +30,7 @@ export default function EditRealisasi(props) {
     const flash = props.flash;
     const data_format = props.data_format;
     //const [realization, setRealization] = useState(0);
-    const {data, setData, put, errors, processing} = useForm({
+    const {data, setData, put, errors, delete: destroy, processing} = useForm({
         id: input_realisasi.id || '',
         kompositor_id: kompositor.id || '',
         input_realisasi_id: input_realisasi.id || '',
@@ -84,6 +84,11 @@ export default function EditRealisasi(props) {
         //setData('nilai', e.target.value);
     }
     
+    const handleDestroy = (e) => {
+        if (confirm('Apakah Anda yakin akan menghapus data Kompositor Realisasi?')) {
+            destroy(route('input-realisasi.destroy-kompositor', realisasi_kompositor.id));
+        }
+    }
     
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
@@ -310,7 +315,7 @@ export default function EditRealisasi(props) {
                                 </CardBody>
                                 <CardFooter className="space-x-2">
                                 <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                    Delete
+                                    Delete Kompositor
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                     Save

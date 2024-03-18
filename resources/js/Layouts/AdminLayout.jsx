@@ -10,9 +10,9 @@ export default function AdminLayout( {auth, children}){
     return (
             <>                
             <Header auth={auth}/>
-            <section className="max-h-full h-450 bg-cyan-50">                     
-                <div className="container px-1 pt-10 pb-5 mx-auto flex flex-wrap ">  
-                    <div className="flex py-2 mb-2">
+            <section className="max-h-full bg-cyan-50">                     
+                <div className="container py-10 pt-1 pb-1 mx-auto flex flex-wrap ">  
+                    <div className="flex py-2 mb-1">
                         <Typography variant="h6">
                             <Link href="/home" className="text-gray-400">APP &nbsp;|&nbsp;</Link>
                         </Typography>
@@ -33,8 +33,8 @@ export default function AdminLayout( {auth, children}){
                 </div>                    
             </section>
             <section className="max-h-full bg-cyan-50"> {children} </section> 
-            <section className="w-1/1 p-4 h-auto">
-                <footer className="footer bg-white relative pt-1 border-b-2 border-blue-200">
+            <section className="p-2 h-auto ">
+                <footer className="footer relative pt-1 border-b-2 border-blue-200">
                     <div className="container mx-auto px-6">
                     <Typography className="p-2 text-md text-blue-400 text-center">Sistem Informasi Capaian Kinerja</Typography>
                     <Typography className="p-2 text-md text-blue-400 text-center">Copyright &copy; 2023 Dirjen Migas</Typography>
