@@ -13,7 +13,7 @@ import { Card,
 import { React, useState, useEffect, usePrevious } from 'react';
 //import FormPeriode from './FormPeriode';
 import Pagination from '@/Components/Pagination';
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage, router, Head } from '@inertiajs/react';
 
 
 export default function ListLevel({auth}){ 
@@ -63,6 +63,8 @@ export default function ListLevel({auth}){
         <AdminLayout 
         auth = {auth}
         children={(
+                <>
+                <Head title="Level" />
                 <div className="container mx-auto">
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
@@ -132,6 +134,7 @@ export default function ListLevel({auth}){
                     </Card>                    
                     
                 </div>
+                </>
                 )}
         >
     

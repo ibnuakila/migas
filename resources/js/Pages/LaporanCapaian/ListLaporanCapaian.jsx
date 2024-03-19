@@ -13,7 +13,7 @@ import { Card,
   Input, Alert} from "@material-tailwind/react";
 import { React, useState, useEffect } from 'react';
 import Pagination from '@/Components/Pagination';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, Head } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import {
   ArrowDownTrayIcon,
@@ -100,7 +100,9 @@ export default function ListLaporanCapaian({auth}){
         <AdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto">                            
+                <>
+                <Head title="Laporan Capaian" />
+                <div className="mx-auto">                            
                     <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">                    
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
@@ -481,6 +483,7 @@ export default function ListLaporanCapaian({auth}){
                     </Card>                    
                     
                 </div>
+                </>
                 )}
         >
     

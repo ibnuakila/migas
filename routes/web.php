@@ -143,6 +143,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/input-realisasi/edit/inputrealisasi/{inputrealisasi}/realisasikompositor/{realisasikompositor}', [InputRealisasiController::class, 'edit'])->name('input-realisasi.edit');
     Route::put('/input-realisasi/update/{inputrealisasi}', [InputRealisasiController::class, 'update'])->name('input-realisasi.update');
     Route::delete('/input-realisasi/delete/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
+    Route::delete('/input-realisasi/delete-kompositor/{realisasikompositor}', [InputRealisasiController::class, 'destroyKompositor'])->name('input-realisasi.destroy-kompositor');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
     Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');

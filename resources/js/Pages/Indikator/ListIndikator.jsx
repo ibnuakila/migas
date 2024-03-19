@@ -16,7 +16,7 @@ import {
   ArrowDownTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage, router, Head } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
 
 export default function ListIndikator({auth}){
@@ -79,6 +79,8 @@ export default function ListIndikator({auth}){
             <AdminLayout 
         auth = {auth}
         children={(
+                <>
+                <Head title="Indikator" />
                 <div className="container mx-auto">
                 {flash.message && (
                     <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
@@ -251,6 +253,7 @@ export default function ListIndikator({auth}){
                         
                     </Card>
                 </div>
+                </>
                 )}
         >
     
