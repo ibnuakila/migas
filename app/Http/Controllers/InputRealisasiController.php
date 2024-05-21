@@ -616,15 +616,56 @@ class InputRealisasiController extends Controller {
                         ->get();
                     $data['res_kompo_param'] = $res_kompo_param;
                     $realisasi_produksi_lifting_minyak = 0;
-                    $parameter_273000 = 0;
+                    $parameter_90000 = 0; $parameter_181000 = 0;
+                    $parameter_273000 = 0; $parameter_365000 = 0;
                     foreach($res_kompo_param as $subrow){
                         if(trim($subrow->nama_kompositor) == "Realisasi Produksi/Lifting Minyak"){
                             $realisasi_produksi_lifting_minyak = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Parameter 90000"){
+                            $parameter_90000 = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Parameter 181000"){
+                            $parameter_181000 = $subrow->nilai;
                         }elseif(trim($subrow->nama_kompositor) == "Parameter 273000"){
                             $parameter_273000 = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Parameter 365000"){
+                            $parameter_365000 = $subrow->nilai;
                         }
                     }
-                    $realisasi = $realisasi_produksi_lifting_minyak / $parameter_273000;
+                    if($triwulan == 1){
+                        $realisasi = $realisasi_produksi_lifting_minyak / $parameter_90000;
+                    }elseif($triwulan == 2){
+                         $realisasi = $realisasi_produksi_lifting_minyak / $parameter_181000;
+                    }elseif($triwulan == 3){
+                         $realisasi = $realisasi_produksi_lifting_minyak / $parameter_273000;
+                    }elseif($triwulan == 4){
+                         $realisasi = $realisasi_produksi_lifting_minyak / $parameter_365000;
+                    }
+                }elseif($nama_kompositor == "Produksi Gas Bumi"){
+                    //query kompositor dan parameter
+                    $res_kompo_param = DB::table('kompositor')
+                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                        ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                        ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                        ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                        //->where('kompositor.jenis_kompositor_id', '=', 2)
+                        ->select('kompositor.*',
+                                'parameter.nama_parameter',
+                                'parameter.kalkulasi',
+                                'parameter.value',
+                                'realisasi_kompositor.nilai')
+                        ->get();
+                    $data['res_kompo_param'] = $res_kompo_param;
+                    $realisasi_produksi_lifting_gas_bumi = 0;
+                    $parameter_5658 = 0;
+                    foreach($res_kompo_param as $subrow){
+                        if(trim($subrow->nama_kompositor) == "Realisasi Produksi/Lifting Gas Bumi"){
+                            $realisasi_produksi_lifting_gas_bumi = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Parameter 5658"){
+                            $parameter_5658 = $subrow->nilai;
+                        }
+                    }
+                    $realisasi = $realisasi_produksi_lifting_gas_bumi / $parameter_5658;
                 }
                 break;
             case 'Indeks Ketersediaan Hulu Minyak':

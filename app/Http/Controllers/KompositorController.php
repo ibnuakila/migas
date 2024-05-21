@@ -50,46 +50,81 @@ class KompositorController extends Controller {
         
             $indikator_id = 0;
             if ($kompositor->jenis_kompositor_id == 1) {//input
-                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                $indikator_id = $indikator_kompositor->indikator_id;
-                $indikator_kompositor->delete(); //delete indikator kompositor
-                $kompositor->delete(); //delete kompositor
+                try{
+                    DB::beginTransaction();
+                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                    $indikator_id = $indikator_kompositor->indikator_id;
+                    $indikator_kompositor->delete(); //delete indikator kompositor
+                    $kompositor->delete(); //delete kompositor
+                    DB::commit();
+                } catch (\Exception $e){
+                    DB::rollBack();
+                    return $e;
+                }
             } else if ($kompositor->jenis_kompositor_id == 2) {//agregasi
                 $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
                 $kompositors = Kompositor::where('indeks_id', $indeks->id)->get();
-                foreach ($kompositors as $komp) {
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
-                    foreach ($indikator_kompositor as $idk_kom) {
-                        $indikator_id = $idk_kom->indikator_id;
+                try{
+                    DB::beginTransaction();
+                    foreach ($kompositors as $komp) {
+                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
+                        foreach ($indikator_kompositor as $idk_kom) {
+                            $indikator_id = $idk_kom->indikator_id;
 
-                        $idk_kom->delete(); //delete indikator_kompositor
+                            $idk_kom->delete(); //delete indikator_kompositor
+                        }
+                        
+                        $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $komp->id)->get();
+                        foreach($kompositor_pic as $kom_pic){
+                            $kom_pic->delete();
+                        }
+                        $komp->delete(); //delete kompositor
                     }
-                    $komp->delete(); //delete kompositor
+                    $indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
+                    foreach ($indeks_child as $value) {
+                        $value->delete(); //delete indeks
+                    }
+                    DB::commit();
+                } catch (\Exception $e){
+                    DB::rollBack();
+                    return $e;
                 }
-                $indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
-                foreach ($indeks_child as $value) {
-                    $value->delete(); //delete indeks
+            } else if ($kompositor->jenis_kompositor_id == 3) {//parameter
+                //pakai transaction -------------------------
+                try{
+                    DB::beginTransaction();
+                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                    $indikator_id = $indikator_kompositor->indikator_id;
+                    
+                    //1. delete kompositor parameter
+                    $komp_param = \App\Models\KompositorParameter::where([
+                                'kompositor_id' => $kompositor->id,
+                                'parameter_id' => $request->input('parameter_id')])->first();
+                    if ($komp_param !== null) {
+                        $komp_param->delete();
+                    }
+                    //2. delete parameter
+                    $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
+                    if ($komp_param !== null) {
+                        $parameter->delete();
+                    }
+                    //3. delete kompositor of kompositor if exist
+                    $komp_of_komp = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                    if ($komp_of_komp !== null) {
+                        $komp_of_komp->delete();
+                    }
+                    //4. delete indikator kompositor
+                    $indikator_kompositor->delete(); 
+                    //5. delete kompositor
+                    $kompositor->delete();
+                    
+                    DB::commit();
+                } catch (\Exception $e){
+                    DB::rollBack();
+                    return $e;
                 }
-            } else {//parameter
-                //delete kompositor parameter
-                $komp_param = \App\Models\KompositorParameter::where([
-                            'kompositor_id' => $kompositor->id,
-                            'parameter_id' => $request->input('parameter_id')])->first();
-                if ($komp_param !== null) {
-                    $komp_param->delete();
-                }
-                //delete parameter
-                $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
-                if ($komp_param !== null) {
-                    $parameter->delete();
-                }
-                //delete kompositor of kompositor if exist
-                $komp_of_komp = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
-                if ($komp_of_komp !== null) {
-                    $komp_of_komp->delete();
-                }
-                //delete kompositor
-                $kompositor->delete();
+            }else if ($kompositor->jenis_kompositor_id == 4) {
+                
             }
             return Redirect::route('kompositor.index-indikator', $indikator_id);
         

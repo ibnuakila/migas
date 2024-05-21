@@ -81,7 +81,7 @@ export default function ListIndikator({auth}){
         children={(
                 <>
                 <Head title="Indikator" />
-                <div className="container mx-auto">
+                <div className="mx-1">
                 {flash.message && (
                     <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)} 
                         color="black" className="my-3 shadow-lg">

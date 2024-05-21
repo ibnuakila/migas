@@ -55,12 +55,14 @@ export default function EditLaporanCapaian() {
             axios.post(route('input-kinerja.calculate-kinerja'), {laporan_capaian_id:laporan_capaian.id, triwulan_id:kinerja.triwulan_id})
                     .then(res => {
                         console.log(res);
-                        if(res.data.response !== ''){                            
+                        if(res.data.kinerja > 0){                            
                             alert(res.data.kinerja);                        
                             let kinerja = document.getElementById('kinerja');
                             kinerja.value = res.data.kinerja;
                             //realisasi.setAttribute('value', res.data.result);
                             setData('kinerja', res.data.kinerja);
+                        }else{
+                            alert(res.data.response);
                         }
                     })
                     .catch((err) => {

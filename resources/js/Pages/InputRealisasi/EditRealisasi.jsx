@@ -90,6 +90,10 @@ export default function EditRealisasi(props) {
         }
     }
     
+    const handleCancel = (e) => {
+        window.history.back();
+    }
+    
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi realisasi?')) {
             //alert(kompositor.jenis_kompositor_id);
@@ -212,7 +216,7 @@ export default function EditRealisasi(props) {
                                 <form action="">
                                 <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                     <Typography variant="h4" color="white">
-                                        Input Realisasi
+                                        Edit Realisasi
                                     </Typography>
                                 </CardHeader>                                    
                                 <CardBody>                                    
@@ -319,6 +323,9 @@ export default function EditRealisasi(props) {
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                     Save
+                                </Button> 
+                                <Button variant="gradient" color="blue" onClick={(e) => handleCancel(e)}>
+                                    Cancel
                                 </Button> 
                                 </CardFooter>
                                 </form>
