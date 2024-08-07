@@ -52,6 +52,7 @@ class InputRealisasiController extends Controller {
     }
 
     public function edit(InputRealisasi $inputrealisasi, \App\Models\RealisasiKompositor $realisasikompositor) {
+        $this->authorize('input-realisasi-edit');
         //$realisasi_kompositor = \App\Models\RealisasiKompositor::where('input_realisasi_id', $inputrealisasi->id)->first();
         $kompositor = \App\Models\Kompositor::where('id', $realisasikompositor->kompositor_id)->first();
         return Inertia::render('InputRealisasi/EditRealisasi', [
@@ -98,6 +99,7 @@ class InputRealisasiController extends Controller {
     }
 
     public function indexIndikator(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan) {
+        $this->authorize('input-realisasi-list');
         //$indikator_periode = \App\Models\IndikatorPeriode::where('id', $laporancapaian->indikator_periode_id)->first();
         $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first();
         return Inertia::render('InputRealisasi/ListInputRealisasi', [
@@ -137,6 +139,7 @@ class InputRealisasiController extends Controller {
     }
 
     public function laporanCapaianTriwulan(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan) {
+        $this->authorize('input-realisasi-list');
         $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first();
         return Inertia::render('InputRealisasi/ListInputRealisasi', [
                     'laporan_capaian' => $laporancapaian,
