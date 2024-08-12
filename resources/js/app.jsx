@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import React from 'react';
 import { ThemeProvider } from "@material-tailwind/react";
+import { MaterialTailwindControllerProvider } from "@/context";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Application';
 
@@ -18,7 +19,9 @@ createInertiaApp({
         root.render(
                 <React.StrictMode>
                     <ThemeProvider>
-                        <App {...props} />
+                        <MaterialTailwindControllerProvider>
+                            <App {...props} />
+                        </MaterialTailwindControllerProvider>
                     </ThemeProvider>
                 </React.StrictMode>
                 

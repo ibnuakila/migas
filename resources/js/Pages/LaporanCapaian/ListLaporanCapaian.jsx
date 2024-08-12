@@ -1,5 +1,5 @@
 
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Card, 
     CardHeader,
     CardBody,
@@ -20,6 +20,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 export default function ListLaporanCapaian({auth}){ 
     const { laporan_capaians } = usePage().props;
     const {
@@ -97,13 +98,13 @@ export default function ListLaporanCapaian({auth}){
         }
     }
     return (
-        <AdminLayout 
+        <NewAdminLayout 
         auth = {auth}
         children={(
                 <>
                 <Head title="Laporan Capaian" />
                 <div className="mx-auto">                            
-                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">                    
+                    <Card className="mt-12 mb-8 flex flex-col gap-1">                    
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
                               Daftar Laporan Capaian Kinerja 
@@ -487,6 +488,6 @@ export default function ListLaporanCapaian({auth}){
                 )}
         >
     
-        </AdminLayout>
+        </NewAdminLayout>
             )
 };

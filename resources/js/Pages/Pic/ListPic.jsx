@@ -1,5 +1,5 @@
 import {React, useState} from 'react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Card,
         CardHeader,
         CardBody,
@@ -12,6 +12,7 @@ import { Card,
         Input} from "@material-tailwind/react";
 import { Link, usePage, router, Head } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination';
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function ListPic( {auth}){
     const {pics} = usePage().props;
@@ -33,7 +34,7 @@ export default function ListPic( {auth}){
         setTerm(value);
     }
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                         <>
@@ -112,6 +113,6 @@ export default function ListPic( {auth}){
                                 )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

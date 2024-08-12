@@ -12,7 +12,7 @@ Button,
         Select, Option 
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function EditPeriode() {
     const {periode, auth} = usePage().props;
@@ -44,7 +44,7 @@ export default function EditPeriode() {
       }
     const optStatus = ['Closed' , 'Active'];
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                                     <div className="container mx-auto">
@@ -93,6 +93,6 @@ export default function EditPeriode() {
                             )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

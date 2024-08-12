@@ -1,5 +1,5 @@
 import {React, useState, useEffect} from 'react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 import { Card, 
     CardHeader,
     CardBody,
@@ -76,7 +76,7 @@ export default function ListIndikator({auth}){
         );
     }
     return (
-            <AdminLayout 
+            <NewAdminLayout 
         auth = {auth}
         children={(
                 <>
@@ -88,7 +88,7 @@ export default function ListIndikator({auth}){
                         {flash.message}
                     </Alert>
                 )}
-                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                    <Card className="mt-12 mb-8 flex flex-col gap-12">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
                               Daftar Indikator 
@@ -257,6 +257,6 @@ export default function ListIndikator({auth}){
                 )}
         >
     
-        </AdminLayout>
+        </NewAdminLayout>
         );
 }

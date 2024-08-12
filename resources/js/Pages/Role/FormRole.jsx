@@ -15,7 +15,7 @@ import {
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
  
 export default function FormRole() {
     const {auth, permissions} = usePage().props;

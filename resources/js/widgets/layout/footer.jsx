@@ -16,7 +16,7 @@ export function Footer({ brandName, brandLink, routes }) {
             target="_blank"
             className="transition-colors hover:text-blue-500 font-bold"
           >
-            {brandName}
+            Bryan
           </a>{" "}
           for a better web.
         </Typography>
@@ -41,13 +41,13 @@ export function Footer({ brandName, brandLink, routes }) {
 }
 
 Footer.defaultProps = {
-  brandName: "Creative Tim",
+  brandName: "Migas",
   brandLink: "https://www.creative-tim.com",
   routes: [
-    { name: "Creative Tim", path: "https://www.creative-tim.com" },
-    { name: "About Us", path: "https://www.creative-tim.com/presentation" },
-    { name: "Blog", path: "https://www.creative-tim.com/blog" },
-    { name: "License", path: "https://www.creative-tim.com/license" },
+    { name: "Migas", path: "/" },
+    { name: "About Us", path: "/" },
+    { name: "Blog", path: "/" },
+    { name: "License", path: "/" },
   ],
 };
 
@@ -57,6 +57,6 @@ Footer.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object),
 };
 
-Footer.displayName = "/src/widgets/layout/footer.jsx";
+Footer.displayName = "/widgets/layout/footer.jsx";
 
 export default Footer;

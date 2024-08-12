@@ -1,5 +1,5 @@
 
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Card, 
     Typography, 
     Button,

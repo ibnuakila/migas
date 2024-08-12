@@ -33,7 +33,7 @@ projectsTableData,
 import { CheckCircleIcon,
         ClockIcon,
         CalendarIcon} from "@heroicons/react/24/solid";
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Link, useForm, usePage, Head } from '@inertiajs/react';
 import { chartsConfig } from "@/configs/index.js";
 
