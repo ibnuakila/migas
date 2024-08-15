@@ -46,7 +46,7 @@ Footer.defaultProps = {
   routes: [
     { name: "Migas", path: "/" },
     { name: "About Us", path: "/" },
-    { name: "Blog", path: "/" },
+    //{ name: "Blog", path: "/" },
     { name: "License", path: "/" },
   ],
 };
