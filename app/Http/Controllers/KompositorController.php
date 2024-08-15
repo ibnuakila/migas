@@ -55,6 +55,10 @@ class KompositorController extends Controller {
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
                     $indikator_id = $indikator_kompositor->indikator_id;
                     $indikator_kompositor->delete(); //delete indikator kompositor
+                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                    foreach($kompositor_pic as $kom_pic){
+                        $kom_pic->delete();
+                    }
                     $kompositor->delete(); //delete kompositor
                     DB::commit();
                 } catch (\Exception $e){
@@ -66,28 +70,39 @@ class KompositorController extends Controller {
                 $kompositors = Kompositor::where('indeks_id', $indeks->id)->get();
                 try{
                     DB::beginTransaction();
-                    foreach ($kompositors as $komp) {
-                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $komp->id)->get();
-                        foreach ($indikator_kompositor as $idk_kom) {
-                            $indikator_id = $idk_kom->indikator_id;
-
+                    
+                    
+                    /*$indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
+                    foreach ($indeks_child as $value) {
+                        $value->delete(); 
+                    }*/
+                    //foreach ($kompositors as $komp) {
+                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->get();
+                        
+                        //------------ review lagi pada saat delete agregasi tidak harus delete subnya --------------
+                        foreach ($indikator_kompositor as $idk_kom) {   
+                            $indikator_id = $idk_kom->indikator_id;                         
                             $idk_kom->delete(); //delete indikator_kompositor
                         }
-                        
-                        $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $komp->id)->get();
+                        //-------------------------------------------------------------------------------------
+                        //delete kompositor-pic
+                        $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
                         foreach($kompositor_pic as $kom_pic){
                             $kom_pic->delete();
                         }
-                        $komp->delete(); //delete kompositor
-                    }
-                    $indeks_child = \App\Models\Indeks::where('parent_id', $indeks->id)->get();
-                    foreach ($indeks_child as $value) {
-                        $value->delete(); //delete indeks
-                    }
+                        
+                        //delete kompositor
+                        $kompositor->delete(); 
+                        //delete indeks yang ada dibawahnya
+                        $indeks->delete();
+                        
+                    //}
+                    
                     DB::commit();
                 } catch (\Exception $e){
                     DB::rollBack();
-                    return $e;
+                    //$message = ['Message' => $e];
+                    return $e;//delete sub agregasi terlebih dahulu
                 }
             } else if ($kompositor->jenis_kompositor_id == 3) {//parameter
                 //pakai transaction -------------------------
@@ -113,9 +128,15 @@ class KompositorController extends Controller {
                     if ($komp_of_komp !== null) {
                         $komp_of_komp->delete();
                     }
-                    //4. delete indikator kompositor
+                    //4. delete kompositor-pic
+                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                    foreach($kompositor_pic as $kom_pic){
+                        $kom_pic->delete();
+                    }
+                    //5. delete indikator kompositor
                     $indikator_kompositor->delete(); 
-                    //5. delete kompositor
+                    
+                    //6. delete kompositor
                     $kompositor->delete();
                     
                     DB::commit();
@@ -139,10 +160,12 @@ class KompositorController extends Controller {
             return Inertia::render('IndikatorKompositor/EditKompositor', [
                         'kompositor' => new \App\Http\Resources\KompositorResource(
                                 $kompositor->with('kompositorParameter')->where('id', '=', $kompositor->id)->get()->first()),
+
                         'kompositors' => Kompositor::query()
                                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                                 ->where('indikator_kompositor.indikator_id', $indikator_kompositor->indikator_id)
                                 ->get(),
+
                         'indikator' => new \App\Http\Resources\IndikatorResource(\App\Models\Indikator::where('id', $indikator_kompositor->indikator_id)->first()),
                         'indeks' => \App\Models\Indeks::all(),
                         'jenis_kompositor' => \App\Models\JenisKompositor::all(),

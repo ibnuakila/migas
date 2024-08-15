@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kompositor;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -34,19 +35,24 @@ class InputRealisasiController extends Controller {
     
     public function destroyKompositor(RealisasiKompositor $realisasikompositor, Request $request) {//delete kompositor
         $this->authorize('input-realisasi-delete');
+        
         $input_realisasi_id = $realisasikompositor->input_realisasi_id;
         $input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
         $laporan_capaian_id = $input_realisasi->laporan_capaian_id;
         $triwulan_id = $input_realisasi->triwulan_id;
-        //return Inertia::render('InputRealisasi/EditRealisasi', [
-        //            'realisasi_kompositor' => ($realisasikompositor->realisasiKompositorPics())]);
+        $kompositor = Kompositor::find($realisasikompositor->kompositor_id);
+
         //delete pic
         DB::table('realisasi_kompositor_pic')
                     ->where('realisasi_kompositor_id', '=', $realisasikompositor->id)
                     ->delete();
         //delete realisasi kompositor
         $realisasikompositor->delete();
-        //return Redirect::back()->with('success', 'Realisasi Kompositor Deleted!');
+        
+        if($kompositor->jenis_kompositor_id == 2){
+            $input_realisasi->realisasi = 0;
+            $input_realisasi->update();
+        }
         
         return Inertia::location('/input-realisasi/laporancapaiantriwulan/'.$laporan_capaian_id.'/triwulan/'.$triwulan_id);
     }
@@ -528,7 +534,7 @@ class InputRealisasiController extends Controller {
                                     'realisasi_kompositor.nilai')
                             ->get();
                         $data['res_kompo_param'] = $res_kompo_param;
-                        $realisasi_produksi_lng = 0; $realisasi_ekspor_lng = 0; $realisasi_lng_domestik_mmbtu;
+                        $realisasi_produksi_lng = 0; $realisasi_ekspor_lng = 0; $realisasi_lng_domestik_mmbtu=0;
                         foreach($res_kompo_param as $subrow){
                             if(trim($subrow->nama_kompositor) == 'Realisasi Produksi LNG'){
                                 $realisasi_produksi_lng = $subrow->nilai;
