@@ -17,7 +17,7 @@ export default function NewAdminLayout({ auth, children }) {
     var path = location.pathname.split("/");
     //console.log(path);
     return (
-        <div className="min-h-screen bg-blue-gray-50/50">
+        <div className="min-h-screen bg-teal-50">
             <Header auth={auth} />
             <div className="p-4 xl:ml-0">                
                 
