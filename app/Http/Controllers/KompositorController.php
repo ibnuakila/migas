@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class KompositorController extends Controller {
     //var $request = Illuminate\Http\Request;
-    //test git
+    
     public function create(\App\Models\Indikator $indikator, Request $request) {
         $this->authorize('kompositor-create');
         
