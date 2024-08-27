@@ -4,8 +4,11 @@ import '../css/app.css';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import React from 'react';
+import { ThemeProvider } from "@material-tailwind/react";
+import { MaterialTailwindControllerProvider } from "@/context";
 
-const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Application';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -13,7 +16,16 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+                <React.StrictMode>
+                    <ThemeProvider>
+                        <MaterialTailwindControllerProvider>
+                            <App {...props} />
+                        </MaterialTailwindControllerProvider>
+                    </ThemeProvider>
+                </React.StrictMode>
+                
+                );
     },
     progress: {
         color: '#4B5563',
