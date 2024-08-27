@@ -13,7 +13,7 @@ Button,
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 import MSelect from '../../Components/MSelect';
 
 export default function EditIndikator() {
@@ -67,7 +67,7 @@ export default function EditIndikator() {
     })
 
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                                 <div className="container mx-auto">
@@ -170,6 +170,6 @@ export default function EditIndikator() {
                                 )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

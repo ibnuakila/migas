@@ -86,7 +86,7 @@ class IndikatorController extends Controller {
                     $request->validated()
             );
             $pics = $request->input('pics');
-            if (is_array($pics)) {
+            if (is_array($pics) and count($pics)>0) {
                 DB::table('indikator_pic')
                         ->where('indikator_id', '=', $indikator->id)
                         ->delete();

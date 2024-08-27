@@ -1,5 +1,5 @@
 import {React, useState, useEffect} from 'react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Card, 
     CardHeader,
     CardBody,
@@ -17,6 +17,7 @@ import {
   ArrowDownTrayIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function ListInputRealisasi({auth}){
     const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
@@ -89,7 +90,7 @@ export default function ListInputRealisasi({auth}){
         );
     }
     return (
-            <AdminLayout 
+            <NewAdminLayout 
         auth = {auth}
         children={(
                 <div className="container mx-auto">
@@ -225,6 +226,6 @@ export default function ListInputRealisasi({auth}){
                 )}
         >
     
-        </AdminLayout>
+        </NewAdminLayout>
         );
 }

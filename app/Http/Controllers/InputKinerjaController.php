@@ -133,6 +133,7 @@ class InputKinerjaController extends Controller
                 ->where('triwulan_id', $triwulan_id)->first();
         $data['laporan_capaian'] = $obj_laporan_capaian;
         $indikator = \App\Models\Indikator::where('id', $obj_laporan_capaian->indikator_id)->first();
+        $data['nama_indikator'] = $indikator->nama_indikator;
         if($indikator !== null && $obj_laporan_capaian->target !== null){
             switch (trim($indikator->nama_indikator)){
                 //IKSP I
@@ -172,6 +173,18 @@ class InputKinerjaController extends Controller
                     $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi Minyak dan Gas Bumi ":
+                    break;
+                case "Produksi Minyak Bumi":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+                    $data['kinerja'] = $kinerja;
+                    break;
+                case "Produksi Gas Bumi":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Persentase Pemanfaatan Gas Bumi Domestik":
                     break;

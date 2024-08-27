@@ -13,7 +13,8 @@ Button,
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
+import NewAdminLayout from "@/layouts/NewAdminLayout";
 
 export default function FormRealisasi(props) {
     
@@ -51,7 +52,7 @@ export default function FormRealisasi(props) {
     }
     
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                         <div className="container mx-auto">
@@ -119,6 +120,6 @@ export default function FormRealisasi(props) {
                                 )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

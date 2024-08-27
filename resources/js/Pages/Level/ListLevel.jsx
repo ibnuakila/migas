@@ -1,5 +1,5 @@
 
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { Card, 
     CardHeader,
     CardBody,
@@ -14,6 +14,7 @@ import { React, useState, useEffect, usePrevious } from 'react';
 //import FormPeriode from './FormPeriode';
 import Pagination from '@/Components/Pagination';
 import { Link, usePage, router, Head } from '@inertiajs/react';
+import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 
 export default function ListLevel({auth}){ 
@@ -60,13 +61,13 @@ export default function ListLevel({auth}){
       },[term]);
     
     return (
-        <AdminLayout 
+        <NewAdminLayout 
         auth = {auth}
         children={(
                 <>
                 <Head title="Level" />
                 <div className="container mx-auto">
-                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                    <Card className="mt-12 mb-8 flex flex-col gap-12">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
                               Daftar Level 
@@ -138,6 +139,6 @@ export default function ListLevel({auth}){
                 )}
         >
     
-        </AdminLayout>
+        </NewAdminLayout>
             )
 };

@@ -52,9 +52,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
+/*Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');*/
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group( function () {
     Route::get('/home', [\App\Http\Controllers\DashboardController::class, 'index'])->name('home');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
 });
 
 Route::middleware('auth')->group(function () {

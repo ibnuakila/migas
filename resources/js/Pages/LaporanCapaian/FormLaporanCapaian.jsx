@@ -13,7 +13,8 @@ import {
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
+import NewAdminLayout from "@/layouts/NewAdminLayout";
  
 export default function FormIndikatorPeriode() {
     const {auth} = usePage().props;
@@ -31,7 +32,7 @@ export default function FormIndikatorPeriode() {
        
     
     return (
-    <AdminLayout 
+    <NewAdminLayout 
                 auth = {auth}
                 children={(
                                     <div className="container mx-auto">
@@ -118,6 +119,6 @@ export default function FormIndikatorPeriode() {
                             )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
   );
 }

@@ -13,9 +13,10 @@ Button,
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 //import FormKompositor from './FormKompositor';
 import MSelect from '../../Components/MSelect';
+import NewAdminLayout from "@/layouts/NewAdminLayout";
 
 export default function FormIndikator() {
     const {auth, satuans, levels, pics, parents, indikator, indikator_kompositors, message} = usePage().props;
@@ -75,7 +76,7 @@ export default function FormIndikator() {
     })
     
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                                 <div className="container mx-auto">
@@ -178,6 +179,6 @@ export default function FormIndikator() {
                                 )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

@@ -13,8 +13,9 @@ Button,
         } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
+import NewAdminLayout from "@/layouts/NewAdminLayout";
 
 export default function EditRealisasi(props) {
     console.log(props);
@@ -88,6 +89,10 @@ export default function EditRealisasi(props) {
         if (confirm('Apakah Anda yakin akan menghapus data Kompositor Realisasi?')) {
             destroy(route('input-realisasi.destroy-kompositor', realisasi_kompositor.id));
         }
+    }
+    
+    const handleCancel = (e) => {
+        window.history.back();
     }
     
     function handleCalculate(){
@@ -198,7 +203,7 @@ export default function EditRealisasi(props) {
     
     //console.log(optPic);
     return (
-            <AdminLayout 
+            <NewAdminLayout 
                 auth = {auth}
                 children={(
                         <div className="container mx-auto">
@@ -212,7 +217,7 @@ export default function EditRealisasi(props) {
                                 <form action="">
                                 <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                     <Typography variant="h4" color="white">
-                                        Input Realisasi
+                                        Edit Realisasi
                                     </Typography>
                                 </CardHeader>                                    
                                 <CardBody>                                    
@@ -320,6 +325,9 @@ export default function EditRealisasi(props) {
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
                                     Save
                                 </Button> 
+                                <Button variant="gradient" color="blue" onClick={(e) => handleCancel(e)}>
+                                    Cancel
+                                </Button> 
                                 </CardFooter>
                                 </form>
                                 </Card>
@@ -327,6 +335,6 @@ export default function EditRealisasi(props) {
                                 )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
             );
 }

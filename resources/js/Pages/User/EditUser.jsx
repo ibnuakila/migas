@@ -13,7 +13,8 @@ import {
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
+import NewAdminLayout from "@/layouts/NewAdminLayout";
 
 export default function EditUser() {
     console.log(usePage().props);
@@ -75,7 +76,7 @@ export default function EditUser() {
         );
     }
     return (
-    <AdminLayout 
+    <NewAdminLayout 
                 auth = {auth}
                 children={(
                                     <div className="container mx-auto">
@@ -159,6 +160,6 @@ export default function EditUser() {
                             )}
                 >
             
-            </AdminLayout>
+            </NewAdminLayout>
   );
 }
