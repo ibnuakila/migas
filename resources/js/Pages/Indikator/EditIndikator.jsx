@@ -19,7 +19,7 @@ import MSelect from '../../Components/MSelect';
 export default function EditIndikator() {
     const {auth, indikator, satuans, levels, parents, pics, def_pics} = usePage().props;
     const defPic = def_pics.map(pic => {
-        return {value: pic.pic_id, label: pic.nama_pic};
+        return {value: pic.id, label: pic.nama_pic};
     })
     const {data, setData, put, errors, delete: destroy, processing} = useForm({
         id: indikator.data.id || '',
@@ -30,12 +30,12 @@ export default function EditIndikator() {
         parent_id: indikator.data.parent_id || '0',
         ordering: indikator.data.ordering || '',
         numbering: indikator.data.numbering || '',
-        pics: defPic || ''
+        pics: def_pics || ''
     });
     const [option, setOption] = useState('');
     const [selectedValue, setSelectedValue] = useState([]);
 
-    console.log(usePage().props);
+    console.log(defPic);
 
     const handleSave = (e) => {
         e.preventDefault();

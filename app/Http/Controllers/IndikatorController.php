@@ -19,74 +19,74 @@ use App\Models\IndikatorKompositor;
 use Illuminate\Support\Facades\DB;
 
 class IndikatorController extends Controller {
+
     //
     public function create(Request $request) {
         $this->authorize('indikator-create');
-        
-            return Inertia::render('Indikator/FormIndikator', [
-                        'satuans' => \App\Models\Satuan::all(),
-                        'levels' => \App\Models\Level::all(),
-                        //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
-                        'parents' => Indikator::query()
-                                ->whereIn('level_id', ['1', '2', '3'])
-                                ->get(),
-                        'pics' => \App\Models\PIC::all()
-            ]);
-        
+
+        return Inertia::render('Indikator/FormIndikator', [
+                    'satuans' => \App\Models\Satuan::all(),
+                    'levels' => \App\Models\Level::all(),
+                    //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
+                    'parents' => Indikator::query()
+                            ->whereIn('level_id', ['1', '2', '3'])
+                            ->get(),
+                    'pics' => \App\Models\PIC::all()
+        ]);
     }
 
     public function index(Request $request): Response {
         $this->authorize('indikator-list');
-        
-            return Inertia::render('Indikator/ListIndikator', [
-                        'indikators' =>
-                                Indikator::query()
-                                ->join('level', 'indikator.level_id', '=', 'level.id')
-                                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
-                                ->with('indikatorPics')
-                                ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
-                                    if ($search != '') {
-                                        $query->where('level.nama_level', 'like', "%{$search}%");
-                                    }
-                                })
-                                ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
-                                    if ($search != '') {
-                                        $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
-                                        $query->where('indikator_pic.nama_pic', 'like', "%{$search}%");
-                                    }
-                                })
-                                ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
-                                    if ($search != '') {
-                                        $query->where('indikator.nama_indikator', 'like', "%{$search}%");
-                                    }
-                                })
-                                ->when($request->user(), function($query) use ($request){
-                                    $roles = $request->user()->getRoleNames();
-                                    if($roles[0] !=='Administrator'){
-                                        $user_id = $request->user()->only('id');
-                                        $user = \App\Models\User::where('id',$user_id)->first();
-                                        $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
-                                        $query->where('indikator_pic.pic_id', '=', $user->pic_id);
-                                    }
-                                })
-                                ->select(
-                                        'indikator.*',
-                                        'level.nama_level',
-                                        'satuan.nama_satuan')
-                                ->paginate(),
-            ]);
-        
+
+        return Inertia::render('Indikator/ListIndikator', [
+                    'indikators' =>
+                            Indikator::query()
+                            ->join('level', 'indikator.level_id', '=', 'level.id')
+                            ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                            ->with('indikatorPics')
+                            ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('level.nama_level', 'like', "%{$search}%");
+                                }
+                            })
+                            ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
+                                    $query->where('indikator_pic.nama_pic', 'like', "%{$search}%");
+                                }
+                            })
+                            ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
+                                if ($search != '') {
+                                    $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                                }
+                            })
+                            ->when($request->user(), function ($query) use ($request) {
+                                $roles = $request->user()->getRoleNames();
+                                if ($roles[0] !== 'Administrator') {
+                                    $user_id = $request->user()->only('id');
+                                    $user = \App\Models\User::where('id', $user_id)->first();
+                                    $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
+                                    $query->where('indikator_pic.pic_id', '=', $user->pic_id);
+                                }
+                            })
+                            ->select(
+                                    'indikator.*',
+                                    'level.nama_level',
+                                    'satuan.nama_satuan')
+                            ->paginate(),
+        ]);
     }
 
     public function update(Indikator $indikator, IndikatorRequest $request) {
         $this->authorize('indikator-edit');
-        
+        try {
+            DB::beginTransaction();
             $request->validate(['pics' => ['required']]);
             $indikator->update(
                     $request->validated()
             );
             $pics = $request->input('pics');
-            if (is_array($pics) and count($pics)>0) {
+            if (is_array($pics) && count($pics) > 0) {
                 DB::table('indikator_pic')
                         ->where('indikator_id', '=', $indikator->id)
                         ->delete();
@@ -97,39 +97,42 @@ class IndikatorController extends Controller {
                     DB::table('indikator_pic')->insert($data);
                 }
             }
-            return Redirect::route('indikator.index')->with('success', 'Indikator updated.');
-        
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //$message = ['Message' => $e];
+            return $e; 
+        }
+        return Redirect::route('indikator.index')->with('success', 'Indikator updated.');
     }
 
     public function destroy(Indikator $indikator, Request $request) {
         $this->authorize('indikator-delete');
-        
-            //$ind_pic = $indikator->indikatorPics();
-            foreach ($indikator->indikatorPics as $pic) {
-                $pic->delete();
-            }
-            $indikator->delete();
-            return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
-        
+
+        //$ind_pic = $indikator->indikatorPics();
+        foreach ($indikator->indikatorPics as $pic) {
+            $pic->delete();
+        }
+        $indikator->delete();
+        return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
     }
 
     public function edit(Indikator $indikator, Request $request) {
         $this->authorize('indikator-edit');
-        
-            return Inertia::render('Indikator/EditIndikator', [
-                        'indikator' => new IndikatorResource($indikator),
-                        'satuans' => \App\Models\Satuan::all(),
-                        'levels' => \App\Models\Level::all(),
-                        'parents' => Indikator::query()
-                                ->whereIn('level_id', ['1', '2', '3'])
-                                ->get(),
-                        'indikator_kompositors' => IndikatorKompositor::query()
-                                ->where('indikator_id', '=', $indikator->id)
-                                ->get(),
-                        'pics' => \App\Models\PIC::all(),
-                        'def_pics' => ($this->getPics($indikator))
-            ]);
-        
+
+        return Inertia::render('Indikator/EditIndikator', [
+                    'indikator' => new IndikatorResource($indikator),
+                    'satuans' => \App\Models\Satuan::all(),
+                    'levels' => \App\Models\Level::all(),
+                    'parents' => Indikator::query()
+                            ->whereIn('level_id', ['1', '2', '3'])
+                            ->get(),
+                    'indikator_kompositors' => IndikatorKompositor::query()
+                            ->where('indikator_id', '=', $indikator->id)
+                            ->get(),
+                    'pics' => \App\Models\PIC::all(),
+                    'def_pics' => ($this->getPics($indikator))
+        ]);
     }
 
     function getPics($indikator) {
@@ -150,24 +153,23 @@ class IndikatorController extends Controller {
 
     public function store(IndikatorRequest $request) {
         $this->authorize('indikator-create');
-        
-            $request->validate(['pics' => ['required']]);
-            $validIndikator = $request->validated();
-            $indikator = Indikator::create($validIndikator);
-            $pics = $request->input('pics');
-            if (is_array($pics)) {
-                DB::table('indikator_pic')
-                        ->where('indikator_id', '=', $indikator->id)
-                        ->delete();
-                foreach ($pics as $pic) {
-                    $data = ['indikator_id' => $indikator->id,
-                        'pic_id' => $pic['value'],
-                        'nama_pic' => $pic['label']];
-                    DB::table('indikator_pic')->insert($data);
-                }
+
+        $request->validate(['pics' => ['required']]);
+        $validIndikator = $request->validated();
+        $indikator = Indikator::create($validIndikator);
+        $pics = $request->input('pics');
+        if (is_array($pics)) {
+            DB::table('indikator_pic')
+                    ->where('indikator_id', '=', $indikator->id)
+                    ->delete();
+            foreach ($pics as $pic) {
+                $data = ['indikator_id' => $indikator->id,
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
+                DB::table('indikator_pic')->insert($data);
             }
-            return Redirect::route('indikator.index');
-        
+        }
+        return Redirect::route('indikator.index');
     }
 
     public function storeIndikatorKompositor(IndikatorKompositorRequest $request) {
