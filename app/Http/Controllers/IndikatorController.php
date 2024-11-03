@@ -19,20 +19,20 @@ use App\Models\IndikatorKompositor;
 use Illuminate\Support\Facades\DB;
 
 class IndikatorController extends Controller {
+
     //
     public function create(Request $request) {
         $this->authorize('indikator-create');
-        
-            return Inertia::render('Indikator/FormIndikator', [
-                        'satuans' => \App\Models\Satuan::all(),
-                        'levels' => \App\Models\Level::all(),
-                        //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
-                        'parents' => Indikator::query()
-                                ->whereIn('level_id', ['1', '2', '3'])
-                                ->get(),
-                        'pics' => \App\Models\PIC::all()
-            ]);
-        
+
+        return Inertia::render('Indikator/FormIndikator', [
+                    'satuans' => \App\Models\Satuan::all(),
+                    'levels' => \App\Models\Level::all(),
+                    //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
+                    'parents' => Indikator::query()
+                            ->whereIn('level_id', ['1', '2', '3'])
+                            ->get(),
+                    'pics' => \App\Models\PIC::all()
+        ]);
     }
 
     public function index(Request $request): Response {
@@ -82,13 +82,14 @@ class IndikatorController extends Controller {
 
     public function update(Indikator $indikator, IndikatorRequest $request) {
         $this->authorize('indikator-edit');
-        
+        try {
+            DB::beginTransaction();
             $request->validate(['pics' => ['required']]);
             $indikator->update(
                     $request->validated()
             );
             $pics = $request->input('pics');
-            if (is_array($pics)) {
+            if (is_array($pics) && count($pics) > 0) {
                 DB::table('indikator_pic')
                         ->where('indikator_id', '=', $indikator->id)
                         ->delete();
@@ -99,39 +100,42 @@ class IndikatorController extends Controller {
                     DB::table('indikator_pic')->insert($data);
                 }
             }
-            return Redirect::route('indikator.index')->with('success', 'Indikator updated.');
-        
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //$message = ['Message' => $e];
+            return $e; 
+        }
+        return Redirect::route('indikator.index')->with('success', 'Indikator updated.');
     }
 
     public function destroy(Indikator $indikator, Request $request) {
         $this->authorize('indikator-delete');
-        
-            //$ind_pic = $indikator->indikatorPics();
-            foreach ($indikator->indikatorPics as $pic) {
-                $pic->delete();
-            }
-            $indikator->delete();
-            return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
-        
+
+        //$ind_pic = $indikator->indikatorPics();
+        foreach ($indikator->indikatorPics as $pic) {
+            $pic->delete();
+        }
+        $indikator->delete();
+        return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
     }
 
     public function edit(Indikator $indikator, Request $request) {
         $this->authorize('indikator-edit');
-        
-            return Inertia::render('Indikator/EditIndikator', [
-                        'indikator' => new IndikatorResource($indikator),
-                        'satuans' => \App\Models\Satuan::all(),
-                        'levels' => \App\Models\Level::all(),
-                        'parents' => Indikator::query()
-                                ->whereIn('level_id', ['1', '2', '3'])
-                                ->get(),
-                        'indikator_kompositors' => IndikatorKompositor::query()
-                                ->where('indikator_id', '=', $indikator->id)
-                                ->get(),
-                        'pics' => \App\Models\PIC::all(),
-                        'def_pics' => ($this->getPics($indikator))
-            ]);
-        
+
+        return Inertia::render('Indikator/EditIndikator', [
+                    'indikator' => new IndikatorResource($indikator),
+                    'satuans' => \App\Models\Satuan::all(),
+                    'levels' => \App\Models\Level::all(),
+                    'parents' => Indikator::query()
+                            ->whereIn('level_id', ['1', '2', '3'])
+                            ->get(),
+                    'indikator_kompositors' => IndikatorKompositor::query()
+                            ->where('indikator_id', '=', $indikator->id)
+                            ->get(),
+                    'pics' => \App\Models\PIC::all(),
+                    'def_pics' => ($this->getPics($indikator))
+        ]);
     }
 
     function getPics($indikator) {
@@ -152,24 +156,23 @@ class IndikatorController extends Controller {
 
     public function store(IndikatorRequest $request) {
         $this->authorize('indikator-create');
-        
-            $request->validate(['pics' => ['required']]);
-            $validIndikator = $request->validated();
-            $indikator = Indikator::create($validIndikator);
-            $pics = $request->input('pics');
-            if (is_array($pics)) {
-                DB::table('indikator_pic')
-                        ->where('indikator_id', '=', $indikator->id)
-                        ->delete();
-                foreach ($pics as $pic) {
-                    $data = ['indikator_id' => $indikator->id,
-                        'pic_id' => $pic['value'],
-                        'nama_pic' => $pic['label']];
-                    DB::table('indikator_pic')->insert($data);
-                }
+
+        $request->validate(['pics' => ['required']]);
+        $validIndikator = $request->validated();
+        $indikator = Indikator::create($validIndikator);
+        $pics = $request->input('pics');
+        if (is_array($pics)) {
+            DB::table('indikator_pic')
+                    ->where('indikator_id', '=', $indikator->id)
+                    ->delete();
+            foreach ($pics as $pic) {
+                $data = ['indikator_id' => $indikator->id,
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
+                DB::table('indikator_pic')->insert($data);
             }
-            return Redirect::route('indikator.index');
-        
+        }
+        return Redirect::route('indikator.index');
     }
 
     public function storeIndikatorKompositor(IndikatorKompositorRequest $request) {
