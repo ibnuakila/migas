@@ -77,13 +77,18 @@ class KompositorController extends Controller {
                         $value->delete(); 
                     }*/
                     //foreach ($kompositors as $komp) {
-                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->get();
+                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)
+                            ->first();
+                        $indikator_id = $indikator_kompositor->indikator_id;
                         
+                        if(is_object($indikator_kompositor)){
+                            $indikator_kompositor->delete();
+                        }
                         //------------ review lagi pada saat delete agregasi tidak harus delete subnya --------------
-                        foreach ($indikator_kompositor as $idk_kom) {   
+                        /*foreach ($indikator_kompositor as $idk_kom) {   
                             $indikator_id = $idk_kom->indikator_id;                         
                             $idk_kom->delete(); //delete indikator_kompositor
-                        }
+                        }*/
                         //-------------------------------------------------------------------------------------
                         //delete kompositor-pic
                         $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
@@ -93,8 +98,8 @@ class KompositorController extends Controller {
                         
                         //delete kompositor
                         $kompositor->delete(); 
-                        //delete indeks yang ada dibawahnya
-                        $indeks->delete();
+                        //delete indeks yang ada dibawahnya #jangan di delete
+                        //$indeks->delete();
                         
                     //}
                     

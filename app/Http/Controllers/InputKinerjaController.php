@@ -215,6 +215,11 @@ class InputKinerjaController extends Controller
                     $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi BBM dan Hasil Olahan":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Deviasi Kuantitas Impor Minyak Mentah untuk Feedstock Kilang dari Kuantitas yang Direkomendasikan":
                     break;

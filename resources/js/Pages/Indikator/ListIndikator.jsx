@@ -23,6 +23,7 @@ export default function ListIndikator({auth}){
     const TABLE_HEAD = ["ID", "Numbering", "Ordering", "Nama Indikator", "Satuan", "Level", "Pic" ,   "Action"];
             
     const { indikators, flash } = usePage().props;
+  
     console.log(usePage().props);
     const [open, setOpen] = useState(true);
     const [termIndikator, setTermIndikator] = useState('');
@@ -157,8 +158,16 @@ export default function ListIndikator({auth}){
                                           variant="small"
                                           color="blue-gray"
                                           className="font-normal leading-none opacity-70"
+                                        >Parameter</Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography
+                                          variant="small"
+                                          color="blue-gray"
+                                          className="font-normal leading-none opacity-70"
                                         >Action</Typography>
                                     </th>
+
                                 </tr>
                                 <tr className="border-b-2">
                                     <th></th>
@@ -184,10 +193,11 @@ export default function ListIndikator({auth}){
                                             }} placeholder="Pic" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
                                     </th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {indikators.data.map(({ id, nama_indikator, nama_satuan, nama_level, indikator_pics, ordering, numbering }) => (
+                                {indikators.data.map(({ id, nama_indikator, nama_satuan, nama_level, indikator_pics, indikator_kompositors, ordering, numbering }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
@@ -227,7 +237,14 @@ export default function ListIndikator({auth}){
                                                 </Typography>) )}
                                         </div>                                                                                                                      
                                       </td>
-                                      
+                                      <td>
+                                          <div className='flex'>
+                                            
+                                                <Typography variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                                                    ({indikator_kompositors.length})
+                                                </Typography>
+                                          </div>
+                                      </td>
                                       <td className="flex mt-2">
                                         <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium pr-1 text-red-300">
                                           <Link href={route('indikator.edit', id)} title="Edit">

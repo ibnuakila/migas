@@ -44,6 +44,7 @@ class IndikatorController extends Controller {
                                 ->join('level', 'indikator.level_id', '=', 'level.id')
                                 ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
                                 ->with('indikatorPics')
+                                ->with('indikatorKompositors')
                                 ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                                     if ($search != '') {
                                         $query->where('level.nama_level', 'like', "%{$search}%");
@@ -73,6 +74,7 @@ class IndikatorController extends Controller {
                                         'indikator.*',
                                         'level.nama_level',
                                         'satuan.nama_satuan')
+                                ->orderBy('indikator.level_id', 'asc')
                                 ->paginate(),
             ]);
         
