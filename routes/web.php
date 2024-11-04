@@ -134,6 +134,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/laporan-capaian/update/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/delete/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
     Route::get('/laporan-capaian/importindikator', [LaporanCapaianController::class, 'importIndikator'])->name('laporan-capaian.importindikator');
+    Route::get('/laporan-capaian/deleteallbyperiode/{periode}', [LaporanCapaianController::class, 'deleteAllByPeriode']);
 });
 
 Route::middleware('auth')->group(function () {

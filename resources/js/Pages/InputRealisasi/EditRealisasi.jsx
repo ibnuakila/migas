@@ -43,7 +43,7 @@ export default function EditRealisasi(props) {
         laporan_capaian_id: input_realisasi.laporan_capaian_id || '',
         pics: defPics
     });
-    console.log(data);
+    //console.log(data);
     const [optionTriwulan, setOptionTriwulan] = useState('');
     const [optionPic, setOptionPic] = useState('');
     const [optionPeriode, setOptionPeriode] = useState('');

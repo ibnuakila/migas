@@ -345,6 +345,7 @@ class InputRealisasiController extends Controller {
         switch ($nama_indeks) {
             case 'Root':
                 switch($nama_kompositor){
+                    //nilai agregasi dari sub indeks IKSP
                     case "Indeks Ketersediaan Migas"://I
                         $indeks_ketersediaan_hulu_migas = 0;
                         $indeks_ketersediaan_bbm = 0;
@@ -441,6 +442,41 @@ class InputRealisasiController extends Controller {
                             }                            
                         }
                         $realisasi = ($indeks_ketersediaan_hulu_minyak + $indeks_ketersediaan_hulu_gas)/ 2;
+
+                    } elseif ($nama_kompositor == 'Persentase Pemanfaatan Gas Bumi Domestik'){
+                        $res_kompo_param = DB::table('kompositor')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                            ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                            ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                            ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                            ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                            ->where('input_realisasi.triwulan_id', '=', $triwulan)
+                            ->select('kompositor.*',
+                                    'parameter.nama_parameter',
+                                    'parameter.kalkulasi',
+                                    'parameter.value',
+                                    'realisasi_kompositor.nilai')
+                            ->get();
+                        $data['res_kompo_param'] = $res_kompo_param;
+                        $temp_realisasi = 0; 
+                        foreach($res_kompo_param as $row){
+                            if(trim($row->nama_kompositor) == 'R/P gas bumi'){
+                                //if($row->jenis_kompositor_id == 1){
+                                    $rp_gas_bumi = $row->nilai;
+                                    $realisasi = $rp_gas_bumi;
+                                //}
+                                
+                            }/*elseif(trim($row->nama_kompositor) == 'Persentase Pemanfaatan Gas Bumi Melalui Pipa Domestik'){
+                                if($row->jenis_kompositor_id == 1){
+                                    
+                                }else{
+
+                                }
+                                
+                            }*/
+                        }
+                        //$realisasi = $temp_realisasi;
                     } elseif ($nama_kompositor == 'Indeks Ketersediaan BBM') {                        
                         //query kompositor dan parameter
                         $res_kompo_param = DB::table('kompositor')
@@ -550,6 +586,50 @@ class InputRealisasiController extends Controller {
                 //}
                 //$realisasi = ($indeks_ketersediaan_hulu_migas + $indeks_ketersediaan_bbm + $indeks_ketersediaan_lpg + $indeks_ketersediaan_lng) / 4;
                 break;
+            case 'Persentase Pemanfaatan Gas Bumi Domestik':
+                if ($nama_kompositor == 'Persentase Pemanfaatan Gas Bumi Melalui Pipa Domestik') {
+                    $res_kompo_param = DB::table('kompositor')
+                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                        ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                        ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                        ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                        //->where('kompositor.jenis_kompositor_id', '=', 2)
+                        ->select('kompositor.*',
+                                'parameter.nama_parameter',
+                                'parameter.kalkulasi',
+                                'parameter.value',
+                                'realisasi_kompositor.nilai')
+                        ->get();
+                    $data['res_kompo_param'] = $res_kompo_param;
+                    foreach($res_kompo_param as $row){
+                        if($row->nama_kompositor == 'Cadangan Minyak Bumi'){
+                            //kalkulasi jika ada
+                            $realisasi = $row->nilai;
+                        }
+                    }
+                }elseif($nama_kompositor == 'Persentase Pemanfaatan LNG Domestik'){
+                    $res_kompo_param = DB::table('kompositor')
+                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                        ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                        ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                        ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                        //->where('kompositor.jenis_kompositor_id', '=', 2)
+                        ->select('kompositor.*',
+                                'parameter.nama_parameter',
+                                'parameter.kalkulasi',
+                                'parameter.value',
+                                'realisasi_kompositor.nilai')
+                        ->get();
+                    $data['res_kompo_param'] = $res_kompo_param;
+                    foreach($res_kompo_param as $row){
+                        if($row->nama_kompositor == 'Cadangan Gas Bumi'){
+                            //kalkulasi jika ada
+                            $realisasi = $row->nilai;
+                        }
+                    }
+                }
             case 'Indeks Ketersediaan Hulu Migas':
                 if ($nama_kompositor == 'Indeks Ketersediaan Hulu Minyak') {
                     //query kompositor dan parameter
@@ -828,7 +908,47 @@ class InputRealisasiController extends Controller {
                 $realisasi = ($indeks_ketersediaan_hulu_minyak + $indeks_ketersediaan_hulu_gas) / 2;
                 break;
             case 'Indeks Ketersediaan BBM':
-                
+                $res_kompo_param = DB::table('kompositor')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                            ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                            ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                            ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                            ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                            ->where('input_realisasi.triwulan_id', '=', $triwulan)
+                            ->select('kompositor.*',
+                                    'parameter.nama_parameter',
+                                    'parameter.kalkulasi',
+                                    'parameter.value',
+                                    'realisasi_kompositor.nilai')
+                            ->get();
+                $data['res_kompo_param'] = $res_kompo_param;
+                $realisasi_produksi_bbm = 0;
+                $realisasi_produksi_hasil_olahan = 0;
+                $parameter_90 = 0;
+                if($nama_kompositor == 'Deviasi Kuantitas Impor Minyak Mentah untuk Feedstock Kilang dari Kuantitas yang Direkomendasikan'){
+                    $selisih_realisasi_kuota = 0;
+                    $kuota_impor_minyak_mentah = 0;
+                    foreach ($res_kompo_param as $subrow) {
+                        if(trim($subrow->nama_kompositor) == 'Selisih realisasi dan kuota (bbl)'){
+                            $selisih_realisasi_kuota = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == 'Kuota Impor Minyak Mentah'){
+                            $kuota_impor_minyak_mentah = $subrow->nilai;
+                        }
+                    }
+                    $realisasi = $selisih_realisasi_kuota / $kuota_impor_minyak_mentah;
+                }else{
+                    foreach ($res_kompo_param as $subrow) {
+                        if(trim($subrow->nama_kompositor) == "Realisasi Produksi BBM"){
+                            $realisasi_produksi_bbm = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Realisasi Produksi Hasil Olahan"){
+                            $realisasi_produksi_hasil_olahan = $subrow->nilai;
+                        }elseif(trim($subrow->nama_kompositor) == "Parameter 90"){
+                            $parameter_90 = $subrow->nilai;
+                        }
+                    }
+                    $realisasi = ($realisasi_produksi_bbm + $realisasi_produksi_hasil_olahan) / $parameter_90;
+                }
             case 'Indeks Ketersediaan LPG':
                 
                 
@@ -1039,6 +1159,37 @@ class InputRealisasiController extends Controller {
             case 'Indeks Fasilitas Penyimpanan Migas':
                 break;
             case 'Indeks Aksesibilitas Migas':
+                break;
+            case 'Deviasi Kuantitas Impor Minyak Mentah untuk Feedstock Kilang dari Kuantitas yang Direkomendasikan':
+                $res_kompo_param = DB::table('kompositor')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                            ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                            ->join('kompositor_parameter', 'kompositor.id', '=', 'kompositor_parameter.kompositor_id', 'left')
+                            ->join('parameter', 'kompositor_parameter.parameter_id', '=', 'parameter.id', 'left')
+                            ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                            ->where('input_realisasi.triwulan_id', '=', $triwulan)
+                            ->select('kompositor.*',
+                                    'parameter.nama_parameter',
+                                    'parameter.kalkulasi',
+                                    'parameter.value',
+                                    'realisasi_kompositor.nilai')
+                            ->get();
+                $data['res_kompo_param'] = $res_kompo_param;
+                if($res_kompo_param->count()>0){
+                    $kuota_impor_minyak_mentah = 0;
+                    $realisasi_impor_minyak_mentah = 0;
+                    foreach($res_kompo_param as $subrow){
+                        if(trim($subrow->nama_kompositor) == 'Kuota Impor Minyak Mentah'){
+                            $kuota_impor_minyak_mentah = $subrow->nilai;
+                        }
+                        if(trim($subrow->nama_kompositor) == 'Realisasi Impor Minyak Mentah'){
+                            $realisasi_impor_minyak_mentah = $subrow->nilai;                            
+                        }
+                        
+                    }                                
+                    $realisasi = $kuota_impor_minyak_mentah - $realisasi_impor_minyak_mentah;                                
+                }                
                 break;
         }
         $data['input_realisasi'] = $result;

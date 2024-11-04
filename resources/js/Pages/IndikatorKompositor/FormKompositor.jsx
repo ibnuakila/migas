@@ -214,8 +214,8 @@ export default function FormKompositor(props) {
                                                                 setData('kompositor_id', e);
                                                             }}                                                            
                                                             error={errors.kompositor_id}>
-                                                        {kompositors.map(({id, nama_kompositor, jenis_kompositor}) => (
-                                                            <Option value={id} key={id}>{nama_kompositor + " (" + jenis_kompositor.nama_jenis_kompositor + ")"}</Option>
+                                                        {kompositors.map(({kompositor_id, nama_kompositor, jenis_kompositor}) => (
+                                                            <Option value={kompositor_id} key={kompositor_id}>{nama_kompositor + " (" + jenis_kompositor.nama_jenis_kompositor + ")"}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}

@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 
 //use Illuminate\Support\Facades\Request;
+use App\Models\InputRealisasi;
+use App\Models\InputRealisasiPic;
+use App\Models\KinerjaTriwulan;
+use App\Models\LaporanCapaianPic;
+use App\Models\RealisasiKompositor;
+use App\Models\RealisasiKompositorPic;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -186,12 +193,16 @@ class LaporanCapaianController extends Controller {
         $data['message'] = 'Undefined message';
         if (is_object($periode)) {
             //loop through indikators
-            $indikators = DB::table('indikator')
-                    ->select('indikator.*')
-                    ->leftJoin('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
-                    ->whereNull('laporan_capaian.id')
-                    ->get();
-
+            // $indikators = DB::table('indikator')
+            //         ->select('indikator.*')
+            //         ->leftJoin('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+            //         ->whereNull('laporan_capaian.id')
+            //         ->get();
+            $indikators = \App\Models\Indikator::whereNotIn('id', function($query)use($periode) {
+                $query->select('indikator_id')
+                      ->from('laporan_capaian')
+                      ->where('periode_id','=', $periode->id);
+            })->get();
             //insert or update into 
             if ($indikators->count() > 1) {
                 foreach ($indikators as $row) {
@@ -203,9 +214,14 @@ class LaporanCapaianController extends Controller {
                         'periode_id' => $periode->id];
                     $obj_lap_capaian = LaporanCapaian::create($data_lap_cap);
                     //insert laporan capaian pic
-                    $indikator_pics = $indikator->indikatorPics;
-                    if (count($indikator_pics) > 0) {
-                        foreach ($indikator_pics as $pic) {
+                    $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
+                    if (($pics->count()) > 0) {
+                        foreach ($pics as $pic) {
+                            $obj_lc_pic = \App\Models\LaporanCapaianPic::where('laporan_capaian_id', '=', $obj_lap_capaian->id)
+                                        ->where('pic_id', '=', $pic->pic_id)->first();
+                            if(is_object($obj_lc_pic)){
+                                $obj_lc_pic->delete();
+                            }
                             $pic_data = ['laporan_capaian_id' => $obj_lap_capaian->id,
                                 'pic_id' => $pic->pic_id,
                                 'nama_pic' => $pic->nama_pic];
@@ -231,18 +247,23 @@ class LaporanCapaianController extends Controller {
                             ];
                             $obj_input_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $obj_lap_capaian->id)
                                             ->where('triwulan_id', $triwulan->id)->first();
-                            if ($obj_input_realisasi === null) {
+                            if (!is_object($obj_input_realisasi)) {
                                 $input = \App\Models\InputRealisasi::create($object);
                             } else {
                                 $input = $obj_input_realisasi;
                             }
                             //insert input_realisasi_pic;
-                            if ($obj_input_realisasi === null) {
-                                $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
-                                foreach ($pics as $pic) {
+                            if (!is_object($obj_input_realisasi)) {
+                                
+                                foreach ($pics as $rowpic) {
+                                    $obj_ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $input->id)
+                                        ->where('pic_id', '=', $rowpic->pic_id)->first();
+                                        if(is_object($obj_ir_pic)){
+                                            $obj_ir_pic->delete();
+                                        }
                                     $temp_lap_pic = ['input_realisasi_id' => $input->id,
-                                        'pic_id' => $pic->pic_id,
-                                        'nama_pic' => $pic->nama_pic];
+                                        'pic_id' => $rowpic->pic_id,
+                                        'nama_pic' => $rowpic->nama_pic];
                                     \App\Models\InputRealisasiPic::create($temp_lap_pic);
                                 }
                             }
@@ -257,6 +278,33 @@ class LaporanCapaianController extends Controller {
         }
 
         return Redirect::back()->with('message', 'Import Berhasil!');
+    }
+
+    public function deleteAllByPeriode($periode_id){
+        $laporan_capaians = LaporanCapaian::where('periode_id', '=', $periode_id)->get();
+        foreach($laporan_capaians as $lc){
+            //hapus laporan capaian pic
+            $lc_pics = LaporanCapaianPic::where('laporan_capaian_id', '=', $lc->id)->delete();
+            
+            //hapus kinerja triwulan
+            $kinerja_triwulan = KinerjaTriwulan::where('laporan_capaian_id', '=', $lc->id)->delete();
+            
+            //hapus input realisasi
+            $input_realisasi = InputRealisasi::where('laporan_capaian_id', '=', $lc->id)->get();
+            foreach($input_realisasi as $ir){
+                //hapus input realisasi pic
+                
+                $ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $ir->id)->delete();
+                
+                $realisasi_kompositor = RealisasiKompositor::where('input_realisasi_id', '=', $ir->id)->get();
+                foreach($realisasi_kompositor as $rk){
+                    $rk_ic = RealisasiKompositorPic::where('realisasi_kompositor_id', '=', $rk->id)->delete();
+                }
+                $ir->delete();
+            }
+            $lc->delete();
+        }
+        return response()->json(['message' => "Laporan capaian deleted!", 'success' => true]);
     }
 
     
