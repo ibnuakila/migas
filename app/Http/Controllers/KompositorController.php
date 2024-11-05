@@ -54,6 +54,16 @@ class KompositorController extends Controller {
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
                     $indikator_id = $indikator_kompositor->indikator_id;
+                    if($kompositor->sumber_kompositor_id == 2){//existing indikator
+                        
+                    }
+                    if($kompositor->sumber_kompositor_id == 3){//existing kompositor
+                        $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                        $kom_of_kom->delete();
+                    }
+                    if($kompositor->sumber_kompositor_id == 4){//exixting parameter
+                        
+                    }
                     $indikator_kompositor->delete(); //delete indikator kompositor
                     $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
                     foreach($kompositor_pic as $kom_pic){

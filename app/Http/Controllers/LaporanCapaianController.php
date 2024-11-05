@@ -296,10 +296,10 @@ class LaporanCapaianController extends Controller {
                 
                 $ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $ir->id)->delete();
                 
-                $realisasi_kompositor = RealisasiKompositor::where('input_realisasi_id', '=', $ir->id)->get();
-                foreach($realisasi_kompositor as $rk){
+                $realisasi_kompositor = RealisasiKompositor::where('input_realisasi_id', '=', $ir->id)->delete();
+                /*foreach($realisasi_kompositor as $rk){
                     $rk_ic = RealisasiKompositorPic::where('realisasi_kompositor_id', '=', $rk->id)->delete();
-                }
+                }*/
                 $ir->delete();
             }
             $lc->delete();
