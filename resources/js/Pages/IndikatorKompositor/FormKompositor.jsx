@@ -230,7 +230,7 @@ export default function FormKompositor(props) {
                                                             value={optionIndeks.selectValue}
                                                             error={errors.indeks_id}>
                                                         {indeks.map(({id, nama_indeks}) => (
-                                                            <Option value={id} key={id}>{nama_indeks}</Option>
+                                                            <Option value={id} key={id}>{nama_indeks + "(" + id + ")" }</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}
