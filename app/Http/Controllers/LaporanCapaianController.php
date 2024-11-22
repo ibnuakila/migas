@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 //use Illuminate\Support\Facades\Request;
 use App\Models\InputRealisasi;
 use App\Models\InputRealisasiPic;
+use App\Models\KategoriKinerja;
 use App\Models\KinerjaTriwulan;
 use App\Models\LaporanCapaianPic;
 use App\Models\RealisasiKompositor;
@@ -19,6 +20,7 @@ use App\Http\Resources\LaporanCapaianCollection;
 use App\Http\Resources\LaporanCapaianResource;
 use App\Http\Requests\LaporanCapaianRequest;
 use Illuminate\Support\Facades\DB;
+use Validator;
 
 
 class LaporanCapaianController extends Controller {
@@ -47,8 +49,26 @@ class LaporanCapaianController extends Controller {
                     'indikators' => \App\Models\Indikator::all(),
                     'periodes' => \App\Models\Periode::all(),
                     'pics' => \App\Models\PIC::all(),
-                    'triwulans' => \App\Models\Triwulan::all()
+                    'triwulans' => \App\Models\Triwulan::all(),
+                    'def_pics' => ($this->getPics($laporancapaian)),
+                    'kategori_kinerja' => \App\Models\KategoriKinerja::all()
         ]);
+    }
+
+    function getPics($laporancapaian) {
+        //$indikator_kompositor = \App\Models\Indikator::where('id', $indikator->indikator_kompositor_id)->first();
+        $temp_res = DB::table('laporan_capaian')
+                ->join('laporan_capaian_pic', 'laporan_capaian.id', '=', 'laporan_capaian_pic.laporan_capaian_id')
+                ->where('laporan_capaian.id', '=', $laporancapaian->id)
+                ->select('laporan_capaian_pic.*')
+                ->get();
+        $def_pics = [];
+        $i = 0;
+        foreach ($temp_res as $row) {
+            $def_pics[$i] = ['value' => $row->pic_id, 'label' => $row->nama_pic];
+            $i++;
+        }
+        return $def_pics;
     }
 
     public function index(Request $request) {
@@ -61,6 +81,7 @@ class LaporanCapaianController extends Controller {
                 ->with('kinerjaTriwulan')
                 ->with('laporanCapaianPic')
                 ->with('inputRealisasi')
+                ->with('kategoriKinerja')
                 ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                     if ($search != '') {
                         $query->where('level.nama_level', 'like', "%{$search}%");
@@ -115,9 +136,28 @@ class LaporanCapaianController extends Controller {
     }
 
     public function update(LaporanCapaian $laporancapaian, LaporanCapaianRequest $request) {
-        $laporancapaian->update(
-                $request->validated()
-        );
+        $input = $request->all();
+        $validation = Validator::make($input, [
+            'periode_id' => 'required',
+            'indikator_id' => 'required',
+            'kategori_kinerja_id' => 'nullable',
+            'target' => 'required',
+            'target_format' => 'nullable',
+            'status_kinerja' => 'nullable',
+            'kinerja_tahunan' => 'nullable',
+            'sumber_data' => 'nullable'
+        ]);
+        
+        $laporancapaian->update([
+            'periode_id' => $input['periode_id'],
+            'indikator_id' => $input['indikator_id'],
+            'kategori_kinerja_id' => $input['kategori_kinerja_id'],
+            'target' => (float)str_replace(',','',$input['target']),
+            'target_format' => $input['target_format'],
+            'status_kinerja' => $input['status_kinerja'],
+            'kinerja_tahunan' => $input['kinerja_tahunan'],
+            'sumber_data' => $input['sumber_data']       
+        ]);
         $pics = $request->input('laporan_capaian_pic');
         if (is_array($pics)) {
             DB::table('laporan_capaian_pic')
@@ -125,8 +165,8 @@ class LaporanCapaianController extends Controller {
                     ->delete();
             foreach ($pics as $pic) {
                 $data = ['laporan_capaian_id' => $laporancapaian->id,
-                    'pic_id' => $pic['pic_id'],
-                    'nama_pic' => $pic['nama_pic']];
+                    'pic_id' => $pic['value'],
+                    'nama_pic' => $pic['label']];
                 DB::table('laporan_capaian_pic')->insert($data);
             }
         }

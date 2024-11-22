@@ -340,6 +340,12 @@ class KompositorController extends Controller {
                     'indikator_id' => $request->input('indikator_id'),
                     'kompositor_id' => $new_kompositor->id
                 ]);
+
+                //input kompositor of kompositor
+                $data_kompositor_of = ['kompositor_id' => $new_kompositor->id,
+                    'ref_kompositor_id' => $request->input('kompositor_id')];
+                \App\Models\KompositorOfKompositor::create($data_kompositor_of);
+
             } elseif ($request->input('sumber_kompositor_id') == '3') {//existing kompositor
                 //tambahkan validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [

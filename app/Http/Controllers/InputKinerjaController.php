@@ -132,6 +132,7 @@ class InputKinerjaController extends Controller
         $obj_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $laporan_capaian_id)
                 ->where('triwulan_id', $triwulan_id)->first();
         $data['laporan_capaian'] = $obj_laporan_capaian;
+        $data['input_realisasi'] = $obj_realisasi;
         $indikator = \App\Models\Indikator::where('id', $obj_laporan_capaian->indikator_id)->first();
         $data['nama_indikator'] = $indikator->nama_indikator;
         if($indikator !== null && $obj_laporan_capaian->target !== null){
@@ -172,7 +173,11 @@ class InputKinerjaController extends Controller
                     }
                     $data['kinerja'] = $kinerja;
                     break;
-                case "Produksi Minyak dan Gas Bumi ":
+                case "Produksi Minyak dan Gas Bumi":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi Minyak Bumi":
                     $target = $obj_laporan_capaian->target;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalculateRealization;
 use App\Models\Kompositor;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -199,7 +200,7 @@ class InputRealisasiController extends Controller {
                     'kompositor_id' => ['required'],
                     'input_realisasi_id' => ['required'],
                     'laporan_capaian_id' => ['required'],
-                    'realisasi' => ['required', 'decimal:2'],
+                    'realisasi' => ['required'],
                     'triwulan_id' => ['required'],
                         //'realisasi_format' => ['required']
                 ])->validate();
@@ -215,7 +216,7 @@ class InputRealisasiController extends Controller {
         } else {
             $update_status_2 = \App\Models\RealisasiKompositor::where('kompositor_id', $request->input('kompositor_id'))
                     ->where('input_realisasi_id', $inputrealisasi->id)
-                    ->update(['nilai' => $request->input('realisasi')]);
+                    ->update(['nilai' => (float)str_replace(',','',$request->input('realisasi'))]);
         }
 
         //update input realisasi 
@@ -225,7 +226,7 @@ class InputRealisasiController extends Controller {
         $indikator = \App\Models\Indikator::where('id', $lapcapaian->indikator_id)->first();
         if ($kompositor->nama_kompositor == $indikator->nama_indikator) {
             $update_status_1 = $inputrealisasi->update([
-                'realisasi' => $request->input('realisasi'),
+                'realisasi' => (float)str_replace(',', '', $request->input('realisasi')),
                 'realisasi_format' => $request->input('realisasi_format'),
                 'triwulan_id' => $request->input('triwulan_id'),
                 'laporan_capaian_id' => $request->input('laporan_capaian_id')
@@ -326,16 +327,39 @@ class InputRealisasiController extends Controller {
     public function calculateRealization(\Illuminate\Http\Request $request) {
         $input_realisasi_id = $request->input('input_realisasi_id');
         $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
-
-        $result = InputRealisasi::query()
+        $params['input_realisasi_id'] = $input_realisasi_id;
+        $params['realisasi_kompositor_id'] = $realisasi_kompositor_id;
+        $objCalculation = new CalculateRealization();
+        $realisasi = $objCalculation->getRealization($params);
+        return $realisasi;
+    }
+    public function _calculateRealization(\Illuminate\Http\Request $request) {
+        $input_realisasi_id = $request->input('input_realisasi_id');
+        $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
+        $params['input_realisasi_id'] = $input_realisasi_id;
+        $params['realisasi_kompositor_id'] = $realisasi_kompositor_id;
+        //$realisasi = CalculateRealization::getRealization($params);
+        
+        /*$result = InputRealisasi::query()
                 ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                 ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                 ->where('realisasi_kompositor.input_realisasi_id', $input_realisasi_id)
                 ->where('realisasi_kompositor.id', $realisasi_kompositor_id)
                 ->where('kompositor.jenis_kompositor_id', 2)
+                ->first();*/
+        $result = InputRealisasi::query()
+                ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                ->where('realisasi_kompositor.input_realisasi_id', $input_realisasi_id)
+                ->where('realisasi_kompositor.id', $realisasi_kompositor_id)
+                ->where('kompositor.jenis_kompositor_id', 2)
                 ->first();
         $data['input_realisasi'] = $result;
+        $nama_indikator = trim($result->nama_indikator);
         $nama_indeks = trim($result->nama_indeks);
         $nama_kompositor = trim($result->nama_kompositor);
         $triwulan = $result->triwulan_id;
@@ -1267,7 +1291,7 @@ class InputRealisasiController extends Controller {
                             $realisasi_impor_bbm = $subrow->nilai;
                         }
                     }
-                    $realisasi = $rekomendasi_impor_bbm - $realisasi_impor_bbm;
+                    $realisasi = 15;//$rekomendasi_impor_bbm - $realisasi_impor_bbm;
                 }
                 break;
         }

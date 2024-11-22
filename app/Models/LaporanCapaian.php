@@ -31,7 +31,7 @@ class LaporanCapaian extends Model
     }
         
     public function kategoriKinerja() {
-        return $this->hasOne(KategoriKinerja::class);
+        return $this->belongsTo(KategoriKinerja::class);
     }
     
     public function laporanCapaianPic() {
