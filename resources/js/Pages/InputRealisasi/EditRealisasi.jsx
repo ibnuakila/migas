@@ -16,6 +16,7 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
+import FormulaParser from hot-formula-parser;
 
 export default function EditRealisasi(props) {
     console.log(props);

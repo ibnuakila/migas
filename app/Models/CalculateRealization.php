@@ -200,6 +200,34 @@ class CalculateRealization
         return DB::select($query, [$id]);
     }
 
+    private function getFourthLevelIndeks($input_realisasi)
+    {
+        $nama = $input_realisasi->nama_kompositor; //nama kompositor = nama indeks (berarti agregasi)
+        $query = "WITH RECURSIVE Hierarchy AS (
+            -- Base case: Select the root node
+            SELECT 
+                id,
+                nama_indeks,
+                parent_id,
+                level
+            FROM indeks
+            WHERE nama_indeks = ?            
+            UNION ALL            
+            -- Recursive case: Get child nodes
+            SELECT 
+                t.id,
+                t.nama_indeks,
+                t.parent_id,
+                t.level
+            FROM indeks t
+            INNER JOIN Hierarchy h ON t.parent_id = h.id
+        )
+        -- Retrieve the hierarchy
+        SELECT * FROM Hierarchy 
+        ORDER BY level, id;";
+        return DB::select($query, [$nama]);
+    }
+
     private function getByIndeksKetersediaanMigas($params)
     {
         $realisasi = 0;
@@ -217,7 +245,7 @@ class CalculateRealization
                             $indikator_iksk_4 = $this->getFourthLevelIndikator($input_realisasi);
                             $data['indikator_iksk_4'] = $indikator_iksk_4;
 
-                            if (count($indikator_iksk_4) > 0) {
+                            if (count($indikator_iksk_4) > 0) {//jika indikator iksk 4
                                 $nama_indikator_iksk_4 = $indikator_iksk_4[0]->nama_indikator;
                                 switch ($nama_indikator_iksk_4) {
                                     case 'Produksi Minyak Bumi':
@@ -298,7 +326,7 @@ class CalculateRealization
                                         break;
                                 }
 
-                            } else {
+                            } else {//indikator iksk 3
                                 if ($input_realisasi->sumber_kompositor_id == 1) {//new indikator
                                     $res_kompo_param = DB::table('kompositor')
                                         ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
@@ -325,7 +353,7 @@ class CalculateRealization
                                         }
                                     }
                                     $realisasi = $produksi_minyak_bumi + $produksi_gas_bumi;
-                                } else {// existing indikator
+                                } elseif($input_realisasi->sumber_kompositor_id == 2) {// existing indikator
                                     $res_kompo_param = DB::table('kompositor')
                                         //->join()
                                         ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
@@ -357,25 +385,157 @@ class CalculateRealization
                                     }
                                     
                                     //$realisasi = $produksi_minyak_bumi + $produksi_gas_bumi;
+                                }elseif($input_realisasi->sumber_kompositor_id == 3){//existing kompositor
+
+                                }else{//existing parameter (4)
+
                                 }
                             }
 
                             break;
                         case 'Deviasi Kuantitas Ekspor Minyak Mentah dari kuantitas yang Direkomendasikan':
-                            $res_kompo_param = DB::table('kompositor')
-                                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                                ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
-                                ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
-                                ->where('kompositor.jenis_kompositor_id', '=', 2)
-                                ->where('indeks.nama_indeks', 'like', $input_realisasi->nama_kompositor)
-                                ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
-                                ->select(
-                                    'kompositor.nama_kompositor',
-                                    'realisasi_kompositor.nilai'
-                                )
-                                ->distinct()
-                                ->get();
-                            $data['res_kompo_param'] = $res_kompo_param;
+                            $indikator_iksk_4 = $this->getFourthLevelIndikator($input_realisasi);
+                            $data['indikator_iksk_4'] = $indikator_iksk_4;
+                            if(count($indikator_iksk_4) > 0){//jika indikator iksk 4 kosong, cari indeks level 4
+                                $res_kompo_param = DB::table('kompositor')
+                                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                    ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                    ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                    ->where('kompositor.jenis_kompositor_id', '=', 2)
+                                    ->where('indeks.nama_indeks', '=', $nama_indikator_iksk_3)
+                                    ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
+                                    ->select(
+                                        'kompositor.nama_kompositor',
+                                        'realisasi_kompositor.nilai'
+                                    )
+                                    ->distinct()
+                                    ->get();
+                                $data['res_kompo_param'] = $res_kompo_param;
+                                if(count($res_kompo_param) > 0){
+                                    $realisasi_deviasi = 0;
+                                    foreach ($res_kompo_param as $subrow) {
+                                        if (trim($subrow->nama_kompositor) == "Realisasi Deviasi"){
+                                            $realisasi_deviasi = $subrow->nilai;
+                                            $realisasi = $realisasi_deviasi;
+                                        } 
+                                    }
+                                }
+                            }else{//iksk 3
+                                if ($input_realisasi->sumber_kompositor_id == 1) {//new indikator
+                                    $res_kompo_param = DB::table('kompositor')
+                                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                        ->where('kompositor.jenis_kompositor_id', '=', 2)
+                                        ->where('indeks.nama_indeks', '=', $nama_indikator_iksk_3)
+                                        ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
+                                        ->where('kompositor.sumber_kompositor_id', '=', 1)
+                                        ->select(
+                                            'kompositor.*',
+                                            'realisasi_kompositor.nilai'
+                                        )
+                                        ->distinct()
+                                        ->get();
+                                    $data['res_kompo_param'] = $res_kompo_param;
+                                    $nama_kompositor = $res_kompo_param[0]->nama_kompositor;
+                                    if(count($res_kompo_param) > 0){
+                                        $res_sub_kompo_param = DB::table('kompositor')
+                                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                        //->where('kompositor.jenis_kompositor_id', '=', 2)
+                                        ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                                        ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
+                                        ->where('kompositor.sumber_kompositor_id', '=', 1)
+                                        ->select(
+                                            'kompositor.*',
+                                            'realisasi_kompositor.nilai'
+                                        )
+                                        ->distinct()
+                                        ->get();
+                                        $data['res_sub_kompo_param'] = $res_sub_kompo_param;
+                                        if(count($res_sub_kompo_param) > 0){
+                                            $nama_sub_kompositor = $res_sub_kompo_param[0]->nama_kompositor;
+                                            $res_sub_sub_kompo_param = DB::table('kompositor')
+                                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                            ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                            ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                            ->where('kompositor.jenis_kompositor_id', '=', 2)
+                                            ->where('indeks.nama_indeks', '=', $nama_sub_kompositor)
+                                            ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
+                                            ->where('kompositor.sumber_kompositor_id', '=', 1)
+                                            ->select(
+                                                'kompositor.*',
+                                                'realisasi_kompositor.nilai'
+                                            )
+                                            ->distinct()
+                                            ->get();
+                                            $data['res_sub_sub_kompo_param'] = $res_sub_sub_kompo_param;
+                                            if(count($res_sub_sub_kompo_param) > 0){
+
+                                            }else{
+                                                $selisih_realisasi_kuota_bbl = 0;
+                                                $kuota_per_surat_rekomendasi = 0;
+                                                foreach($res_sub_kompo_param as $subrow){
+                                                    if (trim($subrow->nama_kompositor) == "selisih realisasi dan kuota (bbl)"){
+                                                        $selisih_realisasi_kuota_bbl = $subrow->nilai;
+                                                        //$realisasi = $selisih_realisasi_kuota_bbl ;
+                                                    } elseif (trim($subrow->nama_kompositor) == "Kuota per surat rekomendasi (bbl)"){
+                                                        $kuota_per_surat_rekomendasi = $subrow->nilai;
+                                                    }
+                                                }
+                                                //Realisasi Deviasi
+                                                $realisasi = $selisih_realisasi_kuota_bbl / $kuota_per_surat_rekomendasi;
+                                            }
+                                        }else{
+
+                                        }
+                                    }else{
+
+                                    }
+                                }elseif($input_realisasi->sumber_kompositor_id == 2){//existing indikator
+                                    $res_kompo_param = DB::table('kompositor')
+                                        //->join()
+                                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                        ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                        ->where('kompositor.jenis_kompositor_id', '=', 2)
+                                        ->where('indeks.nama_indeks', '=', $nama_indikator_iksk_3)
+                                        ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
+                                        ->where('kompositor.sumber_kompositor_id', '=', 1)
+                                        ->select(
+                                            'kompositor.nama_kompositor',
+                                            'realisasi_kompositor.nilai'
+                                        )
+                                        ->distinct()
+                                        ->get();
+                                    $data['res_kompo_param'] = $res_kompo_param;
+                                }elseif($input_realisasi->sumber_kompositor_id == 3){//existing kompositor
+
+                                }else{//existing parameter
+
+                                }
+                                /*$indeks_level_4 = $this->getFourthLevelIndeks($input_realisasi);
+                                $data['indeks_level_4'] = $indeks_level_4;
+                                $nama_indeks = $indeks_level_4[0]->nama_indeks;
+                                $indeks_id = $indeks_level_4[0]->id;
+                                if(count($indeks_level_4) > 0){
+                                    $res_kompo_param = DB::table('kompositorx')
+                                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                                    ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                                    ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                                    ->where('kompositor.indeks_id', '=', $indeks_id)                                    
+                                    ->select(
+                                        'kompositor.*',
+                                        'realisasi_kompositor.nilai',
+                                        'indeks.nama_indeks',
+                                        'indeks.parent_id'
+                                    )->get();
+                                    $data['res_kompo_param'] = $res_kompo_param;
+                                }*/
+                                
+                            }                           
+
                             break;
                         case 'Deviasi Kuantitas Ekspor LNG skema hulu dari kuantitas yang direkomendasikan':
                             $res_kompo_param = DB::table('kompositor')

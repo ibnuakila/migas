@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Indeks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 //use Illuminate\Support\Facades\Request;
@@ -28,7 +29,35 @@ class KompositorController extends Controller {
                                 ->whereColumn('kompositor.nama_kompositor', 'indikator.nama_indikator')
                                 ->select('indikator.*', 'indikator_kompositor.kompositor_id', 'kompositor.nama_kompositor')
                                 ->get(),
-                        'indeks' => \App\Models\Indeks::all(),
+                        'indeks' => function ()use($indikator){
+                            $indeks = Indeks::where('nama_indeks', $indikator->nama_indikator)->first();
+                            $query = "WITH RECURSIVE Hierarchy AS (
+                                -- Base case: Select the root node
+                                SELECT 
+                                    id,
+                                    nama_indeks,
+                                    parent_id,
+                                    level
+                                FROM indeks
+                                WHERE parent_id = ?                                
+                                UNION ALL                                
+                                -- Recursive case: Get child nodes
+                                SELECT 
+                                    t.id,
+                                    t.nama_indeks,
+                                    t.parent_id,
+                                    t.level
+                                FROM indeks t
+                                INNER JOIN Hierarchy h ON t.parent_id = h.id
+                            )
+                            -- Retrieve the hierarchy
+                            SELECT * FROM Hierarchy 
+                            ORDER BY level, id;";
+                            if(is_object($indeks)){
+                                return DB::select($query, [$indeks->parent_id]);
+                            }
+                            
+                        }, //\App\Models\Indeks::all(),
                         'jenis_kompositor' => \App\Models\JenisKompositor::all(),
                         'kompositors' => Kompositor::query()->with('jenisKompositor')
                                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
@@ -252,10 +281,10 @@ class KompositorController extends Controller {
                                         'kompositor.*',
                                         'indikator.nama_indikator',
                                         'jenis_kompositor.nama_jenis_kompositor',
-                                        'indeks.id as _indeks_id',
+                                        //'indeks.id as _indeks_id',
                                         'indeks.nama_indeks')
                                 ->where('indikator.id', '=', $indikator->id)
-                                ->orderBy('_indeks_id', 'asc')
+                                ->orderBy('indeks.id', 'asc')
                                 ->get(),
                         'indikator' => $indikator,
             ]);
