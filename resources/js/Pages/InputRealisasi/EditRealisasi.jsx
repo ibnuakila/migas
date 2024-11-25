@@ -16,7 +16,7 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
-import FormulaParser from hot-formula-parser;
+
 
 export default function EditRealisasi(props) {
     console.log(props);
@@ -57,6 +57,9 @@ export default function EditRealisasi(props) {
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
+
+    
+
     const handleSave = (e) => {
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.id));

@@ -26,7 +26,6 @@
         "@heroicons/react": "^2.0.18",
         "@material-tailwind/react": "^2.1.1",
         "apexcharts": "3.44.0",
-        "hot-formula-parser": "^4.0.0",
         "prop-types": "15.8.1",
         "react-apexcharts": "1.4.1",
         "react-chartjs-2": "^5.2.0",
