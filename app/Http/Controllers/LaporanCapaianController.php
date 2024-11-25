@@ -20,6 +20,7 @@ use App\Http\Resources\LaporanCapaianCollection;
 use App\Http\Resources\LaporanCapaianResource;
 use App\Http\Requests\LaporanCapaianRequest;
 use Illuminate\Support\Facades\DB;
+use Storage;
 use Validator;
 
 
@@ -347,5 +348,47 @@ class LaporanCapaianController extends Controller {
         return response()->json(['message' => "Laporan capaian deleted!", 'success' => true]);
     }
 
+    public function uploadMatrixCapaian(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'file' => ['required', 'extensions:xlsx', 'max:2048'],
+            'periode' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back($validator->errors());
+        }
+        if ($request->file()) {            
+            $file_name = $request->file('file')->getClientOriginalName();
+            $file_type = $request->file('file')->getMimeType(); //getClientOriginalExtension() //; //getClientMimeType();
+            $file_path = $request->file('file')->store($input['periode']);
+            $params['file_path'] = $file_path;
+            $this->readMatrix($params);
+        }
+    }
+
+    private function readMatrix($params)
+    {
+        $file_path = Storage::disk('local')->path($params['file_path']); //base_path($params['file_path']);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_path);
+        $spreadsheet->setActiveSheetIndex(0);
+        $start_row = 4;
+        $indikator = trim($spreadsheet->getActiveSheet()->getCell('B' . strval($start_row))->getValue());
+        $level = trim($spreadsheet->getActiveSheet()->getCell('C' . strval($start_row))->getValue());
+        $target = $spreadsheet->getActiveSheet()->getCell('F' . strval($start_row))->getCalculatedValue();
+        $realisasi_tw1 = $spreadsheet->getActiveSheet()->getCell('G' . strval($start_row))->getCalculatedValue();
+        $realisasi_tw2 = $spreadsheet->getActiveSheet()->getCell('H' . strval($start_row))->getCalculatedValue();
+        $realisasi_tw3 = $spreadsheet->getActiveSheet()->getCell('I' . strval($start_row))->getCalculatedValue();
+        $realisasi_tw4 = $spreadsheet->getActiveSheet()->getCell('J' . strval($start_row))->getCalculatedValue();
+        $kinerja_tw1 = $spreadsheet->getActiveSheet()->getCell('K' . strval($start_row))->getCalculatedValue();
+        $kinerja_tw2 = $spreadsheet->getActiveSheet()->getCell('L' . strval($start_row))->getCalculatedValue();
+        $kinerja_tw3 = $spreadsheet->getActiveSheet()->getCell('M' . strval($start_row))->getCalculatedValue();
+        $kinerja_tw4 = $spreadsheet->getActiveSheet()->getCell('N' . strval($start_row))->getCalculatedValue();
+        $kinerja_tahunan = $spreadsheet->getActiveSheet()->getCell('O' . strval($start_row))->getCalculatedValue();
+        $kategori_kinerja = $spreadsheet->getActiveSheet()->getCell('P' . strval($start_row))->getCalculatedValue();
+        $status_kinerja = $spreadsheet->getActiveSheet()->getCell('Q' . strval($start_row))->getCalculatedValue();
+
+
+    }
     
 }

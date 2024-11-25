@@ -444,7 +444,7 @@ class CalculateRealization
                                         ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
                                         ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                                         //->where('kompositor.jenis_kompositor_id', '=', 2)
-                                        ->where('indeks.nama_indeks', '=', $nama_kompositor)
+                                        ->where('indeks.id', '=', $res_kompo_param[0]->indeks_id)
                                         ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
                                         ->where('kompositor.sumber_kompositor_id', '=', 1)
                                         ->select(
@@ -461,7 +461,7 @@ class CalculateRealization
                                             ->join('realisasi_kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
                                             ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                                             ->where('kompositor.jenis_kompositor_id', '=', 2)
-                                            ->where('indeks.nama_indeks', '=', $nama_sub_kompositor)
+                                            ->where('indeks.id', '=', $res_sub_kompo_param[0]->indeks_id)
                                             ->where('input_realisasi.triwulan_id', '=', $input_realisasi->triwulan_id)
                                             ->where('kompositor.sumber_kompositor_id', '=', 1)
                                             ->select(
