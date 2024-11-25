@@ -99,6 +99,11 @@ export default function ListIndikatorKompositor({auth}){
                                     </th>
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Id Indeks
+                                        </Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Jenis Kompositor
                                         </Typography>
                                     </th>
@@ -156,6 +161,11 @@ export default function ListIndikatorKompositor({auth}){
                                          className="font-normal text-blue-600">
                                           {nama_kompositor}
                                         </Typography>
+                                      </td>
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {indeks_id}
+                                        </Typography>   
                                       </td>
                                       <td className="p-4">
                                         {nama_jenis_kompositor == 'Agregasi' ? (                                                
