@@ -360,10 +360,9 @@ class InputRealisasiController extends Controller
         $indikator_formula = IndikatorFormula::where('indikator_id', $laporan_capaian->indikator_id)->first();
         if (is_object($indikator_formula)) {
             $data['indikator_formula'] = $indikator_formula;
-            $data['mapping'] = json_decode($indikator_formula->map);
-            $formula = $indikator_formula->formula;
-            $formula_map = json_decode($indikator_formula->map);
-
+            $data['mapping'] = json_decode($indikator_formula->mapping_realisasi);
+            $formula = $indikator_formula->formula_realisasi;
+            $formula_map = json_decode($indikator_formula->mapping_realisasi);
 
             $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                 ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')

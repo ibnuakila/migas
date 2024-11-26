@@ -15,7 +15,9 @@ class IndikatorFormula extends Model
     protected $fillable = [
         'id',
         'indikator_id',
-        'formula',
-        'map'
+        'formula_realisasi',
+        'mapping_realisasi',
+        'formula_kinerja',
+        'mapping_kinerja'
     ];
 }
