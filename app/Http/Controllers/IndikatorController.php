@@ -16,6 +16,7 @@ use App\Http\Requests\IndikatorPicRequest;
 use App\Http\Resources\IndikatorResource;
 use App\Http\Requests\IndikatorKompositorRequest;
 use App\Models\IndikatorKompositor;
+use App\Models\Kompositor;
 use Illuminate\Support\Facades\DB;
 
 class IndikatorController extends Controller {
@@ -188,6 +189,26 @@ class IndikatorController extends Controller {
                     'indikator' => new IndikatorResource($indikator),
                     'indeks' => \App\Models\Indeks::all(),
                     'jenis_kompositor' => \App\Models\JenisKompositor::all()
+        ]);
+    }
+
+    public function createFormula(Indikator $indikator){
+        return Inertia::render('Indikator/FormFormula', [
+            'indikator' => new IndikatorResource($indikator),
+            'kompositors' => Kompositor::query()
+                                ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                                ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
+                                ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')                                
+                                ->select(
+                                        'kompositor.*',
+                                        'indikator.nama_indikator',
+                                        'jenis_kompositor.nama_jenis_kompositor',
+                                        //'indeks.id as _indeks_id',
+                                        'indeks.nama_indeks')
+                                ->where('indikator.id', '=', $indikator->id)
+                                ->orderBy('indeks.id', 'asc')
+                                ->get(),
         ]);
     }
 }
