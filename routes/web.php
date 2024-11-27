@@ -83,7 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/update/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/delete/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
-    Route::get('/indikator/createformula/{indikator}', [IndikatorController::class, 'createFormula'])->name('indikator-formula.create');
+    Route::get('/indikator/create-formula/{indikator}', [IndikatorController::class, 'createFormula'])->name('indikator.create-formula');
+    Route::post('/indikator/store-formula/', [IndikatorController::class, 'storeFormula'])->name('indikator.store-formula');
 });
 
 Route::middleware('auth')->group(function () {

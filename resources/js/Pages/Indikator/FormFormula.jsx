@@ -9,7 +9,9 @@ import {
     Textarea,
     Alert,
     Typography,
-    Select, Option
+    Select, Option,
+    List,
+    ListItem
 } from "@material-tailwind/react";
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
@@ -17,54 +19,26 @@ import AdminLayout from '@/layouts/AdminLayout';
 //import FormKompositor from './FormKompositor';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
+import { object } from "prop-types";
 
-export default function FormIndikator() {
-    const { auth, indikator, kompositors, message } = usePage().props;
+export default function FormFormula() {
+    const { auth, indikator, kompositors, formula,message } = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
-        id: '',
-        indikator_id: '',
-        formula_realisasi: '',
-        mapping_realisasi: '',
-        formula_kinerja: '',
-        mapping_kinerja: ''        
+        id: (formula) ? (formula.id):(''),
+        indikator_id: (formula) ? (formula.indikator_id):(indikator.data.id),
+        formula_realisasi: (formula) ? (formula.formula_realisasi):(''),
+        mapping_realisasi: (formula) ? (formula.mapping_realisasi):(''),
+        formula_kinerja: (formula) ? (formula.formula_kinerja):(''),
+        mapping_kinerja: (formula) ? (formula.mapping_kinerja):('')       
     });
-    
-    
+        
     console.log(usePage().props);
-    const msg = 'No Data Found!';
+    //const msg = 'No Data Found!';
 
     const handleSave = (e) => {
         e.preventDefault();
-        post(route('indikator.store'));
-        /*router.visit('indikator.store',{
-            only:['indikator','message'],
-            method: 'post',
-        });*/
-        /*if(indikator !== ''){
-            alert(indikator.id + ', is saved');
-        }*/
-        //var btn = document.getElementById('save-indikator');
-        //btn.setAttribute('color','blue-gray');
-        //btn.value('Update');
+        post(route('indikator.store-formula'));        
     };
-
-    function handleChangeSatuan(e) {
-        setOptionSatuan({ selectValue: e });
-        setData('satuan_id', e);
-        console.log(optionSatuan);
-    }
-
-    function handleChangeLevel(e) {
-        setOptionLevel({ selectValue: e });
-        setData('level_id', e);
-        console.log(optionLevel);
-    }
-
-    function handleChangeParent(e) {
-        setOptionParent({ selectValue: e });
-        setData('parent_id', e);
-        console.log(optionParent);
-    }
     
     return (
         <NewAdminLayout
@@ -88,35 +62,66 @@ export default function FormIndikator() {
                                             value={indikator.data.nama_indikator}
                                             error={errors.nama_indikator} />
                                         {errors.nama_indikator && <div className="text-red-400 mt-1">{errors.nama_indikator}</div>}
+                                    </div>
+                                    <div className="sm:w-full md:w-full lg:w-full">                                        
+                                        <Card>
+                                            <CardBody>
+                                            <div className="mb-4 flex items-center justify-between">
+                                                <Typography variant="h5" color="blue-gray" className="">
+                                                    Daftar Kompositor
+                                                </Typography>
+                                                <Typography
+                                                    as="a"
+                                                    href="#"
+                                                    variant="small"
+                                                    color="blue"
+                                                    className="font-bold"
+                                                >
+                                                </Typography>
+                                            </div>                                            
+                                            <List>
+                                                {kompositors && kompositors.length > 0 && (
+                                                    kompositors.map( (kompositor) => (
+                                                        <ListItem>{kompositor.nama_kompositor}</ListItem>
+                                                    ))
+                                                )}
+                                            </List>
+                                            </CardBody>
+                                        </Card>                                        
                                     </div> 
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Input label="Formula Realisasi" variant="outlined" id="formulaRealisasi"
+                                            value={ data['formula_realisasi'] }
                                             onChange={e => {
-                                                //setData('ordering', e.target.value)
+                                                setData('formula_realisasi', e.target.value)
                                             }}
                                             error={errors.formula_realisasi} />
                                         {errors.formula_realisasi && <div className="text-red-400 mt-1">{errors.formula_realisasi}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Textarea label="Mapping Realisasi" variant="outlined" id="mappingRealisasi"
+                                            value={ data['mapping_realisasi']}
                                             onChange={e => {
-                                                //setData('numbering', e.target.value)
+                                                setData('mapping_realisasi', e.target.value)
                                             }}
                                             error={errors.mapping_realisasi} />
                                         {errors.mapping_realisasi && <div className="text-red-400 mt-1">{errors.mapping_realisasi}</div>}
                                     </div>
+                                    
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Input label="Formula Kinerja" variant="outlined" id="formulaKinerja"
+                                            value={ data['formula_kinerja']}
                                             onChange={e => {
-                                                //setData('ordering', e.target.value)
+                                                setData('formula_kinerja', e.target.value)
                                             }}
                                             error={errors.formula_kinerja} />
                                         {errors.formula_kinerja && <div className="text-red-400 mt-1">{errors.formula_kinerja}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Textarea label="Mapping Kinerja" variant="outlined" id="mappingKinerja"
+                                            value={ data['mapping_kinerja']}
                                             onChange={e => {
-                                                //setData('numbering', e.target.value)
+                                                setData('mapping_kinerja', e.target.value)
                                             }}
                                             error={errors.mapping_kinerja} />
                                         {errors.mapping_kinerja && <div className="text-red-400 mt-1">{errors.mapping_kinerja}</div>}

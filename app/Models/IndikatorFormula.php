@@ -13,7 +13,7 @@ class IndikatorFormula extends Model
     //protected $keyType = 'string';
     public $timestamps = false;
     protected $fillable = [
-        'id',
+        //'id',
         'indikator_id',
         'formula_realisasi',
         'mapping_realisasi',

@@ -107,7 +107,7 @@ export default function EditRealisasi(props) {
                 {input_realisasi_id:input_realisasi.id, realisasi_kompositor_id:realisasi_kompositor.id})
                         .then(res => {
                             console.log(res);
-                            if(res.message != ''){
+                            if(res.data.realisasi){
                                 alert(res.data.realisasi);
                             
                                 let realisasi = document.getElementById('realisasi');
@@ -115,6 +115,8 @@ export default function EditRealisasi(props) {
                                 //realisasi.setAttribute('value', res.data.result);
                                 setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
                                 //setData('nilai', res.data.realisasi);
+                            }else{
+                                alert(res.data.message);
                             }
                         })
                         .catch((err) => {

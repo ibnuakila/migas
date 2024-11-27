@@ -355,7 +355,7 @@ class InputRealisasiController extends Controller
         $input_realisasi_id = $request->input('input_realisasi_id');
         $input_realisasi = InputRealisasi::find($input_realisasi_id);
         $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
-
+        $data['input_realisasi'] = $input_realisasi;
         $laporan_capaian = LaporanCapaian::find($input_realisasi->laporan_capaian_id);
         $indikator_formula = IndikatorFormula::where('indikator_id', $laporan_capaian->indikator_id)->first();
         if (is_object($indikator_formula)) {
@@ -387,7 +387,7 @@ class InputRealisasiController extends Controller
                     'indeks.nama_indeks',
                     'jenis_kompositor.nama_jenis_kompositor'
                 )->get();
-
+                $data['realisasi_kompositor'] = $realisasi_kompositor;
             if (count($realisasi_kompositor) > 0) {
                 //mapping formula to kompositor ----------------------------------------------
                 $kompositorMap = [];
@@ -416,8 +416,10 @@ class InputRealisasiController extends Controller
                 $data['realisasi'] = $result;
                 unset($spreadsheet);
             }
+        }else{
+            $data['message'] = 'Formula not available';
         }
-        $data['realisasi_kompositor'] = $realisasi_kompositor;
+        
         // Set the headers to download the file
         // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         // header('Content-Disposition: attachment;filename="calculated_result.xlsx"');
@@ -427,13 +429,7 @@ class InputRealisasiController extends Controller
         // $writer = new Xlsx($spreadsheet);
         // $writer->save('calculated_result.xlsx');
         return $data;
-        /*$input_realisasi_id = $request->input('input_realisasi_id');
-        $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
-        $params['input_realisasi_id'] = $input_realisasi_id;
-        $params['realisasi_kompositor_id'] = $realisasi_kompositor_id;
-        $objCalculation = new CalculateRealization();
-        $realisasi = $objCalculation->getRealization($params);
-        return $realisasi;*/
+        
     }
     public function _calculateRealization(\Illuminate\Http\Request $request)
     {
