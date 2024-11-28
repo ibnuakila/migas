@@ -139,39 +139,45 @@ class InputKinerjaController extends Controller
         $data['nama_indikator'] = $indikator->nama_indikator;
         
         $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
-        $mapping = json_decode($indikator_formula->mapping_kinerja);
-        $formula = $indikator_formula->formula_kinerja;
-        $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
-        $data['formula'] = $formula;
-        foreach($mapping as $key => $name){
-            if($name == 'target'){
-                $mapping->$key = $obj_laporan_capaian->target;
+        if(is_object($indikator_formula)){
+            $mapping = json_decode($indikator_formula->mapping_kinerja);
+            $formula = $indikator_formula->formula_kinerja;
+            $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
+            $data['formula'] = $formula;
+            foreach($mapping as $key => $name){
+                if($name == 'target'){
+                    $mapping->$key = $obj_laporan_capaian->target;
+                }
+                if($name == 'realisasi'){
+                    $mapping->$key = $obj_realisasi->realisasi;
+                }
             }
-            if($name == 'realisasi'){
-                $mapping->$key = $obj_realisasi->realisasi;
+            $data['mapping_value'] = $mapping;
+            //calculate the formula in virtual spreadsheet ------------------------------
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            //data persentasi kinerja
+            $sheet->setCellValue('B2', 1.00); //realisasi
+            $sheet->setCellValue('C2', 1.00); //kinerja
+            $sheet->setCellValue('B3', 1.15); //realisasi
+            $sheet->setCellValue('C3', 1.10); //kinerja
+            $sheet->setCellValue('B4', 1.30); //realisasi
+            $sheet->setCellValue('C4', 1.20); //kinerja
+
+            foreach ($mapping as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
             }
+            $sheet->setCellValue('A1', $formula);        
+            
+            $result = $sheet->getCell('A1')->getCalculatedValue(); 
+            $data['kinerja'] = $result;
+            unset($spreadsheet);
+        }else{
+            $data['response'] = "Formula not available";
         }
-        $data['mapping_value'] = $mapping;
-        //calculate the formula in virtual spreadsheet ------------------------------
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        //data persentasi kinerja
-        $sheet->setCellValue('B2', 1.00); //realisasi
-        $sheet->setCellValue('C2', 1.00); //kinerja
-        $sheet->setCellValue('B3', 1.15); //realisasi
-        $sheet->setCellValue('C3', 1.10); //kinerja
-        $sheet->setCellValue('B4', 1.30); //realisasi
-        $sheet->setCellValue('C4', 1.20); //kinerja
-
-        foreach ($mapping as $cell => $value) {
-            $sheet->setCellValue($cell, $value);
-        }
-        $sheet->setCellValue('A1', $formula);        
         
-        $result = $sheet->getCell('A1')->getCalculatedValue(); 
-        $data['kinerja'] = $result;
-        unset($spreadsheet);
+        
         return $data;
     }
     

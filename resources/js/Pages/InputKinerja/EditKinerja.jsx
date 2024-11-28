@@ -20,11 +20,11 @@ export default function EditLaporanCapaian() {
     const {auth, laporan_capaian, indikator, kinerja, triwulans, data_format, flash} = usePage().props;
     console.log(usePage().props);
     const {data, setData, put, errors, processing} = useForm({
-        id: kinerja.id || '',        
-        triwulan_id: kinerja.triwulan_id || '',        
-        kinerja: kinerja.kinerja || '',        
-        laporan_capaian_id: kinerja.laporan_capaian_id || '',        
-        kinerja_format: kinerja.kinerja_format || ''
+        id: (kinerja) ? (kinerja.id):(''),        
+        triwulan_id: (kinerja) ? (kinerja.triwulan_id):(''),        
+        kinerja: (kinerja) ? (kinerja.kinerja):(''),        
+        laporan_capaian_id: (kinerja) ? (kinerja.laporan_capaian_id):(''),        
+        kinerja_format: (kinerja) ? (kinerja.kinerja_format):('')
     });
     
     const [open, setOpen] = useState(true);
@@ -52,7 +52,7 @@ export default function EditLaporanCapaian() {
         
     function handleCalculate(){
         if (confirm('Apakah Anda ingin mengkalkulasi kinerja?')) {            
-            axios.post(route('input-kinerja.calculate-kinerja'), {laporan_capaian_id:laporan_capaian.id, triwulan_id:kinerja.triwulan_id})
+            axios.post(route('input-kinerja.calculate-kinerja'), {laporan_capaian_id:laporan_capaian.id, triwulan_id:data['triwulan_id']})
                     .then(res => {
                         console.log(res);
                         if(res.data.kinerja > 0){                            
@@ -135,7 +135,7 @@ export default function EditLaporanCapaian() {
                                                 }
                                                 <div className="relative flex w-full">
                                                     <Input label="Kinerja" variant="outlined" id="kinerja"                                                         
-                                                            defaultValue={kinerja.kinerja}
+                                                            defaultValue={data['kinerja']}
                                                             onChange=""
                                                             error={errors.kinerja}
                                                             className="pr-20"
@@ -153,7 +153,7 @@ export default function EditLaporanCapaian() {
                                                 </div>
                                                 <div>
                                                     <Select label="Kinerja Format" onChange={handleChangeKinerjaFormat}
-                                                            value={kinerja.kinerja_format}
+                                                            value={data['kinerja_format']}
                                                             error={errors.kinerja_format}>                                                    
                                                             {data_format.map(({id, format}) => (
                                                                 <Option value={id} key={id}>{format}</Option>
@@ -164,7 +164,7 @@ export default function EditLaporanCapaian() {
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Select label="Triwulan" id="indeks"
                                                                 onChange={handleTriwulanChange}
-                                                                value={kinerja.triwulan_id}
+                                                                value={data['triwulan_id']}
                                                                 error={errors.triwulan_id}>
                                                             {triwulans.map(({id, triwulan}) => (
                                                                 <Option value={id} key={id}>{triwulan}</Option>
