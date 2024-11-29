@@ -353,7 +353,11 @@ class InputRealisasiController extends Controller
     public function calculateRealization(\Illuminate\Http\Request $request)
     {
         $input_realisasi_id = $request->input('input_realisasi_id');
+        $sumber_kompositor_id = $request->input('sumber_kompositor_id');
+        $kompositor_id = $request->input('kompositor_id');
+        $nama_kompositor = $request->input('nama_kompositor');
         $input_realisasi = InputRealisasi::find($input_realisasi_id);
+        
         $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
         $data['input_realisasi'] = $input_realisasi;
         $laporan_capaian = LaporanCapaian::find($input_realisasi->laporan_capaian_id);
@@ -363,8 +367,8 @@ class InputRealisasiController extends Controller
             $data['mapping'] = json_decode($indikator_formula->mapping_realisasi);
             $formula = $indikator_formula->formula_realisasi;
             $formula_map = json_decode($indikator_formula->mapping_realisasi);
-
-            $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+            if($sumber_kompositor_id == 2){
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                 ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
                 //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
@@ -387,6 +391,67 @@ class InputRealisasiController extends Controller
                     'indeks.nama_indeks',
                     'jenis_kompositor.nama_jenis_kompositor'
                 )->get();
+                foreach($realisasi_kompositor as $kompo){
+                    if($kompo->nama_kompositor == $nama_kompositor){
+                        $obj_kompo = Kompositor::query()
+                            ->join('kompositor_of_kompositor', 'kompositor.id', '=', 'kompositor_of_kompositor.ref_kompositor_id')
+                            ->where('kompositor_of_kompositor.kompositor_id', '=', $kompositor_id)
+                            ->first();
+                        if(is_object($obj_kompo)){
+                            $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                            ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                            ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                            //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                            ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                            ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                            ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                            ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                            ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                            ->where('kompositor.id', '=', $obj_kompo->kompositor_id)
+                            //->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                            ->select(
+                                'input_realisasi.*',
+                                'triwulan.triwulan',
+                                'realisasi_kompositor.id as realisasi_kompositor_id',
+                                'realisasi_kompositor.nilai',
+                                'kompositor.nama_kompositor',
+                                'kompositor.satuan',
+                                'kompositor.id as kompositor_id',
+                                'kompositor.sumber_kompositor_id',
+                                'indeks.nama_indeks',
+                                'jenis_kompositor.nama_jenis_kompositor'
+                            )->get();
+                        }else{
+                            $realisasi_kompositor = [];
+                        }
+                    }
+                }
+            }else{
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                ->where('input_realisasi.laporan_capaian_id', $input_realisasi->laporan_capaian_id)
+                ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                ->select(
+                    'input_realisasi.*',
+                    'triwulan.triwulan',
+                    'realisasi_kompositor.id as realisasi_kompositor_id',
+                    'realisasi_kompositor.nilai',
+                    'kompositor.nama_kompositor',
+                    'kompositor.satuan',
+                    'kompositor.id as kompositor_id',
+                    'kompositor.sumber_kompositor_id',
+                    'indeks.nama_indeks',
+                    'jenis_kompositor.nama_jenis_kompositor'
+                )->get();
+            }
+            
                 $data['realisasi_kompositor'] = $realisasi_kompositor;
             if (count($realisasi_kompositor) > 0) {
                 //mapping formula to kompositor ----------------------------------------------

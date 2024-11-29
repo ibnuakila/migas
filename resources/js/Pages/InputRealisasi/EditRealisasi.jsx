@@ -104,7 +104,13 @@ export default function EditRealisasi(props) {
             //alert(kompositor.jenis_kompositor_id);
             if(isAgregasi){
                 axios.post(route('input-realisasi.calculate-realization'), 
-                {input_realisasi_id:input_realisasi.id, realisasi_kompositor_id:realisasi_kompositor.id})
+                {
+                    input_realisasi_id: input_realisasi.id, 
+                    realisasi_kompositor_id: realisasi_kompositor.id,
+                    kompositor_id: kompositor.id,
+                    nama_kompositor: kompositor.nama_kompositor,
+                    sumber_kompositor_id: kompositor.sumber_kompositor_id
+                })
                         .then(res => {
                             console.log(res);
                             if(res.data.realisasi){
