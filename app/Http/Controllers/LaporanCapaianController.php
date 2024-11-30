@@ -119,7 +119,8 @@ class LaporanCapaianController extends Controller {
                         'periode.periode',
                         'level.nama_level',
                         'satuan.nama_satuan')
-                ->orderBy('indikator.level_id')
+                ->orderBy('indikator.id', 'asc')
+                //->orderBy('indikator')
                 ->paginate();
         
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
@@ -337,10 +338,12 @@ class LaporanCapaianController extends Controller {
                 
                 $ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $ir->id)->delete();
                 
-                $realisasi_kompositor = RealisasiKompositor::where('input_realisasi_id', '=', $ir->id)->delete();
-                /*foreach($realisasi_kompositor as $rk){
+                $realisasi_kompositor = RealisasiKompositor::where('input_realisasi_id', '=', $ir->id)->get();
+                foreach($realisasi_kompositor as $rk){
                     $rk_ic = RealisasiKompositorPic::where('realisasi_kompositor_id', '=', $rk->id)->delete();
-                }*/
+                
+                    $rk->delete();
+                }
                 $ir->delete();
             }
             $lc->delete();
