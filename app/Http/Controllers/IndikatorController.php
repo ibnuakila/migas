@@ -80,7 +80,7 @@ class IndikatorController extends Controller
                         'level.nama_level',
                         'satuan.nama_satuan'
                     )
-                    ->orderBy('indikator.level_id', 'asc')
+                    ->orderBy('indikator.id', 'asc')
                     ->paginate(),
         ]);
 

@@ -141,7 +141,7 @@ class InputKinerjaController extends Controller
         $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
         if(is_object($indikator_formula)){
             $mapping = json_decode($indikator_formula->mapping_kinerja);
-            $formula = $indikator_formula->formula_kinerja;
+            $formula = json_decode($indikator_formula->formula_kinerja);
             $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
             foreach($mapping as $key => $name){
@@ -158,17 +158,23 @@ class InputKinerjaController extends Controller
             $sheet = $spreadsheet->getActiveSheet();
 
             //data persentasi kinerja
-            $sheet->setCellValue('B2', 1.00); //realisasi
-            $sheet->setCellValue('C2', 1.00); //kinerja
-            $sheet->setCellValue('B3', 1.15); //realisasi
-            $sheet->setCellValue('C3', 1.10); //kinerja
-            $sheet->setCellValue('B4', 1.30); //realisasi
-            $sheet->setCellValue('C4', 1.20); //kinerja
+            // $sheet->setCellValue('B2', 1.00); //realisasi
+            // $sheet->setCellValue('C2', 1.00); //kinerja
+            // $sheet->setCellValue('B3', 1.15); //realisasi
+            // $sheet->setCellValue('C3', 1.10); //kinerja
+            // $sheet->setCellValue('B4', 1.30); //realisasi
+            // $sheet->setCellValue('C4', 1.20); //kinerja
 
-            foreach ($mapping as $cell => $value) {
+            
+            //mapping each formula to each cell
+            foreach ($formula as $cell => $value){
                 $sheet->setCellValue($cell, $value);
             }
-            $sheet->setCellValue('A1', $formula);        
+
+            //mapping formula to it's parameter value
+            foreach ($mapping as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
+            }               
             
             $result = $sheet->getCell('A1')->getCalculatedValue(); 
             $data['kinerja'] = $result;

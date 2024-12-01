@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Indeks;
+use App\Models\KompositorParameter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 //use Illuminate\Support\Facades\Request;
@@ -82,18 +83,21 @@ class KompositorController extends Controller {
                 try{
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                    $indikator_kompositor->delete(); //delete indikator kompositor
                     $indikator_id = $indikator_kompositor->indikator_id;
                     if($kompositor->sumber_kompositor_id == 2){//existing indikator
-                        
+                        $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                        $kom_of_kom->delete();
                     }
                     if($kompositor->sumber_kompositor_id == 3){//existing kompositor
                         $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
                         $kom_of_kom->delete();
                     }
                     if($kompositor->sumber_kompositor_id == 4){//exixting parameter
-                        
+                        $kom_param = KompositorParameter::where('kompositor_id', $kompositor->id)->first();
+                        $kom_param->delete();
                     }
-                    $indikator_kompositor->delete(); //delete indikator kompositor
+                    
                     $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
                     foreach($kompositor_pic as $kom_pic){
                         $kom_pic->delete();
@@ -362,18 +366,18 @@ class KompositorController extends Controller {
                     'sumber_kompositor_id' => str($request->input('sumber_kompositor_id'))
                 ];
                 //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
-                $new_kompositor = Kompositor::create($ref_kom_data);
+                //$new_kompositor = Kompositor::create($ref_kom_data);
                 //insert indikator-kompositor
                 //$validated = $validator->validated();            
                 IndikatorKompositor::create([
                     'indikator_id' => $request->input('indikator_id'),
-                    'kompositor_id' => $new_kompositor->id
+                    'kompositor_id' => $request->input('kompositor_id')
                 ]);
 
                 //input kompositor of kompositor
-                $data_kompositor_of = ['kompositor_id' => $new_kompositor->id,
+                /*$data_kompositor_of = ['kompositor_id' => $new_kompositor->id,
                     'ref_kompositor_id' => $request->input('kompositor_id')];
-                \App\Models\KompositorOfKompositor::create($data_kompositor_of);
+                \App\Models\KompositorOfKompositor::create($data_kompositor_of);*/
 
             } elseif ($request->input('sumber_kompositor_id') == '3') {//existing kompositor
                 //tambahkan validasi

@@ -90,7 +90,7 @@ export default function FormFormula() {
                                         </Card>                                        
                                     </div> 
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Input label="Formula Realisasi" variant="outlined" id="formulaRealisasi"
+                                        <Textarea label="Formula Realisasi" variant="outlined" id="formulaRealisasi"
                                             value={ data['formula_realisasi'] }
                                             onChange={e => {
                                                 setData('formula_realisasi', e.target.value)
@@ -109,7 +109,7 @@ export default function FormFormula() {
                                     </div>
                                     
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Input label="Formula Kinerja" variant="outlined" id="formulaKinerja"
+                                        <Textarea label="Formula Kinerja" variant="outlined" id="formulaKinerja"
                                             value={ data['formula_kinerja']}
                                             onChange={e => {
                                                 setData('formula_kinerja', e.target.value)
