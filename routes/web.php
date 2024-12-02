@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/indikator/edit/{indikator}', [IndikatorController::class, 'edit'])->name('indikator.edit');
     Route::put('/indikator/update/{indikator}', [IndikatorController::class, 'update'])->name('indikator.update');
     Route::delete('/indikator/delete/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
+    Route::get('/indikator/create-formula/{indikator}', [IndikatorController::class, 'createFormula'])->name('indikator.create-formula');
+    Route::post('/indikator/store-formula/', [IndikatorController::class, 'storeFormula'])->name('indikator.store-formula');
 });
 
 Route::middleware('auth')->group(function () {
@@ -134,6 +136,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/laporan-capaian/update/{laporancapaian}', [LaporanCapaianController::class, 'update'])->name('laporan-capaian.update');
     Route::delete('/laporan-capaian/delete/{laporancapaian}', [LaporanCapaianController::class, 'destroy'])->name('laporan-capaian.destroy');
     Route::get('/laporan-capaian/importindikator', [LaporanCapaianController::class, 'importIndikator'])->name('laporan-capaian.importindikator');
+    Route::get('/laporan-capaian/deleteallbyperiode/{periode}', [LaporanCapaianController::class, 'deleteAllByPeriode']);
+    Route::post('/laporan-capaian/upload-matrix-capaian', [LaporanCapaianController::class, 'uploadMatrixCapaian']);
 });
 
 Route::middleware('auth')->group(function () {

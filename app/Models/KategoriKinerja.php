@@ -12,6 +12,11 @@ class KategoriKinerja extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
-        'nama_kategori_kinerja'
+        'name'
     ];
+
+    public function laporanCapaian()
+    {
+        return $this->hasMany(LaporanCapaian::class);
+    }
 }

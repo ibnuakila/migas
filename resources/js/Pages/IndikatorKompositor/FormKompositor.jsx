@@ -214,8 +214,8 @@ export default function FormKompositor(props) {
                                                                 setData('kompositor_id', e);
                                                             }}                                                            
                                                             error={errors.kompositor_id}>
-                                                        {kompositors.map(({id, nama_kompositor, jenis_kompositor}) => (
-                                                            <Option value={id} key={id}>{nama_kompositor + " (" + jenis_kompositor.nama_jenis_kompositor + ")"}</Option>
+                                                        {kompositors.map(({kompositor_id, nama_kompositor, jenis_kompositor}) => (
+                                                            <Option value={kompositor_id} key={kompositor_id}>{nama_kompositor + " (" + jenis_kompositor.nama_jenis_kompositor + ")"}</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
@@ -230,7 +230,7 @@ export default function FormKompositor(props) {
                                                             value={optionIndeks.selectValue}
                                                             error={errors.indeks_id}>
                                                         {indeks.map(({id, nama_indeks}) => (
-                                                            <Option value={id} key={id}>{nama_indeks}</Option>
+                                                            <Option value={id} key={id}>{nama_indeks + "(" + id + ")" }</Option>
                                                                             ))}
                                                 </Select>
                                                 {errors.indeks_id && <div className="text-red-400 mt-1">{errors.indeks_id}</div>}

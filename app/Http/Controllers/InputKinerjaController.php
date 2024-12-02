@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 //use Illuminate\Http\Request;
+use App\Models\IndikatorFormula;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\KinerjaTriwulan;
 use App\Http\Requests\KinerjaTriwulanRequest;
 use MathPHP\Statistics\Regression;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class InputKinerjaController extends Controller
 {
@@ -123,7 +125,7 @@ class InputKinerjaController extends Controller
     {
         //
     }
-    
+
     public function calculateKinerja(\Illuminate\Http\Request $request)
     {
         $laporan_capaian_id = $request->input('laporan_capaian_id');
@@ -132,6 +134,68 @@ class InputKinerjaController extends Controller
         $obj_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $laporan_capaian_id)
                 ->where('triwulan_id', $triwulan_id)->first();
         $data['laporan_capaian'] = $obj_laporan_capaian;
+        $data['input_realisasi'] = $obj_realisasi;
+        $indikator = \App\Models\Indikator::where('id', $obj_laporan_capaian->indikator_id)->first();
+        $data['nama_indikator'] = $indikator->nama_indikator;
+        
+        $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
+        if(is_object($indikator_formula)){
+            $mapping = json_decode($indikator_formula->mapping_kinerja);
+            $formula = json_decode($indikator_formula->formula_kinerja);
+            $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
+            $data['formula'] = $formula;
+            foreach($mapping as $key => $name){
+                if($name == 'target'){
+                    $mapping->$key = $obj_laporan_capaian->target;
+                }
+                if($name == 'realisasi'){
+                    $mapping->$key = $obj_realisasi->realisasi;
+                }
+            }
+            $data['mapping_value'] = $mapping;
+            //calculate the formula in virtual spreadsheet ------------------------------
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            //data persentasi kinerja
+            // $sheet->setCellValue('B2', 1.00); //realisasi
+            // $sheet->setCellValue('C2', 1.00); //kinerja
+            // $sheet->setCellValue('B3', 1.15); //realisasi
+            // $sheet->setCellValue('C3', 1.10); //kinerja
+            // $sheet->setCellValue('B4', 1.30); //realisasi
+            // $sheet->setCellValue('C4', 1.20); //kinerja
+
+            
+            //mapping each formula to each cell
+            foreach ($formula as $cell => $value){
+                $sheet->setCellValue($cell, $value);
+            }
+
+            //mapping formula to it's parameter value
+            foreach ($mapping as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
+            }               
+            
+            $result = $sheet->getCell('A1')->getCalculatedValue(); 
+            $data['kinerja'] = $result;
+            unset($spreadsheet);
+        }else{
+            $data['response'] = "Formula not available";
+        }
+        
+        
+        return $data;
+    }
+    
+    public function _calculateKinerja(\Illuminate\Http\Request $request)
+    {
+        $laporan_capaian_id = $request->input('laporan_capaian_id');
+        $triwulan_id = $request->input('triwulan_id');
+        $obj_laporan_capaian = \App\Models\LaporanCapaian::where('id', $laporan_capaian_id)->first();        
+        $obj_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $laporan_capaian_id)
+                ->where('triwulan_id', $triwulan_id)->first();
+        $data['laporan_capaian'] = $obj_laporan_capaian;
+        $data['input_realisasi'] = $obj_realisasi;
         $indikator = \App\Models\Indikator::where('id', $obj_laporan_capaian->indikator_id)->first();
         $data['nama_indikator'] = $indikator->nama_indikator;
         if($indikator !== null && $obj_laporan_capaian->target !== null){
@@ -172,7 +236,11 @@ class InputKinerjaController extends Controller
                     }
                     $data['kinerja'] = $kinerja;
                     break;
-                case "Produksi Minyak dan Gas Bumi ":
+                case "Produksi Minyak dan Gas Bumi":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi Minyak Bumi":
                     $target = $obj_laporan_capaian->target;
@@ -215,6 +283,11 @@ class InputKinerjaController extends Controller
                     $data['kinerja'] = $kinerja;
                     break;
                 case "Produksi BBM dan Hasil Olahan":
+                    $target = $obj_laporan_capaian->target;
+                    $realisasi = $obj_realisasi->realisasi;
+                    $kinerja = $realisasi / $target;
+
+                    $data['kinerja'] = $kinerja;
                     break;
                 case "Deviasi Kuantitas Impor Minyak Mentah untuk Feedstock Kilang dari Kuantitas yang Direkomendasikan":
                     break;

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Indeks;
+use App\Models\KompositorParameter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 //use Illuminate\Support\Facades\Request;
@@ -28,7 +30,35 @@ class KompositorController extends Controller {
                                 ->whereColumn('kompositor.nama_kompositor', 'indikator.nama_indikator')
                                 ->select('indikator.*', 'indikator_kompositor.kompositor_id', 'kompositor.nama_kompositor')
                                 ->get(),
-                        'indeks' => \App\Models\Indeks::all(),
+                        'indeks' => function ()use($indikator){
+                            $indeks = Indeks::where('nama_indeks', $indikator->nama_indikator)->first();
+                            $query = "WITH RECURSIVE Hierarchy AS (
+                                -- Base case: Select the root node
+                                SELECT 
+                                    id,
+                                    nama_indeks,
+                                    parent_id,
+                                    level
+                                FROM indeks
+                                WHERE parent_id = ?                                
+                                UNION ALL                                
+                                -- Recursive case: Get child nodes
+                                SELECT 
+                                    t.id,
+                                    t.nama_indeks,
+                                    t.parent_id,
+                                    t.level
+                                FROM indeks t
+                                INNER JOIN Hierarchy h ON t.parent_id = h.id
+                            )
+                            -- Retrieve the hierarchy
+                            SELECT * FROM Hierarchy 
+                            ORDER BY level, id;";
+                            if(is_object($indeks)){
+                                return DB::select($query, [$indeks->parent_id]);
+                            }
+                            
+                        }, //\App\Models\Indeks::all(),
                         'jenis_kompositor' => \App\Models\JenisKompositor::all(),
                         'kompositors' => Kompositor::query()->with('jenisKompositor')
                                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
@@ -53,8 +83,21 @@ class KompositorController extends Controller {
                 try{
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_id = $indikator_kompositor->indikator_id;
                     $indikator_kompositor->delete(); //delete indikator kompositor
+                    $indikator_id = $indikator_kompositor->indikator_id;
+                    if($kompositor->sumber_kompositor_id == 2){//existing indikator
+                        $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                        $kom_of_kom->delete();
+                    }
+                    if($kompositor->sumber_kompositor_id == 3){//existing kompositor
+                        $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                        $kom_of_kom->delete();
+                    }
+                    if($kompositor->sumber_kompositor_id == 4){//exixting parameter
+                        $kom_param = KompositorParameter::where('kompositor_id', $kompositor->id)->first();
+                        $kom_param->delete();
+                    }
+                    
                     $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
                     foreach($kompositor_pic as $kom_pic){
                         $kom_pic->delete();
@@ -77,13 +120,18 @@ class KompositorController extends Controller {
                         $value->delete(); 
                     }*/
                     //foreach ($kompositors as $komp) {
-                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->get();
+                        $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)
+                            ->first();
+                        $indikator_id = $indikator_kompositor->indikator_id;
                         
+                        if(is_object($indikator_kompositor)){
+                            $indikator_kompositor->delete();
+                        }
                         //------------ review lagi pada saat delete agregasi tidak harus delete subnya --------------
-                        foreach ($indikator_kompositor as $idk_kom) {   
+                        /*foreach ($indikator_kompositor as $idk_kom) {   
                             $indikator_id = $idk_kom->indikator_id;                         
                             $idk_kom->delete(); //delete indikator_kompositor
-                        }
+                        }*/
                         //-------------------------------------------------------------------------------------
                         //delete kompositor-pic
                         $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
@@ -93,8 +141,8 @@ class KompositorController extends Controller {
                         
                         //delete kompositor
                         $kompositor->delete(); 
-                        //delete indeks yang ada dibawahnya
-                        $indeks->delete();
+                        //delete indeks yang ada dibawahnya #jangan di delete
+                        //$indeks->delete();
                         
                     //}
                     
@@ -237,10 +285,10 @@ class KompositorController extends Controller {
                                         'kompositor.*',
                                         'indikator.nama_indikator',
                                         'jenis_kompositor.nama_jenis_kompositor',
-                                        'indeks.id as _indeks_id',
+                                        //'indeks.id as _indeks_id',
                                         'indeks.nama_indeks')
                                 ->where('indikator.id', '=', $indikator->id)
-                                ->orderBy('_indeks_id', 'asc')
+                                ->orderBy('indeks.id', 'asc')
                                 ->get(),
                         'indikator' => $indikator,
             ]);
@@ -318,13 +366,19 @@ class KompositorController extends Controller {
                     'sumber_kompositor_id' => str($request->input('sumber_kompositor_id'))
                 ];
                 //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
-                $new_kompositor = Kompositor::create($ref_kom_data);
+                //$new_kompositor = Kompositor::create($ref_kom_data);
                 //insert indikator-kompositor
                 //$validated = $validator->validated();            
                 IndikatorKompositor::create([
                     'indikator_id' => $request->input('indikator_id'),
-                    'kompositor_id' => $new_kompositor->id
+                    'kompositor_id' => $request->input('kompositor_id')
                 ]);
+
+                //input kompositor of kompositor
+                /*$data_kompositor_of = ['kompositor_id' => $new_kompositor->id,
+                    'ref_kompositor_id' => $request->input('kompositor_id')];
+                \App\Models\KompositorOfKompositor::create($data_kompositor_of);*/
+
             } elseif ($request->input('sumber_kompositor_id') == '3') {//existing kompositor
                 //tambahkan validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [

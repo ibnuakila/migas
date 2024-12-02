@@ -17,6 +17,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
 
+
 export default function EditRealisasi(props) {
     console.log(props);
     const auth = props.auth;    
@@ -43,7 +44,7 @@ export default function EditRealisasi(props) {
         laporan_capaian_id: input_realisasi.laporan_capaian_id || '',
         pics: defPics
     });
-    console.log(data);
+    //console.log(data);
     const [optionTriwulan, setOptionTriwulan] = useState('');
     const [optionPic, setOptionPic] = useState('');
     const [optionPeriode, setOptionPeriode] = useState('');
@@ -56,6 +57,9 @@ export default function EditRealisasi(props) {
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
+
+    
+
     const handleSave = (e) => {
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.id));
@@ -81,7 +85,7 @@ export default function EditRealisasi(props) {
     
     function handleChangeRealisasi(e){
         console.log('handleChangeRealisasi triggered');
-        setData('realisasi', parseFloat(e.target.value).toFixed(2));
+        setData('realisasi', parseFloat(e.target.value).toLocaleString(undefined, {maximumFractionDigits:2}));
         //setData('nilai', e.target.value);
     }
     
@@ -100,10 +104,16 @@ export default function EditRealisasi(props) {
             //alert(kompositor.jenis_kompositor_id);
             if(isAgregasi){
                 axios.post(route('input-realisasi.calculate-realization'), 
-                {input_realisasi_id:input_realisasi.id, realisasi_kompositor_id:realisasi_kompositor.id})
+                {
+                    input_realisasi_id: input_realisasi.id, 
+                    realisasi_kompositor_id: realisasi_kompositor.id,
+                    kompositor_id: kompositor.id,
+                    nama_kompositor: kompositor.nama_kompositor,
+                    sumber_kompositor_id: kompositor.sumber_kompositor_id
+                })
                         .then(res => {
                             console.log(res);
-                            if(res.message != ''){
+                            if(res.data.realisasi){
                                 alert(res.data.realisasi);
                             
                                 let realisasi = document.getElementById('realisasi');
@@ -111,6 +121,8 @@ export default function EditRealisasi(props) {
                                 //realisasi.setAttribute('value', res.data.result);
                                 setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
                                 //setData('nilai', res.data.realisasi);
+                            }else{
+                                alert(res.data.message);
                             }
                         })
                         .catch((err) => {
@@ -133,8 +145,8 @@ export default function EditRealisasi(props) {
                                 let realisasi = document.getElementById('realisasi');
                                 realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, {maximumFractionDigits:2}) ;;
                                 //setData('nilai', res.data.value);
-                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
-                                console.log(data);
+                                setData('realisasi', res.data.value);
+                                console.log(res.data.value);
                                 
                             }
                         })
@@ -159,7 +171,7 @@ export default function EditRealisasi(props) {
                                 realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, {maximumFractionDigits:2}) ;;
                                 //setData('nilai', res.data.value);
                                 setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, {maximumFractionDigits:2}));
-                                console.log(data);
+                                //console.log(data);
                                 
                             }
                         })
