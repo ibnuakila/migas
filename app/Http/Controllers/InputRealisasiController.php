@@ -380,8 +380,12 @@ class InputRealisasiController extends Controller
                     ->where('kompositor_id', $kompositor_id)
                     ->where('nilai', '>', 0)
                     ->first();
-
-                $data['realisasi'] = $realisasi_kompositor->nilai;
+                if(is_object($realisasi_kompositor)){
+                    $realisasi = $realisasi_kompositor->id;
+                }else{
+                    $realisasi = 0;
+                }
+                $data['realisasi'] = $realisasi;
                 $data['realisasi_kompositor'] = $realisasi_kompositor;
 
             } else { //new 
