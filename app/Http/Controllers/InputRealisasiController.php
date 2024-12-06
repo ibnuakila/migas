@@ -375,20 +375,20 @@ class InputRealisasiController extends Controller
             //cek apakah existing indikator
             $realisasi_kompositor = RealisasiKompositor::where('kompositor_id', $kompositor_id)->get();
 
-            // if (count($realisasi_kompositor) > 1) { //existing indikator
-            //     $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
-            //         ->where('kompositor_id', $kompositor_id)
-            //         ->where('nilai', '>', 0)
-            //         ->first();
-            //     if(is_object($realisasi_kompositor)){
-            //         $realisasi = $realisasi_kompositor->id;
-            //     }else{
-            //         $realisasi = 0;
-            //     }
-            //     $data['realisasi'] = $realisasi;
-            //     $data['realisasi_kompositor'] = $realisasi_kompositor;
+            if (count($realisasi_kompositor) > 1) { //existing indikator
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                    ->where('kompositor_id', $kompositor_id)
+                    ->where('nilai', '>', 0)
+                    ->first();
+                if(is_object($realisasi_kompositor)){
+                    $realisasi = $realisasi_kompositor->id;
+                }else{
+                    $realisasi = 0;
+                }
+                $data['realisasi'] = $realisasi;
+                $data['realisasi_kompositor'] = $realisasi_kompositor;
 
-            // } else { //new 
+            } else { //new 
                 $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                     ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                     ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
@@ -418,7 +418,9 @@ class InputRealisasiController extends Controller
                     //mapping formula to kompositor ----------------------------------------------
                     $kompositorMap = [];
                     foreach ($realisasi_kompositor as $kompositor) {
-                        $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                        if($kompositor['nilai'] != 0){
+                            $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                        }
                     }
 
                     foreach ($formula_map as $key => $name) {
@@ -444,7 +446,7 @@ class InputRealisasiController extends Controller
                     $data['realisasi'] = $result;
                     //unset($spreadsheet);
                 }
-            //}
+            }
         } else {
             $data['message'] = 'Formula not available';
         }
