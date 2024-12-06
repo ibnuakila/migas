@@ -375,20 +375,20 @@ class InputRealisasiController extends Controller
             //cek apakah existing indikator
             $realisasi_kompositor = RealisasiKompositor::where('kompositor_id', $kompositor_id)->get();
 
-            // if (count($realisasi_kompositor) > 1) { //existing indikator
-            //     $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
-            //         ->where('kompositor_id', $kompositor_id)
-            //         ->where('nilai', '>', 0)
-            //         ->first();
-            //     if(is_object($realisasi_kompositor)){
-            //         $realisasi = $realisasi_kompositor->id;
-            //     }else{
-            //         $realisasi = 0;
-            //     }
-            //     $data['realisasi'] = $realisasi;
-            //     $data['realisasi_kompositor'] = $realisasi_kompositor;
+            if (count($realisasi_kompositor) > 1) { //existing indikator
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                    ->where('kompositor_id', $kompositor_id)
+                    ->where('nilai', '>', 0)
+                    ->first();
+                if(is_object($realisasi_kompositor)){
+                    $realisasi = $realisasi_kompositor->id;
+                }else{
+                    $realisasi = 0;
+                }
+                $data['realisasi'] = $realisasi;
+                $data['realisasi_kompositor'] = $realisasi_kompositor;
 
-            // } else { //new 
+            } else { //new 
                 $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                     ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                     ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
@@ -433,20 +433,24 @@ class InputRealisasiController extends Controller
                     //calculate the formula in virtual spreadsheet ------------------------------
 
                     $sheet = $spreadsheet->getActiveSheet();
-                    //mapping each formula to each cell
-                    foreach ($formula as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
+                    if(is_array($formula)){
+                        //mapping each formula to each cell
+                        foreach ($formula as $cell => $value) {
+                            $sheet->setCellValue($cell, $value);
+                        }
                     }
-                    //mapping formula to it's parameter value
-                    foreach ($formula_map as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
+                    if(is_array($formula_map)){
+                        //mapping formula to it's parameter value
+                        foreach ($formula_map as $cell => $value) {
+                            $sheet->setCellValue($cell, $value);
+                        }
                     }
 
                     $result = $sheet->getCell('A1')->getCalculatedValue(); //$calculation->calculateFormula($formula, $sheet->getCell('A1'));
                     $data['realisasi'] = $result;
                     //unset($spreadsheet);
                 }
-            //}
+            }
         } else {
             $data['message'] = 'Formula not available';
         }
