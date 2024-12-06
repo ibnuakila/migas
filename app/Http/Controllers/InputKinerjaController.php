@@ -139,6 +139,7 @@ class InputKinerjaController extends Controller
         $data['nama_indikator'] = $indikator->nama_indikator;
         
         $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
+        $data['indikator_formula'] = $indikator_formula;
         if(is_object($indikator_formula)){
             $mapping = json_decode($indikator_formula->mapping_kinerja);
             $formula = json_decode($indikator_formula->formula_kinerja);
