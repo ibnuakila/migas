@@ -11,7 +11,7 @@
  Target Server Version : 100432
  File Encoding         : 65001
 
- Date: 01/12/2024 20:39:01
+ Date: 06/12/2024 08:14:08
 */
 
 SET NAMES utf8mb4;
@@ -1082,7 +1082,7 @@ CREATE TABLE `indikator_formula`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IXFK_indikator_formula_indikator`(`indikator_id`) USING BTREE,
   CONSTRAINT `FK_indikator_formula_indikator` FOREIGN KEY (`indikator_id`) REFERENCES `indikator` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of indikator_formula
@@ -1093,13 +1093,14 @@ INSERT INTO `indikator_formula` VALUES (3, 3, '{\"A1\":\"=G7+G8\"}', '{\"G7\":\"
 INSERT INTO `indikator_formula` VALUES (5, 4, '{\"A1\":\"=(E5)/(E6)\"}', '{\"E5\":\"Realisasi Produksi/Lifting Minyak\", \"E6\":\"Parameter TW1 90000\"}', '{\"A1\":\"=G7/F7\"}', '{\"G7\":\"realisasi\", \"F7\":\"target\"}');
 INSERT INTO `indikator_formula` VALUES (6, 5, '{\"A1\":\"=(E11/E12)\"}', '{\"E11\":\"Realisasi Produksi/Lifting Gas Bumi\", \"E12\":\"Parameter 5658\"}', '{\"A1\":\"=G8/F8\"}', '{\"G8\":\"realisasi\", \"F8\":\"target\"}');
 INSERT INTO `indikator_formula` VALUES (7, 9, '{\"A1\":\"=E24/C24\", \"E24\":\"=C24-D24\"}', '{\"C24\":\"Kuota per surat rekomendasi (bbl)\", \"D24\":\"Realisasi per TW (bbl)\"}', '{\"A1\":\"=FORECAST(F24,OFFSET($BB$5:$BB$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2))\", \"BA5\":\"0\", \"BA6\":\"0.15\", \"BA7\":\"1\", \"BB5\":\"1.2\", \"BB6\":\"1\", \"BB7\":\"0\"}', '{\"F24\":\"realisasi\"}');
-INSERT INTO `indikator_formula` VALUES (8, 10, 'E24/C24', '{\"E24\":\"selisih realisasi dan kuota (bbl)\",\"C24\":kuota per surat rekomendasi (bbl)\"}', '=FORECAST(F24,OFFSET($BB$5:$BB$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2))', '{\"F24\":\"Realisasi Deviasi (%)\",');
-INSERT INTO `indikator_formula` VALUES (9, 11, 'E33/C33', '{\"E33\":\"selisih realisasi dan kuota (bbl)\",\"C33\":\"kuota per surat rekomendasi (MMBTU)\"}', '=FORECAST(F33,OFFSET($BB$5:$BB$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2))', '{\"F33\":\"Realisasi Deviasi (%)\"\'');
+INSERT INTO `indikator_formula` VALUES (8, 10, '{\"A1\":\"=E24/C24\"}', '{\"E24\":\"selisih realisasi dan kuota (bbl)\",\"C24\":\"kuota per surat rekomendasi (bbl)\"}', '{\"A1\":\"=FORECAST(F24,OFFSET($BB$5:$BB$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F24,$BA$5:$BA$7,1)-1,0,2))\"}', '{\"F24\"Realisasi\",}');
+INSERT INTO `indikator_formula` VALUES (9, 11, '{\"A1\":\"=E33/C33\",\"E33\":\"=C33-D33\"}', '{\"C33\":\"Kuota per surat rekomendasi (MMBTU)\",\"D33\":\"Realisasi per TW (MMBTU)\"}', '{\"A1\":\"=FORECAST(F33,OFFSET($BB$5:$BB$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2))\", \"BA5\":\"0\",\"BA6\":\"0.15\",\"BA7\":\"1\",\"BB5\":\"1.2\",\"BB6\":\"1\",\"BB7\":\"0\"}', '{\"F33\":\"Target\"}');
 INSERT INTO `indikator_formula` VALUES (10, 12, 'E33/C33', '{\"E33\":\"selisih realisasi dan kuota (MMBTU)\",\"C33\":\"kuota per surat rekomendasi (MMBTU)\"}', '=FORECAST(F33,OFFSET($BB$5:$BB$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2),OFFSET($BA$5:$BA$7,MATCH(F33,$BA$5:$BA$7,1)-1,0,2))', '{\"F33\":\"Realisasi Deviasi (%)\",');
-INSERT INTO `indikator_formula` VALUES (11, 6, 'E34', '{\"E34\":\"R/P gas bumi\"}', 'G13/F13', '{\"G13\":\"REALISASI TW I\",\"F13\":\"TARGET\"}');
+INSERT INTO `indikator_formula` VALUES (11, 6, '{\"A1\":\"=E34\"}', '{\"E34\":\"R/P gas bumi\"}', '{\"A1\":\"=G13/F13\"}', '{\"G13\":\"REALISASI TW I\",\"F13\":\"TARGET\"}');
 INSERT INTO `indikator_formula` VALUES (12, 7, 'E35', '{\"E35\":\"Cadangan Minyak Bumi\"}', 'G14/F14', '{\"G14\":\"REALISASI TW I\",\"F14\":\"TARGET\"}');
 INSERT INTO `indikator_formula` VALUES (13, 8, 'E36', '{\"E36\":\"Cadangan Gas Bumi\"}', 'G15/F15', '{\"G15\":\"REALISASI TW I\",\"F15\":\"TARGET\"}');
 INSERT INTO `indikator_formula` VALUES (14, 13, '{\"A1\":\"=(H15+H16-H17)/(H15+H18-H19)\"}', '{\"H15\":\"Realisasi Produksi BBM\", \"H16\":\"Kuota Impor BBM\", \"H17\":\"Kuota Ekspor BBM\", \"H18\":\"Realisasi Impor BBM\", \"H19\":\"Realisasi Ekspor BBM\"}', '{\"A1\":\"=IF(G16>1.3,1-ABS((G16-1.3)/1.3),IF(G16>1,FORECAST(G16,OFFSET($BQ$5:$BQ$7,MATCH(G16,$BP$5:$BP$7,1)-1,0,2),OFFSET($BP$5:$BP$7,MATCH(G16,$BP$5:$BP$7,1)-1,0,2)),(G16/$F$16)))\", \"BP5\":\"1.0\", \"BP6\":\"1.15\", \"BP7\":\"1.30\", \"BQ5\":\"1\", \"BQ6\":\"1.1\", \"BQ7\":\"1.2\"}', '{\"F16\":\"target\", \"G16\":\"realisasi\"}');
+INSERT INTO `indikator_formula` VALUES (15, 16, '{\"A1\":\"=E6/C6\",\"E6\":\"=C6-D6\"}', '{\"C6\":\"kuota per surat rekomendasi (bbl)\",\"D6\":\"realisasi per TW (bbl)\"}', '{\"A1\":\"=FORECAST(F6,OFFSET($AV$5:$AV$7,MATCH(F6,$AU$5:$AU$7,1)-1,0,2),OFFSET($AU$5:$AU$7,MATCH(F6,$AU$5:$AU$7,1)-1,0,2))\", \"AU5\":\"0\", \"AU6\":\"0.3\", \"AU7\":\"1\", \"AV5\":\"1.2\", \"AV6\":\"1\", \"AV7\":\"0\"}', '{\"F6\":\"realisasi\"}');
 
 -- ----------------------------
 -- Table structure for indikator_kompositor
@@ -1114,7 +1115,7 @@ CREATE TABLE `indikator_kompositor`  (
   INDEX `IXFK_indikator_kompositor_kompositor`(`kompositor_id`) USING BTREE,
   CONSTRAINT `FK_indikator_kompositor_indikator` FOREIGN KEY (`indikator_id`) REFERENCES `indikator` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_indikator_kompositor_kompositor` FOREIGN KEY (`kompositor_id`) REFERENCES `kompositor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 766 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 767 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of indikator_kompositor
@@ -1835,6 +1836,7 @@ INSERT INTO `indikator_kompositor` VALUES (762, 1, 2);
 INSERT INTO `indikator_kompositor` VALUES (763, 1, 3);
 INSERT INTO `indikator_kompositor` VALUES (764, 1, 9);
 INSERT INTO `indikator_kompositor` VALUES (765, 1, 15);
+INSERT INTO `indikator_kompositor` VALUES (766, 11, 757);
 
 -- ----------------------------
 -- Table structure for indikator_pic
@@ -2604,7 +2606,7 @@ INSERT INTO `input_realisasi` VALUES (7980, 0.00, NULL, 1, 2073);
 INSERT INTO `input_realisasi` VALUES (7981, 0.00, NULL, 2, 2073);
 INSERT INTO `input_realisasi` VALUES (7982, 0.00, NULL, 3, 2073);
 INSERT INTO `input_realisasi` VALUES (7983, 0.00, NULL, 4, 2073);
-INSERT INTO `input_realisasi` VALUES (7984, 0.00, NULL, 1, 2074);
+INSERT INTO `input_realisasi` VALUES (7984, 0.14, 2, 1, 2074);
 INSERT INTO `input_realisasi` VALUES (7985, 0.00, NULL, 2, 2074);
 INSERT INTO `input_realisasi` VALUES (7986, 0.00, NULL, 3, 2074);
 INSERT INTO `input_realisasi` VALUES (7987, 0.00, NULL, 4, 2074);
@@ -5238,7 +5240,7 @@ CREATE TABLE `input_realisasi_pic`  (
   INDEX `IXFK_input_realisasi_pic_input_realisasi`(`input_realisasi_id`) USING BTREE,
   INDEX `IXFK_input_realisasi_pic_pic`(`pic_id`) USING BTREE,
   CONSTRAINT `input_realisasi_pic_ibfk_1` FOREIGN KEY (`input_realisasi_id`) REFERENCES `input_realisasi` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 11178 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11181 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of input_realisasi_pic
@@ -5280,7 +5282,6 @@ INSERT INTO `input_realisasi_pic` VALUES (8437, 7980, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8438, 7981, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8439, 7982, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8440, 7983, 4, 'DMEP');
-INSERT INTO `input_realisasi_pic` VALUES (8441, 7984, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8442, 7985, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8443, 7986, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (8444, 7987, 4, 'DMEP');
@@ -7994,6 +7995,7 @@ INSERT INTO `input_realisasi_pic` VALUES (11159, 7952, 4, 'DMEP');
 INSERT INTO `input_realisasi_pic` VALUES (11168, 7948, 2, 'DME');
 INSERT INTO `input_realisasi_pic` VALUES (11176, 7944, 2, 'DME');
 INSERT INTO `input_realisasi_pic` VALUES (11177, 7944, 3, 'DMO');
+INSERT INTO `input_realisasi_pic` VALUES (11180, 7984, 4, 'DMEP');
 
 -- ----------------------------
 -- Table structure for jenis_kompositor
@@ -10728,7 +10730,7 @@ CREATE TABLE `kompositor`  (
   INDEX `IXFK_kompositor_sumber_kompositor`(`sumber_kompositor_id`) USING BTREE,
   CONSTRAINT `FK_kompositor_indeks` FOREIGN KEY (`indeks_id`) REFERENCES `indeks` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_kompositor_jenis_kompositor` FOREIGN KEY (`jenis_kompositor_id`) REFERENCES `jenis_kompositor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 757 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 758 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of kompositor
@@ -11445,6 +11447,7 @@ INSERT INTO `kompositor` VALUES (749, 'Jumlah WK Migas Non-Konvensional Yang Sia
 INSERT INTO `kompositor` VALUES (750, 'Jumlah WK Migas Non-Konvensional Yang Siap Ditawarkan', 'float', 320, 1, 1);
 INSERT INTO `kompositor` VALUES (755, 'Kuota per surat rekomendasi (bbl)', 'float', 23, 1, 1);
 INSERT INTO `kompositor` VALUES (756, 'Realisasi per TW (bbl)', 'float', 23, 1, 1);
+INSERT INTO `kompositor` VALUES (757, 'Realisasi per TW (MMBTU)', 'float', 25, 1, 1);
 
 -- ----------------------------
 -- Table structure for kompositor_of_kompositor
@@ -11526,7 +11529,7 @@ CREATE TABLE `kompositor_pic`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IXFK_kompositor_pic_kompositor`(`kompositor_id`) USING BTREE,
   CONSTRAINT `FK_kompositor_pic_kompositor` FOREIGN KEY (`kompositor_id`) REFERENCES `kompositor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 853 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 854 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of kompositor_pic
@@ -12200,6 +12203,7 @@ INSERT INTO `kompositor_pic` VALUES (849, 9, 2, 'DME');
 INSERT INTO `kompositor_pic` VALUES (850, 9, 3, 'DMO');
 INSERT INTO `kompositor_pic` VALUES (851, 15, 2, 'DME');
 INSERT INTO `kompositor_pic` VALUES (852, 15, 3, 'DMO');
+INSERT INTO `kompositor_pic` VALUES (853, 757, 4, 'DMEP');
 
 -- ----------------------------
 -- Table structure for laporan_capaian
@@ -13913,7 +13917,7 @@ CREATE TABLE `realisasi_kompositor`  (
   INDEX `IXFK_realisasi_kompositor_kompositor`(`kompositor_id`) USING BTREE,
   CONSTRAINT `FK_realisasi_kompositor_input_realisasi` FOREIGN KEY (`input_realisasi_id`) REFERENCES `input_realisasi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_realisasi_kompositor_kompositor` FOREIGN KEY (`kompositor_id`) REFERENCES `kompositor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 288 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 301 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of realisasi_kompositor
@@ -13968,6 +13972,19 @@ INSERT INTO `realisasi_kompositor` VALUES (284, 2, 7944, 1.47, NULL);
 INSERT INTO `realisasi_kompositor` VALUES (285, 3, 7944, 2.41, NULL);
 INSERT INTO `realisasi_kompositor` VALUES (286, 9, 7944, 0.00, NULL);
 INSERT INTO `realisasi_kompositor` VALUES (287, 15, 7944, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (288, 9, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (289, 10, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (290, 11, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (291, 12, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (292, 13, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (293, 14, 8076, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (294, 111, 7972, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (295, 112, 7972, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (296, 100, 7984, 0.14, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (297, 101, 7984, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (298, 102, 7984, 289268880.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (299, 103, 7984, 0.00, NULL);
+INSERT INTO `realisasi_kompositor` VALUES (300, 757, 7984, 248488140.00, NULL);
 
 -- ----------------------------
 -- Table structure for realisasi_kompositor_pic
@@ -13981,7 +13998,7 @@ CREATE TABLE `realisasi_kompositor_pic`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `IXFK_realisasi_kompositor_pic_realisasi_kompositor`(`realisasi_kompositor_id`) USING BTREE,
   CONSTRAINT `FK_realisasi_kompositor_pic_realisasi_kompositor` FOREIGN KEY (`realisasi_kompositor_id`) REFERENCES `realisasi_kompositor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 194 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 207 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of realisasi_kompositor_pic
@@ -14024,6 +14041,15 @@ INSERT INTO `realisasi_kompositor_pic` VALUES (190, 286, 2, 'DME');
 INSERT INTO `realisasi_kompositor_pic` VALUES (191, 286, 3, 'DMO');
 INSERT INTO `realisasi_kompositor_pic` VALUES (192, 287, 2, 'DME');
 INSERT INTO `realisasi_kompositor_pic` VALUES (193, 287, 3, 'DMO');
+INSERT INTO `realisasi_kompositor_pic` VALUES (194, 288, 2, 'DME');
+INSERT INTO `realisasi_kompositor_pic` VALUES (195, 288, 3, 'DMO');
+INSERT INTO `realisasi_kompositor_pic` VALUES (196, 294, 25, 'DMBS');
+INSERT INTO `realisasi_kompositor_pic` VALUES (197, 295, 25, 'DMBS');
+INSERT INTO `realisasi_kompositor_pic` VALUES (202, 296, 4, 'DMEP');
+INSERT INTO `realisasi_kompositor_pic` VALUES (203, 297, 4, 'DMEP');
+INSERT INTO `realisasi_kompositor_pic` VALUES (204, 298, 4, 'DMEP');
+INSERT INTO `realisasi_kompositor_pic` VALUES (205, 299, 4, 'DMEP');
+INSERT INTO `realisasi_kompositor_pic` VALUES (206, 300, 4, 'DMEP');
 
 -- ----------------------------
 -- Table structure for role_has_permissions

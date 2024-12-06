@@ -356,12 +356,15 @@ class InputRealisasiController extends Controller
         $sumber_kompositor_id = $request->input('sumber_kompositor_id');
         $kompositor_id = $request->input('kompositor_id');
         $nama_kompositor = $request->input('nama_kompositor');
+        $check_formula = $request->input('check_formula');
         $input_realisasi = InputRealisasi::find($input_realisasi_id);
 
         $realisasi_kompositor_id = $request->input('realisasi_kompositor_id');
         $data['input_realisasi'] = $input_realisasi;
         $laporan_capaian = LaporanCapaian::find($input_realisasi->laporan_capaian_id);
         $indikator_formula = IndikatorFormula::where('indikator_id', $laporan_capaian->indikator_id)->first();
+        $spreadsheet = new Spreadsheet();
+
         if (is_object($indikator_formula)) {
             $data['indikator_formula'] = $indikator_formula;
             $data['mapping'] = json_decode($indikator_formula->mapping_realisasi);
@@ -371,16 +374,16 @@ class InputRealisasiController extends Controller
 
             //cek apakah existing indikator
             $realisasi_kompositor = RealisasiKompositor::where('kompositor_id', $kompositor_id)->get();
-            
-            if (count($realisasi_kompositor)>1) { //existing indikator
-                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()                    
+
+            if (count($realisasi_kompositor) > 1) { //existing indikator
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                     ->where('kompositor_id', $kompositor_id)
                     ->where('nilai', '>', 0)
                     ->first();
-                
-                    $data['realisasi'] = $realisasi_kompositor->nilai;
-                    $data['realisasi_kompositor'] = $realisasi_kompositor;
-                       
+
+                $data['realisasi'] = $realisasi_kompositor->nilai;
+                $data['realisasi_kompositor'] = $realisasi_kompositor;
+
             } else { //new 
                 $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                     ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
@@ -420,37 +423,47 @@ class InputRealisasiController extends Controller
                         }
                     }
                     $data['formula_map'] = $formula_map;
-                    
+
                     //calculate the formula in virtual spreadsheet ------------------------------
-                    $spreadsheet = new Spreadsheet();
+
                     $sheet = $spreadsheet->getActiveSheet();
                     //mapping each formula to each cell
-                    foreach($formula as $cell => $value){
+                    foreach ($formula as $cell => $value) {
                         $sheet->setCellValue($cell, $value);
                     }
                     //mapping formula to it's parameter value
                     foreach ($formula_map as $cell => $value) {
                         $sheet->setCellValue($cell, $value);
                     }
-                    
+
                     $result = $sheet->getCell('A1')->getCalculatedValue(); //$calculation->calculateFormula($formula, $sheet->getCell('A1'));
                     $data['realisasi'] = $result;
-                    unset($spreadsheet);
+                    //unset($spreadsheet);
                 }
             }
         } else {
             $data['message'] = 'Formula not available';
         }
 
-        // Set the headers to download the file
-        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        // header('Content-Disposition: attachment;filename="calculated_result.xlsx"');
-        // header('Cache-Control: max-age=0');
+        if ($check_formula) {
+            // Set the headers to download the file
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="check_formula.xlsx"');
+            header('Cache-Control: max-age=0');
+            //header("Access-Control-Allow-Origin: *");
+            //header("Access-Control-Allow-Methods: GET, POST");
+            header("Access-Control-Allow-Headers: Content-Type");
 
-        // Write the file to output
-        // $writer = new Xlsx($spreadsheet);
-        // $writer->save('calculated_result.xlsx');
-        return $data;
+
+            //Write the file to output
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        } else {
+            return $data;
+        }
+
+
+
     }
     public function _calculateRealization(\Illuminate\Http\Request $request)
     {
@@ -487,7 +500,7 @@ class InputRealisasiController extends Controller
         switch ($nama_indeks) {
             case 'Root':
                 switch ($nama_kompositor) {
-                        //nilai agregasi dari sub indeks IKSP
+                    //nilai agregasi dari sub indeks IKSP
                     case "Indeks Ketersediaan Migas": //I
                         $indeks_ketersediaan_hulu_migas = 0;
                         $indeks_ketersediaan_bbm = 0;
@@ -612,13 +625,13 @@ class InputRealisasiController extends Controller
                             $realisasi = $rp_gas_bumi;
                             //}
                         }/* elseif(trim($row->nama_kompositor) == 'Persentase Pemanfaatan Gas Bumi Melalui Pipa Domestik'){
-                       if($row->jenis_kompositor_id == 1){
+                     if($row->jenis_kompositor_id == 1){
 
-                       }else{
+                     }else{
 
-                       }
+                     }
 
-                       } */
+                     } */
                     }
                     //$realisasi = $temp_realisasi;
                 } elseif ($nama_kompositor == 'Indeks Ketersediaan BBM') {
