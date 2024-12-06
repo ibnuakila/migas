@@ -144,12 +144,14 @@ class InputKinerjaController extends Controller
             $formula = json_decode($indikator_formula->formula_kinerja);
             $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
-            foreach($mapping as $key => $name){
-                if($name == 'target'){
-                    $mapping->$key = $obj_laporan_capaian->target;
-                }
-                if($name == 'realisasi'){
-                    $mapping->$key = $obj_realisasi->realisasi;
+            if(is_array($mapping)){
+                foreach($mapping as $key => $name){
+                    if($name == 'target'){
+                        $mapping->$key = $obj_laporan_capaian->target;
+                    }
+                    if($name == 'realisasi'){
+                        $mapping->$key = $obj_realisasi->realisasi;
+                    }
                 }
             }
             $data['mapping_value'] = $mapping;
