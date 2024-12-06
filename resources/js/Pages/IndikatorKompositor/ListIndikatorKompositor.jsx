@@ -82,11 +82,7 @@ export default function ListIndikatorKompositor({auth}){
                         <table className="w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
-                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
-                                            Id
-                                        </Typography>
-                                    </th>
+                                    
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Indeks
@@ -94,9 +90,15 @@ export default function ListIndikatorKompositor({auth}){
                                     </th>
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
+                                            Id
+                                        </Typography>
+                                    </th>
+                                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Nama Kompositor
                                         </Typography>
                                     </th>
+                                    
                                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
                                             Jenis Kompositor
@@ -119,13 +121,14 @@ export default function ListIndikatorKompositor({auth}){
                                     </th>
                                 </tr>
                                 <tr className="border-b-2">
-                                    <th></th>
+                                    
                                     <th>
                                         <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
                                         onChange={handleChangeIndeks} labelProps={{
                                             className: "hidden",
                                             }} placeholder="Indeks" icon={<MagnifyingGlassIcon className="h-5 w-5" />}/>
                                     </th>
+                                    <th></th>
                                     <th>
                                         <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
                                         onChange={handleChangeKompositor} labelProps={{
@@ -141,22 +144,23 @@ export default function ListIndikatorKompositor({auth}){
                             <tbody>                                                      
                                 {kompositors.map(({ id, nama_indikator, nama_kompositor, nama_jenis_kompositor, satuan, indeks_id,nama_indeks, jenis_kompositor_id, kompositor_pics }) => (
                                     <tr key={id} className="even:bg-blue-gray-50/50">
+                                      
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {indeks_id + " | " + nama_indeks }
+                                        </Typography>                                                                                
+                                      </td>   
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal">
                                           {id}
                                         </Typography>
-                                      </td>
-                                      <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {nama_indeks}
-                                        </Typography>                                                                                
-                                      </td>                                      
+                                      </td>                                   
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray"                                            
                                          className="font-normal text-blue-600">
                                           {nama_kompositor}
                                         </Typography>
-                                      </td>
+                                      </td>                                      
                                       <td className="p-4">
                                         {nama_jenis_kompositor == 'Agregasi' ? (                                                
                                             <Typography variant="small" color="blue-gray" className="font-normal text-red-600">

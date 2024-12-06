@@ -309,8 +309,8 @@ export default function ListLaporanCapaian({auth}){
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {data.map(({id, indikator_id, numbering, nama_indikator, nama_level, nama_satuan, target, laporan_capaian_pic,
-                                    input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja_id,status_kinerja, periode}) => (
+                                {data.map(({id, indikator_id, numbering, nama_indikator, nama_level, nama_satuan, target, target_format, laporan_capaian_pic,
+                                    input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja, status_kinerja, periode}) => (
                                     <tr key={id+numbering} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
@@ -339,7 +339,10 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-400">
-                                          {target ? ((parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
+                                          {target ? (
+                                            ( target_format == "Decimal" ? (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2}):
+                                              (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}))
+                                              ):(0)}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
@@ -353,14 +356,15 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                       </td>
                                         {input_realisasi.length > 0 ?
-                                            (input_realisasi.map( ({ realisasi, triwulan_id})=>(
+                                            (input_realisasi.map( ({ realisasi, realisasi_format, triwulan_id})=>(
                                                 <td className="p-4 text-center" key={id+triwulan_id}>
-                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-red-600"
-                                                        
-                                                    >
+                                                    <Typography  variant="small" color="blue-gray" className="font-normal text-red-600">
                                                         <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} 
                                                         title="Realisasi Kompositor/Parameter" onClick={null}>
-                                                            {(parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})}
+                                                            { realisasi_format==2 ? 
+                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}):
+                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})
+                                                            }
                                                         </Link>
                                                     </Typography>
                                                 </td>
@@ -445,9 +449,12 @@ export default function ListLaporanCapaian({auth}){
                                         </Typography>
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {kategori_kinerja_id}
-                                        </Typography>
+                                        {kategori_kinerja && (                                            
+                                              <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                                {kategori_kinerja.name}
+                                              </Typography>
+                                            )
+                                         }                                        
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
