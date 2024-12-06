@@ -167,16 +167,19 @@ class InputKinerjaController extends Controller
             // $sheet->setCellValue('B4', 1.30); //realisasi
             // $sheet->setCellValue('C4', 1.20); //kinerja
 
-            
-            //mapping each formula to each cell
-            foreach ($formula as $cell => $value){
-                $sheet->setCellValue($cell, $value);
+            if(is_array($formula)){
+                //mapping each formula to each cell
+                foreach ($formula as $cell => $value){
+                    $sheet->setCellValue($cell, $value);
+                }
             }
 
-            //mapping formula to it's parameter value
-            foreach ($mapping as $cell => $value) {
-                $sheet->setCellValue($cell, $value);
-            }               
+            if(is_array($mapping)){
+                //mapping formula to it's parameter value
+                foreach ($mapping as $cell => $value) {
+                    $sheet->setCellValue($cell, $value);
+                }       
+            }        
             
             $result = $sheet->getCell('A1')->getCalculatedValue(); 
             $data['kinerja'] = $result;
