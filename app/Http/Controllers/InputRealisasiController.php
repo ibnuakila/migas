@@ -439,7 +439,7 @@ class InputRealisasiController extends Controller
                             $sheet->setCellValue($cell, $value);
                         }
                     }
-                    if(is_array($formula)){
+                    if(is_array($formula_map)){
                         //mapping formula to it's parameter value
                         foreach ($formula_map as $cell => $value) {
                             $sheet->setCellValue($cell, $value);
