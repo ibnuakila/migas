@@ -434,18 +434,18 @@ class InputRealisasiController extends Controller
                     //calculate the formula in virtual spreadsheet ------------------------------
 
                     $sheet = $spreadsheet->getActiveSheet();
-                    if(is_array($formula)){
+                    //if(is_array($formula)){
                         //mapping each formula to each cell
                         foreach ($formula as $cell => $value) {
                             $sheet->setCellValue($cell, $value);
                         }
-                    }
-                    if(is_array($formula_map)){
+                    //}
+                    //if(is_array($formula_map)){
                         //mapping formula to it's parameter value
                         foreach ($formula_map as $cell => $value) {
                             $sheet->setCellValue($cell, $value);
                         }
-                    }
+                    //}
 
                     $result = $sheet->getCell('A1')->getCalculatedValue(); //$calculation->calculateFormula($formula, $sheet->getCell('A1'));
                     $data['realisasi'] = $result;
