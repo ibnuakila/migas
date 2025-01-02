@@ -53,4 +53,8 @@ class Indikator extends Model
         return $this->hasMany(IndikatorPic::class);
     }
     
+    public function indikatorFormula() {
+        return $this->hasOne(IndikatorFormula::class);
+    }
+    
 }
