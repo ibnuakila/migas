@@ -62,7 +62,7 @@ export default function ListIndikatorKompositor({auth}){
             <NewAdminLayout 
         auth = {auth}
         children={(
-                <div className="container mx-auto">
+                <div className="mx-auto">
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                     {indikator ? ( 
