@@ -55,7 +55,13 @@ class KompositorController extends Controller {
                             SELECT * FROM Hierarchy 
                             ORDER BY level, id;";
                             if(is_object($indeks)){
-                                return DB::select($query, [$indeks->parent_id]);
+                                if($indeks->parent_id !== 1){
+                                    return DB::select($query, [$indeks->parent_id]);
+                                }else{
+                                    return DB::table('indeks')->where('id', $indeks->id)->get();
+                                }
+                            }else{
+                                return DB::table('indeks')->where('nama_indeks', 'Root')->get();
                             }
                             
                         }, //\App\Models\Indeks::all(),

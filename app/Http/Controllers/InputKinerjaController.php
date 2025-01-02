@@ -142,7 +142,7 @@ class InputKinerjaController extends Controller
         $data['indikator_formula'] = $indikator_formula;
         if(is_object($indikator_formula)){
             $mapping = json_decode($indikator_formula->mapping_kinerja);
-            $formula = json_decode($indikator_formula->formula_kinerja);
+            $formula = json_decode(trim($indikator_formula->formula_kinerja));
             $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
             //if(is_array($mapping)){
