@@ -167,20 +167,20 @@ class KompositorController extends Controller {
                     
                     //1. delete kompositor parameter
                     $komp_param = \App\Models\KompositorParameter::where([
-                                'kompositor_id' => $kompositor->id,
-                                'parameter_id' => $request->input('parameter_id')])->first();
-                    if ($komp_param !== null) {
-                        $komp_param->delete();
-                    }
+                                //'kompositor_id' => $kompositor->id,
+                                'parameter_id' => $request->input('parameter_id')])->delete();
+                    // if (is_object($komp_param)) {
+                    //     $komp_param->delete();
+                    // }
                     //2. delete parameter
                     $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
-                    if ($komp_param !== null) {
+                    if (is_object($parameter)) {
                         $parameter->delete();
                     }
                     //3. delete kompositor of kompositor if exist
                     $komp_of_komp = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
-                    if ($komp_of_komp !== null) {
-                        $komp_of_komp->delete();
+                    if (is_object($komp_of_komp)) {
+                        //$komp_of_komp->delete();
                     }
                     //4. delete kompositor-pic
                     $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
@@ -198,8 +198,32 @@ class KompositorController extends Controller {
                     DB::rollBack();
                     return $e;
                 }
-            }else if ($kompositor->jenis_kompositor_id == 4) {
-                
+            }else if ($kompositor->jenis_kompositor_id == 4) {//kompositor of kompositor
+                try{
+                    DB::beginTransaction();
+                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                    $indikator_id = $indikator_kompositor->indikator_id;
+                    
+                    //delete kompositor of kompositor if exist
+                    $komp_of_komp = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
+                    if ($komp_of_komp !== null) {
+                        $komp_of_komp->delete();
+                    }
+                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                    foreach($kompositor_pic as $kom_pic){
+                        $kom_pic->delete();
+                    }
+                    //5. delete indikator kompositor
+                    $indikator_kompositor->delete(); 
+                        
+                    //6. delete kompositor
+                    $kompositor->delete();
+                    
+                    DB::commit();
+                } catch (\Exception $e){
+                    DB::rollBack();
+                    return $e;
+                }
             }
             return Redirect::route('kompositor.index-indikator', $indikator_id);
         

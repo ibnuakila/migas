@@ -373,16 +373,20 @@ class InputRealisasiController extends Controller
             $data['formula'] = $formula;
             $formula_map = json_decode($indikator_formula->mapping_realisasi);
 
-            //cek apakah existing indikator
-            $realisasi_kompositor = RealisasiKompositor::where('kompositor_id', $kompositor_id)->get();
-
+            //cek apakah existing indikator # tambahkan filter triwulan
+            $realisasi_kompositor = RealisasiKompositor::query()
+                ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                ->where('kompositor_id', $kompositor_id)
+                ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                ->get();
+            $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
             if (count($realisasi_kompositor) > 1) { //existing indikator
                 $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                     ->where('kompositor_id', $kompositor_id)
                     ->where('nilai', '>', 0)
                     ->first();
                 if(is_object($realisasi_kompositor)){
-                    $realisasi = $realisasi_kompositor->id;
+                    $realisasi = $realisasi_kompositor->nilai;
                 }else{
                     $realisasi = 0;
                 }
@@ -419,9 +423,13 @@ class InputRealisasiController extends Controller
                     //mapping formula to kompositor ----------------------------------------------
                     $kompositorMap = [];
                     foreach ($realisasi_kompositor as $kompositor) {
-                        if($kompositor['nilai'] != 0){
+                        if($kompositor['nama_kompositor'] == 'Triwulan'){
+                            $kompositor['nilai'] = $input_realisasi->triwulan_id;
+                        }
+                        if($kompositor['nilai'] !== 0){
                             $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
                         }
+                        
                     }
 
                     foreach ($formula_map as $key => $name) {
