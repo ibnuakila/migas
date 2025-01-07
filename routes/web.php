@@ -150,7 +150,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/input-realisasi/delete/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::delete('/input-realisasi/delete-kompositor/{realisasikompositor}', [InputRealisasiController::class, 'destroyKompositor'])->name('input-realisasi.destroy-kompositor');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
-    Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
+    Route::match(['GET', 'POST'],'/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
     Route::get('/input-realisasi/laporancapaiantriwulan/{laporancapaian}/triwulan/{triwulan}', [InputRealisasiController::class, 'laporanCapaianTriwulan'])->name('input-realisasi.laporan-capaian-triwulan');
 });
