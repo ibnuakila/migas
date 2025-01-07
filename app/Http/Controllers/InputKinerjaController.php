@@ -13,6 +13,7 @@ use App\Models\KinerjaTriwulan;
 use App\Http\Requests\KinerjaTriwulanRequest;
 use MathPHP\Statistics\Regression;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class InputKinerjaController extends Controller
 {
@@ -140,10 +141,11 @@ class InputKinerjaController extends Controller
         
         $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
         $data['indikator_formula'] = $indikator_formula;
+        $spreadsheet = new Spreadsheet();
         if(is_object($indikator_formula)){
             $mapping = json_decode($indikator_formula->mapping_kinerja);
             $formula = json_decode($indikator_formula->formula_kinerja);
-            $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
+            $data['mapping'] = $mapping; //json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
             //if(is_array($mapping)){
                 foreach($mapping as $key => $name){
@@ -157,40 +159,42 @@ class InputKinerjaController extends Controller
             //}
             $data['mapping_value'] = $mapping;
             //calculate the formula in virtual spreadsheet ------------------------------
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-
-            //data persentasi kinerja
-            // $sheet->setCellValue('B2', 1.00); //realisasi
-            // $sheet->setCellValue('C2', 1.00); //kinerja
-            // $sheet->setCellValue('B3', 1.15); //realisasi
-            // $sheet->setCellValue('C3', 1.10); //kinerja
-            // $sheet->setCellValue('B4', 1.30); //realisasi
-            // $sheet->setCellValue('C4', 1.20); //kinerja
-
-            //if(is_array($formula)){
-                //mapping each formula to each cell
-                foreach ($formula as $cell => $value){
-                    $sheet->setCellValue($cell, $value);
-                }
-            //}
-
-            //if(is_array($mapping)){
-                //mapping formula to it's parameter value
-                foreach ($mapping as $cell => $value) {
-                    $sheet->setCellValue($cell, $value);
-                }       
-            //}        
             
-            $result = $sheet->getCell('A1')->getFormattedValue(true); 
+            $sheet = $spreadsheet->getActiveSheet();
+            //mapping each formula to each cell
+            foreach ($formula as $cell => $value){
+                $sheet->setCellValue($cell, $value);
+            }
+        
+            //mapping formula to it's parameter value
+            foreach ($mapping as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
+            }       
+                        
+            $result = $sheet->getCell('A1')->getCalculatedValue(); 
             $data['kinerja'] = $result;
             //unset($spreadsheet);
         }else{
             $data['response'] = "Formula not available";
         }
+        if ($request->isMethod('get')) {
+            // Set the headers to download the file
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="check_formula.xlsx"');
+            header('Cache-Control: max-age=0');
+            //header("Access-Control-Allow-Origin: *");
+            //header("Access-Control-Allow-Methods: GET, POST");
+            header("Access-Control-Allow-Headers: Content-Type");
+
+
+            //Write the file to output
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        } else {
+            return $data;
+        }
         
         
-        return $data;
     }
     
     public function _calculateKinerja(\Illuminate\Http\Request $request)

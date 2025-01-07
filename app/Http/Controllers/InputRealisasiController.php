@@ -464,7 +464,7 @@ class InputRealisasiController extends Controller
             $data['message'] = 'Formula not available';
         }
 
-        if ($check_formula) {
+        if ($request->isMethod('get')) {
             // Set the headers to download the file
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="check_formula.xlsx"');

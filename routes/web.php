@@ -125,7 +125,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
     Route::put('/input-kinerja/update/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
     Route::delete('/input-kinerja/delete/{kinerjatriwulan}', [InputKinerjaController::class, 'destroy'])->name('input-kinerja.destroy');
-    Route::post('/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
+    Route::match(['GET', 'POST'],'/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
 });
 
 Route::middleware('auth')->group(function () {
