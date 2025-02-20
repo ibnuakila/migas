@@ -16,6 +16,7 @@ import { router } from '@inertiajs/react';
 import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
+import SSelect from "@/Components/SSelect";
 
 export default function FormKompositor(props) {
 
@@ -56,6 +57,10 @@ export default function FormKompositor(props) {
     //const defPics = props.def_pics;
     const optPic = pics.map(pic => {
         return { value: pic.id, label: pic.nama_pic };
+    })
+
+    const optExistIndikator = indikators.map( ({ id, nama_indikator, level, kompositor_id }) => {
+        return { value: kompositor_id, label:nama_indikator + " (" + level.nama_level + ")"};
     })
     
     const handleChange = (value) => {
@@ -202,16 +207,16 @@ export default function FormKompositor(props) {
                                         </div>) : (null)}
                                     {existingIndikator ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Select Indikator" id="indeks"
+                                            <SSelect label="Select Indikator" id="indeks" options={optExistIndikator}
                                                 onChange={(e) => {
-                                                    setData('kompositor_id', e);
+                                                    setData('kompositor_id', e.value);
                                                     console.log(e);
                                                 }}
                                                 error={errors.kompositor_id}>
-                                                {indikators.map(({ id, nama_indikator, level, kompositor_id }) => (
+                                                {/*indikators.map(({ id, nama_indikator, level, kompositor_id }) => (
                                                     <Option value={kompositor_id} key={kompositor_id}>{nama_indikator + " (" + level.nama_level + ")"}</Option>
-                                                ))}
-                                            </Select>
+                                                ))*/}
+                                            </SSelect>
                                             {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
                                         </div>) : (null)}
                                     {existingKompositor ? (

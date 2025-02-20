@@ -14,6 +14,7 @@ use App\Http\Requests\KinerjaTriwulanRequest;
 use MathPHP\Statistics\Regression;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InputKinerjaController extends Controller
 {
@@ -179,17 +180,26 @@ class InputKinerjaController extends Controller
         }
         if ($request->isMethod('get')) {
             // Set the headers to download the file
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="check_formula.xlsx"');
-            header('Cache-Control: max-age=0');
+            //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //header('Content-Disposition: attachment;filename="check_formula.xlsx"');
+            //header('Cache-Control: max-age=0');
             //header("Access-Control-Allow-Origin: *");
             //header("Access-Control-Allow-Methods: GET, POST");
-            header("Access-Control-Allow-Headers: Content-Type");
+            //header("Access-Control-Allow-Headers: Content-Type");
 
 
             //Write the file to output
+            //$writer = new Xlsx($spreadsheet);
+            //$writer->save('php://output');
+
             $writer = new Xlsx($spreadsheet);
-            $writer->save('php://output');
+            $response = new StreamedResponse(function () use ($writer) {
+                $writer->save('php://output');
+            });
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //$response->headers->set('Content-Disposition', 'attachment;filename="data-usulan-akreditasi.xlsx"');
+            //$response->headers->set('Cache-Control', 'max-age=0');
+            return $response;
         } else {
             return $data;
         }

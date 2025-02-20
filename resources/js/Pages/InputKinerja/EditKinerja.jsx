@@ -55,19 +55,36 @@ export default function EditLaporanCapaian() {
         if (confirm('Apakah Anda ingin mengkalkulasi kinerja?')) {
             if(isCheck){
                 axios.get(route('input-kinerja.calculate-kinerja'), { 
-                    params:{laporan_capaian_id: laporan_capaian.id, triwulan_id: data['triwulan_id']}
+                    params:{
+                        laporan_capaian_id: laporan_capaian.id, 
+                        triwulan_id: data['triwulan_id']
+                    },
+                    responseType: "arraybuffer"
                 })
                 .then(res => {
-                    console.log(res);
-                    if (res.data.kinerja > 0) {
-                        alert(res.data.kinerja);
-                        let kinerja = document.getElementById('kinerja');
-                        kinerja.value = res.data.kinerja;
-                        //realisasi.setAttribute('value', res.data.result);
-                        setData('kinerja', res.data.kinerja);
-                    } else {
-                        alert(res.data.response);
-                    }
+                    // console.log(res);
+                    // if (res.data.kinerja > 0) {
+                    //     alert(res.data.kinerja);
+                    //     let kinerja = document.getElementById('kinerja');
+                    //     kinerja.value = res.data.kinerja;
+                    //     //realisasi.setAttribute('value', res.data.result);
+                    //     setData('kinerja', res.data.kinerja);
+                    // } else {
+                    //     alert(res.data.response);
+                    // }
+                    console.log(res.headers);
+                        const ctype = res.headers['content-type'];
+                        const blob = new Blob([res?.data], { type: ctype });
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'check_formula.xlsx');  // Set the filename here
+                        document.body.appendChild(link);
+                        link.click();
+
+                        // Cleanup
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(url);
                 })
                 .catch((err) => {
                     if (err.response) {

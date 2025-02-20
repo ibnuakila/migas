@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Storage;
 
 class InputRealisasiController extends Controller
@@ -376,19 +377,26 @@ class InputRealisasiController extends Controller
             //cek apakah existing indikator # tambahkan filter triwulan
             $realisasi_kompositor = RealisasiKompositor::query()
                 ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
-                ->where('kompositor_id', $kompositor_id)
+                ->join('kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
+                ->where('nama_kompositor', '=', $nama_kompositor)
                 ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                ->where('input_realisasi.realisasi', '<>', 0)
                 ->get();
             $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
             if (count($realisasi_kompositor) > 1) { //existing indikator
-                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
-                    ->where('kompositor_id', $kompositor_id)
-                    ->where('nilai', '>', 0)
-                    ->first();
-                if(is_object($realisasi_kompositor)){
-                    $realisasi = $realisasi_kompositor->nilai;
-                }else{
-                    $realisasi = 0;
+                // $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                //     ->where('kompositor_id', $kompositor_id)
+                //     ->where('nilai', '>', 0)
+                //     ->first();
+                // if(is_object($realisasi_kompositor)){
+                //     $realisasi = $realisasi_kompositor->nilai;
+                // }else{
+                //     $realisasi = 0;
+                // }
+                foreach($realisasi_kompositor as $kompositor){
+                    if($kompositor->nilai != 0){
+                        $realisasi = $kompositor->nilai;
+                    }
                 }
                 $data['realisasi'] = $realisasi;
                 $data['realisasi_kompositor'] = $realisasi_kompositor;
@@ -466,17 +474,27 @@ class InputRealisasiController extends Controller
 
         if ($request->isMethod('get')) {
             // Set the headers to download the file
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="check_formula.xlsx"');
-            header('Cache-Control: max-age=0');
-            //header("Access-Control-Allow-Origin: *");
-            //header("Access-Control-Allow-Methods: GET, POST");
-            header("Access-Control-Allow-Headers: Content-Type");
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // header('Content-Disposition: attachment;filename="check_formula.xlsx"');
+            // header('Cache-Control: max-age=0');
+            // //header("Access-Control-Allow-Origin: *");
+            // //header("Access-Control-Allow-Methods: GET, POST");
+            // header("Access-Control-Allow-Headers: Content-Type");
 
 
             //Write the file to output
+            //$writer = new Xlsx($spreadsheet);
+            //$writer->save('php://output');
+
             $writer = new Xlsx($spreadsheet);
-            $writer->save('php://output');
+            $response = new StreamedResponse(function () use ($writer) {
+                $writer->save('php://output');
+            });
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', 'attachment;filename="data-usulan-akreditasi.xlsx"');
+            $response->headers->set('Cache-Control', 'max-age=0');
+
+            return $response;
         } else {
             return $data;
         }

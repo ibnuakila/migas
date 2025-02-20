@@ -66,6 +66,12 @@ export default function EditRealisasi(props) {
     const handleSave = (e) => {
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.id));
+        window.history.back(1);
+        setTimeout( () => {            
+            location.reload();
+        }, 300)
+        
+        
     }
 
     function handleChangeTriwulan(e) {
@@ -108,19 +114,21 @@ export default function EditRealisasi(props) {
             //alert(kompositor.jenis_kompositor_id);
             if (isAgregasi) {
                 if (isCheck) {
-                    axios.get(route('input-realisasi.calculate-realization'), { 
-                        params:{
-                            responseType: 'blob',
+                    axios.get(route('input-realisasi.calculate-realization'), {
+                        params: {
+                            
                             input_realisasi_id: input_realisasi.id,
                             realisasi_kompositor_id: realisasi_kompositor.id,
                             kompositor_id: kompositor.id,
                             nama_kompositor: kompositor.nama_kompositor,
                             sumber_kompositor_id: kompositor.sumber_kompositor_id,
-                            check_formula: isCheck}
-                        }).then(res => {
-                            console.log(res.headers);
-                            const ctype = res.headers['content-type'];
-                            const blob = new Blob([res?.data], {type: ctype});
+                            check_formula: isCheck
+                        },
+                        responseType: "arraybuffer"
+                    }).then(res => {
+                        console.log(res.headers);
+                        const ctype = res.headers['content-type'];
+                        const blob = new Blob([res?.data], { type: ctype });
                         const url = window.URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
@@ -133,7 +141,7 @@ export default function EditRealisasi(props) {
                         window.URL.revokeObjectURL(url);
                     }).catch((error) => {
                         console.error("There was an error downloading the file", error);
-                      });
+                    });
                 } else {
                     axios.post(route('input-realisasi.calculate-realization'),
                         {
