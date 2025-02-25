@@ -364,6 +364,7 @@ class InputRealisasiController extends Controller
         $data['input_realisasi'] = $input_realisasi;
         $laporan_capaian = LaporanCapaian::find($input_realisasi->laporan_capaian_id);
         $indikator_formula = IndikatorFormula::where('indikator_id', $laporan_capaian->indikator_id)->first();
+        
         $data['indikator_formula'] = $indikator_formula;
         $spreadsheet = new Spreadsheet();
 

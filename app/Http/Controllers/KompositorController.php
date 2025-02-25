@@ -84,13 +84,13 @@ class KompositorController extends Controller {
     public function destroy(Kompositor $kompositor, Request $request) {
         $this->authorize('kompositor-delete');
         
-            $indikator_id = 0;
+            $indikator_id = $request->input('indikator_id');
             if ($kompositor->jenis_kompositor_id == 1) {//input
                 try{
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
                     $indikator_kompositor->delete(); //delete indikator kompositor
-                    $indikator_id = $indikator_kompositor->indikator_id;
+                    //$indikator_id = $indikator_kompositor->indikator_id;
                     if($kompositor->sumber_kompositor_id == 2){//existing indikator
                         $kom_of_kom = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
                         $kom_of_kom->delete();
@@ -127,8 +127,9 @@ class KompositorController extends Controller {
                     }*/
                     //foreach ($kompositors as $komp) {
                         $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)
+                            ->where('indikator_id', $indikator_id)
                             ->first();
-                        $indikator_id = $indikator_kompositor->indikator_id;
+                        //$indikator_id = $indikator_kompositor->indikator_id;
                         
                         if(is_object($indikator_kompositor)){
                             $indikator_kompositor->delete();
@@ -156,14 +157,14 @@ class KompositorController extends Controller {
                 } catch (\Exception $e){
                     DB::rollBack();
                     //$message = ['Message' => $e];
-                    return $e;//delete sub agregasi terlebih dahulu
+                    return "Data tidak bisa dihapus karena berelasi!";//delete sub agregasi terlebih dahulu
                 }
             } else if ($kompositor->jenis_kompositor_id == 3) {//parameter
                 //pakai transaction -------------------------
                 try{
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_id = $indikator_kompositor->indikator_id;
+                    //$indikator_id = $indikator_kompositor->indikator_id;
                     
                     //1. delete kompositor parameter
                     $komp_param = \App\Models\KompositorParameter::where([
@@ -202,7 +203,7 @@ class KompositorController extends Controller {
                 try{
                     DB::beginTransaction();
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_id = $indikator_kompositor->indikator_id;
+                    //$indikator_id = $indikator_kompositor->indikator_id;
                     
                     //delete kompositor of kompositor if exist
                     $komp_of_komp = \App\Models\KompositorOfKompositor::where('kompositor_id', $kompositor->id)->first();
