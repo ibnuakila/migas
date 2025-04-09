@@ -108,7 +108,15 @@ class InputKinerjaController extends Controller
         //$validate = $request->val
         $validated = $request->validated();
         
-        $update_status_1 = $kinerjatriwulan->update($validated);        
+        $update_status_1 = $kinerjatriwulan->update($validated); 
+        //update laporan capaian untuk status kinerja dan kinerja tahunan
+        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $request->laporan_capaian_id)->first();
+        //hitung persentasi kinerja tahunan
+        if(is_object($laporan_capaian)){
+            $laporan_capaian->status_kinerja = $request->kinerja;
+            $laporan_capaian->kinerja_tahunan = $request->kinerja;
+            $laporan_capaian->kategori_kinerja_id = 0; //dilihat presentasi kinerja
+        }
         if($update_status_1){
             $message = "Update berhasil!";
         }else{
