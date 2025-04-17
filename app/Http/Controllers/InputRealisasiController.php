@@ -382,9 +382,9 @@ class InputRealisasiController extends Controller
                 ->where('nama_kompositor', '=', $nama_kompositor)
                 ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
                 ->where('input_realisasi.realisasi', '<>', 0)
-                ->get();
+                ->first();
             $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
-            if (count($realisasi_kompositor) > 1) { //existing indikator
+            if (is_object($realisasi_kompositor)) { //existing indikator
                 // $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                 //     ->where('kompositor_id', $kompositor_id)
                 //     ->where('nilai', '>', 0)
@@ -392,13 +392,13 @@ class InputRealisasiController extends Controller
                 // if(is_object($realisasi_kompositor)){
                 //     $realisasi = $realisasi_kompositor->nilai;
                 // }else{
-                //     $realisasi = 0;
+                     $realisasi = 0;
                 // }
-                foreach($realisasi_kompositor as $kompositor){
-                    if($kompositor->nilai != 0){
-                        $realisasi = $kompositor->nilai;
-                    }
-                }
+                //foreach($realisasi_kompositor as $kompositor){
+                    //if($kompositor->nilai > 0){
+                        $realisasi = $realisasi_kompositor->nilai;
+                    //}
+                //}
                 $data['realisasi'] = $realisasi;
                 $data['realisasi_kompositor'] = $realisasi_kompositor;
 
