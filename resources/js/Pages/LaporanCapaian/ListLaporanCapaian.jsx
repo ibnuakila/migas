@@ -310,7 +310,7 @@ export default function ListLaporanCapaian({auth}){
                             </thead>
                             <tbody>                                                      
                                 {data.map(({id, indikator_id, numbering, nama_indikator, nama_level, nama_satuan, target, target_format, laporan_capaian_pic,
-                                    input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja, status_kinerja, periode}) => (
+                                    input_realisasi,  kinerja_triwulan, kinerja_tahunan, kategori_kinerja, status_kinerja, periode, kinerja_color}) => (
                                     <tr key={id+numbering} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-500">
@@ -444,8 +444,8 @@ export default function ListLaporanCapaian({auth}){
                                         }
                                       
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {kinerja_tahunan}
+                                        <Typography variant="small" color="blue-gray" className={kinerja_color}>
+                                          {(parseFloat(kinerja_tahunan)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
@@ -457,8 +457,8 @@ export default function ListLaporanCapaian({auth}){
                                          }                                        
                                       </td>
                                       <td className="p-4">
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                                          {status_kinerja}
+                                        <Typography variant="small" color="blue-gray" className={kinerja_color}>
+                                        {(parseFloat(status_kinerja)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
                                         </Typography>
                                       </td>
                                       <td className="p-4">

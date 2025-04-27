@@ -115,7 +115,24 @@ class InputKinerjaController extends Controller
         if(is_object($laporan_capaian)){
             $laporan_capaian->status_kinerja = $request->kinerja;
             $laporan_capaian->kinerja_tahunan = $request->kinerja;
-            $laporan_capaian->kategori_kinerja_id = 0; //dilihat presentasi kinerja
+            //hitung presentasi kinerja
+            $color = ''; $kategori = 0;
+            if($request->kinerja > 1){
+                $color = 'text-blue-600';
+                $kategori = 1; //max
+            }elseif($request->kinerja > 0.75){
+                $color = 'text-green-600';
+                $kategori = 3; //stabilize
+            }elseif($request->kinerja > 0.5){
+                $color = 'text-yellow-600';
+                $kategori = 2; //min
+            }else{
+                $color = 'text-red-300';
+                $kategori = 2; //min
+            }
+            $laporan_capaian->kategori_kinerja_id = $kategori; //dilihat presentasi kinerja
+            $laporan_capaian->kinerja_color = $color;
+            $laporan_capaian->update();
         }
         if($update_status_1){
             $message = "Update berhasil!";
