@@ -90,7 +90,10 @@ export default function FormFormula() {
                                         </Card>                                        
                                     </div> 
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Textarea label="Formula Realisasi" variant="outlined" id="formulaRealisasi"
+                                        <Textarea label="Formula Realisasi" variant="outlined" id="formulaRealisasi" 
+                                        className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
+                                                shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
+                                                placeholder-gray-400 resize-y"
                                             value={ data['formula_realisasi'] }
                                             onChange={e => {
                                                 setData('formula_realisasi', e.target.value)
@@ -100,6 +103,9 @@ export default function FormFormula() {
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Textarea label="Mapping Realisasi" variant="outlined" id="mappingRealisasi"
+                                        className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
+                                                shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
+                                                placeholder-gray-400 resize-y"
                                             value={ data['mapping_realisasi']}
                                             onChange={e => {
                                                 setData('mapping_realisasi', e.target.value)
@@ -110,6 +116,9 @@ export default function FormFormula() {
                                     
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Textarea label="Formula Kinerja" variant="outlined" id="formulaKinerja"
+                                        className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
+                                            shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
+                                            placeholder-gray-400 resize-y"
                                             value={ data['formula_kinerja']}
                                             onChange={e => {
                                                 setData('formula_kinerja', e.target.value)
@@ -119,6 +128,9 @@ export default function FormFormula() {
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         <Textarea label="Mapping Kinerja" variant="outlined" id="mappingKinerja"
+                                        className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
+                                            shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
+                                            placeholder-gray-400 resize-y"
                                             value={ data['mapping_kinerja']}
                                             onChange={e => {
                                                 setData('mapping_kinerja', e.target.value)
