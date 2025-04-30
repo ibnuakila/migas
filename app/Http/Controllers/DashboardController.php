@@ -65,6 +65,68 @@ class DashboardController extends Controller
             ->groupBy('pic.nama_pic')
             ->get();
 
+        $biru = DB::table('indikator')
+            ->join('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+            ->where('indikator.level_id', '=', '1')
+            ->where('kinerja_tahunan', '>', 1)
+            ->get();
+        $hijau = DB::table('indikator')
+            ->join('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+            ->where('indikator.level_id', '=', '1')
+            ->whereBetween('kinerja_tahunan', [0.75, 1])
+            ->get();
+        $kuning = DB::table('indikator')
+            ->join('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+            ->where('indikator.level_id', '=', '1')
+            ->whereBetween('kinerja_tahunan', [0.5, 0.74])
+            ->get();
+        $merah = DB::table('indikator')
+            ->join('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+            ->where('indikator.level_id', '=', '1')
+            ->where('kinerja_tahunan', '<', 0.5)
+            ->get();
+        $capaian_pk = [
+            ['label' => 'Biru (> 100%)', 'value' => $biru->count()],
+            ['label' => 'Hijau (75% - 100%)', 'value' => $hijau->count()],
+            ['label' => 'Kuning (50% - 74%)', 'value' => $kuning->count()],
+            ['label' => 'Merah (< 50%)', 'value' => $merah->count()]
+        ];
+
+        $periode = \App\Models\Periode::where('status', 'Active')->first();
+        $user_count = \App\Models\User::all()->count();
+        $indikator_count = \App\Models\Indikator::all()->count();
+        $pic_count = \App\Models\PIC::all()->count();
+        $chards = [
+            [
+                'color' => 'gray',
+                'icon' => 'BanknotesIcon',
+                'title' => 'Current Periode',
+                'value' => $periode->periode,
+                'footer' => ['color' => 'text-green-500', 'value' => 'Last Periode', 'label' => ($periode->periode - 1)]
+            ],
+            [
+                'color' => 'gray',
+                'icon' => 'UsersIcon',
+                'title' => 'PICS',
+                'value' => $pic_count,
+                'footer' => ['color' => 'text-green-500', 'value' => 'PICS', 'label' => $pic_count]
+            ],
+            [
+                'color' => 'gray',
+                'icon' => 'UserPlusIcon',
+                'title' => 'Users',
+                'value' => $user_count,
+                'footer' => ['color' => 'text-green-500', 'value' => 'Active Users', 'label' => $user_count]
+            ],
+            [
+                'color' => 'gray',
+                'icon' => 'ChartBarIcon',
+                'title' => 'Total Indikator',
+                'value' => $indikator_count,
+                'footer' => ['color' => 'text-green-500', 'value' => 'Total Indikator', 'label' => $indikator_count]
+            ]
+            ];
+
         return Inertia::render('Dashboard/home', [
             'periode' => \App\Models\Periode::where('status', 'Active')->first(),
             'user_count' => \App\Models\User::all()->count(),
@@ -83,7 +145,9 @@ class DashboardController extends Controller
                 return $arr;
             },
             'websiteViewsChart' => $websiteViewsChart,
-            'rerata_capaian_kinerja' => $rerata_capaian_kinerja
+            'rerata_capaian_kinerja' => $rerata_capaian_kinerja,
+            'capaian_pk' => $capaian_pk,
+            'chards' => $chards
         ]);
     }
 

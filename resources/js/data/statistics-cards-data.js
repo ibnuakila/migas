@@ -25,7 +25,7 @@ export const statisticsCardsData = [
     footer: {
       color: "text-green-500",
       value: "PICS",
-      label: "",
+      label: "35",
     },
   },
   {

@@ -25,25 +25,28 @@ import {
   projectsTableData,
   ordersOverviewData,
 } from "@/data";
-import { CheckCircleIcon, ClockIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, ClockIcon, PlusCircleIcon, BanknotesIcon,
+  UserPlusIcon,
+  UsersIcon,
+  ChartBarIcon, } from "@heroicons/react/24/solid";
 import NewAdminLayout from "@/layouts/NewAdminLayout";
 import { usePage } from "@inertiajs/react";
 
 export function Home({ props }) {
   console.log(usePage().props);
-  const { rerata_capaian_kinerja } = usePage().props;
+  const { rerata_capaian_kinerja, capaian_pk, chards } = usePage().props;
   const avgKinerja = rerata_capaian_kinerja.map(item => item.rerata_kinerja).reduce((sum, value) => sum + value, 0) / rerata_capaian_kinerja.length;
   return (
     <NewAdminLayout props={props}
       children={(
         <div className="mt-12">
           <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-            {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
+            {chards.map(({ icon, title, footer, ...rest }) => (
               <StatisticsCard
                 key={title}
                 {...rest}
                 title={title}
-                icon={React.createElement(icon, {
+                icon={React.createElement(ChartBarIcon, {
                   className: "w-6 h-6 text-white",
                 })}
                 footer={
@@ -118,8 +121,7 @@ export function Home({ props }) {
                           {nama_pic} :
                         </Typography>
 
-                      </div>
-                      <div>
+                      
                         <Typography
                           as="span"
                           variant="small"
@@ -156,34 +158,42 @@ export function Home({ props }) {
                   Ditjen Migas: <strong>15 Indikator</strong>
                 </Typography>
               </CardHeader>
-              <CardBody className="pt-0">
-                
-                  <div  className="flex items-start gap-4 py-3">
-                    <div
-                      className="relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50"                          
-                    >
-                      {React.createElement(PlusCircleIcon, {
-                        className: `!w-5 !h-5 text-blue-gray-300`,
-                      })}
-                    </div>
-                    <div>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="block font-medium"
+              <CardBody className="pt-0">                
+              {capaian_pk.map(
+                  ({ label, value }, key) => (
+                    <div key={label} className="flex items-start gap-4 py-3">
+                      <div
+                        className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${key === ordersOverviewData.length - 1
+                          ? "after:h-0"
+                          : "after:h-4/6"
+                          }`}
                       >
-                        
-                      </Typography>
-                      <Typography
-                        as="span"
-                        variant="small"
-                        className="text-xs font-medium text-blue-gray-500"
-                      >
-                        
-                      </Typography>
+                        {React.createElement(PlusCircleIcon, {
+                          className: `!w-5 !h-5 text-blue-gray-300`,
+                        })}
+                      </div>
+                      <div>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="block font-medium"
+                        >
+                          {label} :
+                        </Typography>
+
+                      
+                        <Typography
+                          as="span"
+                          variant="small"
+                          className="text-xs font-medium text-blue-gray-500"
+                        >
+                          {value}
+                        </Typography>
+                      </div>
+
                     </div>
-                  </div>
-               
+                  )
+                )}
               </CardBody>
             </Card>
           </div>

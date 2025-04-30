@@ -11,7 +11,7 @@
  Target Server Version : 100432
  File Encoding         : 65001
 
- Date: 28/04/2025 07:13:53
+ Date: 30/04/2025 07:48:41
 */
 
 SET NAMES utf8mb4;
@@ -15846,8 +15846,8 @@ INSERT INTO `laporan_capaian` VALUES (2148, 4, 87, NULL, NULL, NULL, NULL, NULL,
 INSERT INTO `laporan_capaian` VALUES (2149, 4, 88, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `laporan_capaian` VALUES (2150, 4, 89, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `laporan_capaian` VALUES (2151, 4, 90, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `laporan_capaian` VALUES (2152, 4, 92, NULL, 68.00, 'Decimal', NULL, '2023', NULL, NULL);
-INSERT INTO `laporan_capaian` VALUES (2153, 4, 93, NULL, 68.00, 'Decimal', NULL, '2023', NULL, NULL);
+INSERT INTO `laporan_capaian` VALUES (2152, 4, 92, NULL, 68.00, 'Decimal', NULL, NULL, NULL, NULL);
+INSERT INTO `laporan_capaian` VALUES (2153, 4, 93, NULL, 68.00, 'Decimal', NULL, NULL, NULL, NULL);
 INSERT INTO `laporan_capaian` VALUES (2154, 4, 94, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `laporan_capaian` VALUES (2155, 4, 95, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `laporan_capaian` VALUES (2156, 4, 96, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -16437,7 +16437,7 @@ CREATE TABLE `laporan_capaian_pic`  (
   INDEX `IXFK_laporan_capaian_pic_laporan_capaian`(`laporan_capaian_id`) USING BTREE,
   INDEX `IXFK_laporan_capaian_pic_pic`(`pic_id`) USING BTREE,
   CONSTRAINT `FK_laporan_capaian_pic_laporan_capaian` FOREIGN KEY (`laporan_capaian_id`) REFERENCES `laporan_capaian` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2233 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2235 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of laporan_capaian_pic
@@ -17111,8 +17111,6 @@ INSERT INTO `laporan_capaian_pic` VALUES (2207, 2064, 3, 'DMO');
 INSERT INTO `laporan_capaian_pic` VALUES (2208, 2076, 3, 'DMO');
 INSERT INTO `laporan_capaian_pic` VALUES (2209, 2097, 3, 'DMO');
 INSERT INTO `laporan_capaian_pic` VALUES (2210, 2073, 4, 'DMEP');
-INSERT INTO `laporan_capaian_pic` VALUES (2212, 2152, 23, 'SDM');
-INSERT INTO `laporan_capaian_pic` VALUES (2214, 2153, 23, 'SDM');
 INSERT INTO `laporan_capaian_pic` VALUES (2215, 2080, 8, 'DMOT');
 INSERT INTO `laporan_capaian_pic` VALUES (2216, 2093, 8, 'DMOT');
 INSERT INTO `laporan_capaian_pic` VALUES (2217, 2094, 8, 'DMOT');
@@ -17130,6 +17128,8 @@ INSERT INTO `laporan_capaian_pic` VALUES (2229, 2279, 46, 'DMED');
 INSERT INTO `laporan_capaian_pic` VALUES (2230, 2280, 46, 'DMED');
 INSERT INTO `laporan_capaian_pic` VALUES (2231, 2281, 46, 'DMED');
 INSERT INTO `laporan_capaian_pic` VALUES (2232, 2549, 94, 'DPMSS');
+INSERT INTO `laporan_capaian_pic` VALUES (2233, 2152, 23, 'SDM');
+INSERT INTO `laporan_capaian_pic` VALUES (2234, 2153, 23, 'SDM');
 
 -- ----------------------------
 -- Table structure for level
@@ -17379,10 +17379,10 @@ CREATE TABLE `pic`  (
 -- Records of pic
 -- ----------------------------
 INSERT INTO `pic` VALUES (1, 'ADM', NULL, 'Administrator');
-INSERT INTO `pic` VALUES (2, 'DME', NULL, '-');
-INSERT INTO `pic` VALUES (3, 'DMO', NULL, '-');
+INSERT INTO `pic` VALUES (2, 'DME', 1, '-');
+INSERT INTO `pic` VALUES (3, 'DMO', 1, '-');
 INSERT INTO `pic` VALUES (4, 'DMEP', 2, '-');
-INSERT INTO `pic` VALUES (5, 'DMB', NULL, '-');
+INSERT INTO `pic` VALUES (5, 'DMB', 1, '-');
 INSERT INTO `pic` VALUES (6, 'DMOO', NULL, '-');
 INSERT INTO `pic` VALUES (7, 'DMOM', NULL, '-');
 INSERT INTO `pic` VALUES (8, 'DMOT', NULL, '-');
@@ -17403,7 +17403,7 @@ INSERT INTO `pic` VALUES (23, 'SDM', 1, 'Sekretariat Ditjen Migas');
 INSERT INTO `pic` VALUES (24, 'SDML', 23, 'Pokja Rencana dan Laporan');
 INSERT INTO `pic` VALUES (25, 'DMBS', 5, NULL);
 INSERT INTO `pic` VALUES (26, 'DMBP', 5, '-');
-INSERT INTO `pic` VALUES (27, 'DMI', 3, '-');
+INSERT INTO `pic` VALUES (27, 'DMI', 1, '-');
 INSERT INTO `pic` VALUES (28, 'DMIR', 27, '-');
 INSERT INTO `pic` VALUES (29, 'DMIB', 28, '-');
 INSERT INTO `pic` VALUES (30, 'DMIRP', 28, '-');
@@ -17415,7 +17415,7 @@ INSERT INTO `pic` VALUES (35, 'SDMK', 23, '-');
 INSERT INTO `pic` VALUES (36, 'DMEE', 2, '-');
 INSERT INTO `pic` VALUES (37, 'DMED', 2, '-');
 INSERT INTO `pic` VALUES (38, 'DMTL', 2, '-');
-INSERT INTO `pic` VALUES (39, 'DMT', 5, '-');
+INSERT INTO `pic` VALUES (39, 'DMT', 1, '-');
 INSERT INTO `pic` VALUES (40, 'DMTS', 39, '-');
 INSERT INTO `pic` VALUES (41, 'DMTE', 39, '-');
 INSERT INTO `pic` VALUES (42, 'DMTP', 39, '-');
