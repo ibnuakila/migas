@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periode;
+use App\Models\LaporanCapaian;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -91,6 +92,27 @@ class DashboardController extends Controller
             ['label' => 'Kuning (50% - 74%)', 'value' => $kuning->count()],
             ['label' => 'Merah (< 50%)', 'value' => $merah->count()]
         ];
+        
+        $qry_iksp = $select = LaporanCapaian::query()
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                ->with('kinerjaTriwulan')
+                ->with('laporanCapaianPic')
+                ->with('inputRealisasi')
+                ->with('kategoriKinerja')
+                ->select('laporan_capaian.*',
+                        'indikator.nama_indikator',
+                        'indikator.numbering',
+                        'periode.periode',
+                        'level.nama_level',
+                        'satuan.nama_satuan')
+                ->orderBy('indikator.id', 'asc')
+                ->where('level.id', '=', "1")
+                ->where('periode.status', '=', 'Active')
+                ->get();
+        $capaian_iksp = [];
 
         $periode = \App\Models\Periode::where('status', 'Active')->first();
         $user_count = \App\Models\User::all()->count();
@@ -147,7 +169,8 @@ class DashboardController extends Controller
             'websiteViewsChart' => $websiteViewsChart,
             'rerata_capaian_kinerja' => $rerata_capaian_kinerja,
             'capaian_pk' => $capaian_pk,
-            'chards' => $chards
+            'chards' => $chards,
+            'capaian_iksp' => $qry_iksp
         ]);
     }
 
