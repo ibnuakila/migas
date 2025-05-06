@@ -92,8 +92,12 @@ class DashboardController extends Controller
             ['label' => 'Kuning (50% - 74%)', 'value' => $kuning->count()],
             ['label' => 'Merah (< 50%)', 'value' => $merah->count()]
         ];
+
+        $pics = DB::table('pic')
+            ->where('parent_id', '=', '1')
+            ->get();
         
-        $qry_iksp = $select = LaporanCapaian::query()
+        $qry_iksp = LaporanCapaian::query()
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
                 ->join('level', 'indikator.level_id', '=', 'level.id')
@@ -170,7 +174,8 @@ class DashboardController extends Controller
             'rerata_capaian_kinerja' => $rerata_capaian_kinerja,
             'capaian_pk' => $capaian_pk,
             'chards' => $chards,
-            'capaian_iksp' => $qry_iksp
+            'capaian_iksp' => $qry_iksp,
+            'pics' => $pics
         ]);
     }
 
@@ -194,5 +199,33 @@ class DashboardController extends Controller
                 return $arr;
             },
         ]);
+    }
+
+    public function getIksk(Request $request, $pic)
+    {
+        $qry_iksp = LaporanCapaian::query()
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+                ->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id')
+                ->join('pic', 'pic.id', '=','indikator_pic.pic_id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')                
+                ->with('kinerjaTriwulan')
+                ->with('laporanCapaianPic')
+                ->with('inputRealisasi')
+                ->with('kategoriKinerja')
+                ->select('laporan_capaian.*',
+                        'indikator.nama_indikator',
+                        'indikator.numbering',
+                        'periode.periode',
+                        'level.nama_level',
+                        'satuan.nama_satuan')
+                ->orderBy('indikator.id', 'asc')
+                ->where('level.id', '=', "2")
+                ->where('periode.status', '=', 'Active')
+                ->where('pic.parent_id', '=', '1')
+                ->where('pic.id', '=', $pic)
+                ->get();
+        return $qry_iksp;
     }
 }
