@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group( function () {
     Route::get('/home', [\App\Http\Controllers\DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
-    Route::get('/dashboard/iksk/{pic}', [DashboardController::class, 'getIksk'])->name('getIksk');
+    Route::get('/dashboard/iksk', [DashboardController::class, 'getIksk'])->name('dashboard.getiksk');
 });
 
 Route::middleware('auth')->group(function () {

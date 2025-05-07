@@ -40,8 +40,8 @@ import {
 }
     from "@heroicons/react/24/solid";
 import NewAdminLayout from "@/layouts/NewAdminLayout";
-import { usePage }
-    from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import axios from "axios";
 
 export function Home({ props }
 ) {
@@ -51,30 +51,36 @@ export function Home({ props }
     const optPic = pics.map(pic => {
         return { value: pic.id, label: pic.nama_pic };
     })
+    const [dataCapaian, setDataCapaian] = useState(capaian_iksp);
     const [iksk, setIksk] = useState();
-    function handleIksk() {
-        if (confirm('Apakah Anda yakin akan mengimport data indikator?')) {
-            router.visit('/laporan-capaian/importindikator', {
-                method: 'get',
-                data: { isImport: true },
-                onFinish: visit => {
-                    if (flash.message) {
-                        alert(flash.message);
-                    }
-                    router.reload();
-                },
-            });
+    const [level, setLevel] = useState("IKSP");
 
-        }
+    function handleIksk() {
+        
     }
     const optLevel = [
-        {label: 'IKSP', value: 'iksp'},
-        {label: 'IKSK-2', value: 'iksk-2'}
+        {label: 'IKSP', value: 'IKSP'},
+        {label: 'IKSK-2', value: 'IKSK-2'}
     ];
     function handleChangeIksk(e) {
-        setIksk({selectValue: e});
-        //setData('jenis_kompositor_id', e);
+        setIksk(e);
+        axios.get(route('dashboard.getiksk'), {
+            params: {
+                pic: e,
+                level: level                
+            },
+            //responseType: "arraybuffer"
+        }).then(response => {
+            console.log(response);
+            setDataCapaian(response.data);
+        }).catch((error) => {
+            console.error("There was an error downloading the file", error);
+        });
         //console.log(optionJenisKompositor);
+    }
+    function handleChangeLevel(e){
+        console.log(e);
+        setLevel(e);
     }
 
     return (
@@ -274,7 +280,7 @@ export function Home({ props }
                             <div className="flex flex-wrap flex-col place-content-center gap-4">
                             <div className="sm:w-full md:w-full lg:w-full">
                                 <Select label="Select Level" id="level"
-                                        onChange={handleChangeIksk}
+                                        onChange={handleChangeLevel}
                                         >                            
                                     {optLevel.map(({value, label}, key) => (
                                             <Option value={value} key={key}>{label}</Option>
@@ -288,8 +294,7 @@ export function Home({ props }
                                     {pics.map(({id, nama_pic}, key) => (
                                             <Option value={id} key={key}>{nama_pic}</Option>
                                                             ))}                           
-                                </Select>
-                                
+                                </Select>                                
                             </div>
                             </div>
                             </CardBody>
@@ -316,7 +321,7 @@ export function Home({ props }
                                         className="flex items-center gap-1 font-normal text-blue-gray-600"
                                     >
                                         <CheckCircleIcon strokeWidth={3} className="h-4 w-4 text-blue-gray-200" />
-                                        <strong>IKSP</strong>
+                                        <strong>{level}</strong>
                                     </Typography>
                                 </div>
                             </CardHeader>
@@ -342,7 +347,7 @@ export function Home({ props }
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {capaian_iksp.map(
+                                        {dataCapaian.map(
                                             ({ nama_indikator, nama_satuan, periode, target, input_realisasi, kinerja_triwulan, status_kinerja }, key) => {
                                                 const className = `py-3 px-5 ${key === capaian_iksp.length - 1
                                                         ? ""

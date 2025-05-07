@@ -201,8 +201,31 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function getIksk(Request $request, $pic)
+    public function getIksk(Request $request)
     {
+        $pic = $request['pic'];
+        $level = $request['level'];
+        if($level == 'IKSP'){
+            $qry_iksp = LaporanCapaian::query()
+                ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
+                ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
+                ->with('kinerjaTriwulan')
+                ->with('laporanCapaianPic')
+                ->with('inputRealisasi')
+                ->with('kategoriKinerja')
+                ->select('laporan_capaian.*',
+                        'indikator.nama_indikator',
+                        'indikator.numbering',
+                        'periode.periode',
+                        'level.nama_level',
+                        'satuan.nama_satuan')
+                ->orderBy('indikator.id', 'asc')
+                ->where('level.id', '=', "1")
+                ->where('periode.status', '=', 'Active')
+                ->get();
+        }else{
         $qry_iksp = LaporanCapaian::query()
                 ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
                 ->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id')
@@ -226,6 +249,7 @@ class DashboardController extends Controller
                 ->where('pic.parent_id', '=', '1')
                 ->where('pic.id', '=', $pic)
                 ->get();
+        }
         return $qry_iksp;
     }
 }
