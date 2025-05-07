@@ -11,7 +11,7 @@
  Target Server Version : 100432
  File Encoding         : 65001
 
- Date: 30/04/2025 07:48:41
+ Date: 07/05/2025 18:45:48
 */
 
 SET NAMES utf8mb4;
@@ -17241,7 +17241,7 @@ DROP TABLE IF EXISTS `password_resets`;
 CREATE TABLE `password_resets`  (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp(0) DEFAULT current_timestamp,
+  `created_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`email`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
@@ -17273,8 +17273,8 @@ CREATE TABLE `permissions`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp(0) DEFAULT current_timestamp,
-  `updated_at` timestamp(0) DEFAULT current_timestamp,
+  `created_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `permissions_name_guard_name_unique`(`name`, `guard_name`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
@@ -17354,10 +17354,10 @@ CREATE TABLE `personal_access_tokens`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `last_used_at` timestamp(0) DEFAULT current_timestamp,
-  `expires_at` timestamp(0) DEFAULT current_timestamp,
-  `created_at` timestamp(0) DEFAULT current_timestamp,
-  `updated_at` timestamp(0) DEFAULT current_timestamp,
+  `last_used_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `expires_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `personal_access_tokens_token_unique`(`token`) USING BTREE,
   INDEX `personal_access_tokens_tokenable_type_tokenable_id_index`(`tokenable_type`, `tokenable_id`) USING BTREE
@@ -18049,8 +18049,8 @@ CREATE TABLE `roles`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp(0) DEFAULT current_timestamp,
-  `updated_at` timestamp(0) DEFAULT current_timestamp,
+  `created_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `roles_name_guard_name_unique`(`name`, `guard_name`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
@@ -18179,11 +18179,11 @@ CREATE TABLE `users`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email_verified_at` timestamp(0) default current_timestamp,
+  `email_verified_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp(0) default current_timestamp,
-  `updated_at` timestamp(0) default current_timestamp,
+  `created_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp(0) DEFAULT CURRENT_TIMESTAMP,
   `pic_id` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `users_email_unique`(`email`) USING BTREE
