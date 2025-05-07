@@ -81,6 +81,20 @@ export function Home({ props }
     function handleChangeLevel(e){
         console.log(e);
         setLevel(e);
+        if(e == 'IKSP'){
+            axios.get(route('dashboard.getiksk'), {
+                params: {
+                    pic: '-',
+                    level: e                
+                },
+                //responseType: "arraybuffer"
+            }).then(response => {
+                console.log(response);
+                setDataCapaian(response.data);
+            }).catch((error) => {
+                console.error("There was an error downloading the file", error);
+            });
+        }
     }
 
     return (
@@ -304,7 +318,7 @@ export function Home({ props }
                             </CardBody>
                             
                         </Card>
-                        
+
                         <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
                             <CardHeader
                                 floated=
