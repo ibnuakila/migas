@@ -364,7 +364,7 @@ class InputRealisasiController extends Controller
         $data['input_realisasi'] = $input_realisasi;
         $laporan_capaian = LaporanCapaian::find($input_realisasi->laporan_capaian_id);
         $indikator_formula = IndikatorFormula::where('indikator_id', $laporan_capaian->indikator_id)->first();
-        
+
         $data['indikator_formula'] = $indikator_formula;
         $spreadsheet = new Spreadsheet();
 
@@ -382,25 +382,72 @@ class InputRealisasiController extends Controller
                 ->where('nama_kompositor', '=', $nama_kompositor)
                 ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
                 ->where('input_realisasi.realisasi', '<>', 0)
+                ->where('realisasi_kompositor.nilai', '<>', 0)
                 ->first();
             $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
             if (is_object($realisasi_kompositor)) { //existing indikator
-                // $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
-                //     ->where('kompositor_id', $kompositor_id)
-                //     ->where('nilai', '>', 0)
-                //     ->first();
-                // if(is_object($realisasi_kompositor)){
-                //     $realisasi = $realisasi_kompositor->nilai;
-                // }else{
-                     $realisasi = 0;
-                // }
-                //foreach($realisasi_kompositor as $kompositor){
-                    //if($kompositor->nilai > 0){
-                        $realisasi = $realisasi_kompositor->nilai;
-                    //}
-                //}
+
+                //$realisasi = 0;
+
+                $realisasi = $realisasi_kompositor->nilai;
                 $data['realisasi'] = $realisasi;
                 $data['realisasi_kompositor'] = $realisasi_kompositor;
+
+                $sheet = $spreadsheet->getActiveSheet();
+                
+                //mapping each formula to each cell
+                foreach ($formula as $cell => $value) {
+                    $sheet->setCellValue($cell, $value);
+                }
+
+                //untuk menampilkan nilai formula mapping
+                $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                    ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                    ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                    //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                    ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                    ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                    ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                    ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                    ->where('input_realisasi.laporan_capaian_id', $input_realisasi->laporan_capaian_id)
+                    ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                    ->select(
+                        'input_realisasi.*',
+                        'triwulan.triwulan',
+                        'realisasi_kompositor.id as realisasi_kompositor_id',
+                        'realisasi_kompositor.nilai',
+                        'kompositor.nama_kompositor',
+                        'kompositor.satuan',
+                        'kompositor.id as kompositor_id',
+                        'kompositor.sumber_kompositor_id',
+                        'indeks.nama_indeks',
+                        'jenis_kompositor.nama_jenis_kompositor'
+                    )->get();
+
+                $kompositorMap = [];
+                    foreach ($realisasi_kompositor as $kompositor) {
+                        if ($kompositor['nama_kompositor'] == 'Triwulan') {
+                            $kompositor['nilai'] = $input_realisasi->triwulan_id;
+                        }
+                        if ($kompositor['nilai'] !== 0) {
+                            $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                        }
+                    }
+                //mapping kompositor to its formula
+                foreach ($formula_map as $key => $name) {
+                    if (isset($kompositorMap[$name])) {
+                        $formula_map->$key = $kompositorMap[$name];
+                    }
+                }
+                
+                //mapping formula to it's parameter value
+                foreach ($formula_map as $cell => $value) {
+                    $sheet->setCellValue($cell, $value);
+                }                
+
+                $result = $sheet->getCell('A1')->getCalculatedValue();
+
 
             } else { //new 
                 $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
@@ -432,13 +479,12 @@ class InputRealisasiController extends Controller
                     //mapping formula to kompositor ----------------------------------------------
                     $kompositorMap = [];
                     foreach ($realisasi_kompositor as $kompositor) {
-                        if($kompositor['nama_kompositor'] == 'Triwulan'){
+                        if ($kompositor['nama_kompositor'] == 'Triwulan') {
                             $kompositor['nilai'] = $input_realisasi->triwulan_id;
                         }
-                        if($kompositor['nilai'] !== 0){
+                        if ($kompositor['nilai'] !== 0) {
                             $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
                         }
-                        
                     }
 
                     foreach ($formula_map as $key => $name) {
@@ -452,16 +498,16 @@ class InputRealisasiController extends Controller
 
                     $sheet = $spreadsheet->getActiveSheet();
                     //if(is_array($formula)){
-                        //mapping each formula to each cell
-                        foreach ($formula as $cell => $value) {
-                            $sheet->setCellValue($cell, $value);
-                        }
+                    //mapping each formula to each cell
+                    foreach ($formula as $cell => $value) {
+                        $sheet->setCellValue($cell, $value);
+                    }
                     //}
                     //if(is_array($formula_map)){
-                        //mapping formula to it's parameter value
-                        foreach ($formula_map as $cell => $value) {
-                            $sheet->setCellValue($cell, $value);
-                        }
+                    //mapping formula to it's parameter value
+                    foreach ($formula_map as $cell => $value) {
+                        $sheet->setCellValue($cell, $value);
+                    }
                     //}
 
                     $result = $sheet->getCell('A1')->getCalculatedValue(); //$calculation->calculateFormula($formula, $sheet->getCell('A1'));
@@ -474,34 +520,19 @@ class InputRealisasiController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            // Set the headers to download the file
-            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            // header('Content-Disposition: attachment;filename="check_formula.xlsx"');
-            // header('Cache-Control: max-age=0');
-            // //header("Access-Control-Allow-Origin: *");
-            // //header("Access-Control-Allow-Methods: GET, POST");
-            // header("Access-Control-Allow-Headers: Content-Type");
-
-
-            //Write the file to output
-            //$writer = new Xlsx($spreadsheet);
-            //$writer->save('php://output');
 
             $writer = new Xlsx($spreadsheet);
             $response = new StreamedResponse(function () use ($writer) {
                 $writer->save('php://output');
             });
             $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            $response->headers->set('Content-Disposition', 'attachment;filename="data-usulan-akreditasi.xlsx"');
-            $response->headers->set('Cache-Control', 'max-age=0');
+            //$response->headers->set('Content-Disposition', 'attachment;filename="data-usulan-akreditasi.xlsx"');
+            //$response->headers->set('Cache-Control', 'max-age=0');
 
             return $response;
         } else {
             return $data;
         }
-
-
-
     }
     public function _calculateRealization(\Illuminate\Http\Request $request)
     {

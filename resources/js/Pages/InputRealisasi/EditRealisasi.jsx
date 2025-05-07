@@ -132,7 +132,7 @@ export default function EditRealisasi(props) {
                         const url = window.URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'check_formula.xlsx');  // Set the filename here
+                        link.setAttribute('download', 'check_formula_realisasi.xlsx');  // Set the filename here
                         document.body.appendChild(link);
                         link.click();
 
