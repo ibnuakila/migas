@@ -105,6 +105,12 @@ export default function EditRealisasi(props) {
         }
     }
 
+    const handleRealisasiFormatChange = (e) => {
+        setRealisasiFormat({ selectValue: e });
+        setData('realisasi_format', e);
+    }
+
+
     const handleCancel = (e) => {
         window.history.back();
     }
@@ -332,11 +338,10 @@ export default function EditRealisasi(props) {
                                     {isAgregasi ? (
                                         <div>
                                             <Select label="Realisasi Format" onChange={handleChangeRealisasiFormat}
-                                                defaultValue={input_realisasi.realisasi_format}
+                                                value={input_realisasi.realisasi_format}
                                                 error={errors.realisasi_format}>
-                                                {data_format.map(({ id, format }) => (
-                                                    <Option value={id} key={id}>{format}</Option>
-                                                ))}
+                                                <Option value="Decimal">Decimal</Option>
+                                                <Option value="Persentase">Persentase</Option>
                                             </Select>
                                             {errors.realisasi_format && <div className="text-red-400 mt-1">{errors.realisasi_format}</div>}
                                         </div>

@@ -361,7 +361,7 @@ export default function ListLaporanCapaian({auth}){
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-red-600">
                                                         <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} 
                                                         title="Realisasi Kompositor/Parameter" onClick={null}>
-                                                            { realisasi_format==2 ? 
+                                                            { realisasi_format=='Persentase' ? 
                                                             (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}):
                                                             (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})
                                                             }
