@@ -337,12 +337,14 @@ export default function ListLaporanCapaian({auth}){
                                           {nama_satuan}
                                         </Typography>
                                       </td>
-                                      <td className="p-4">                                      
-                                        <Typography variant="small" color="blue-gray" className="font-normal text-red-400">
-                                          {target ? (
+                                      <td className="p-4">
+                                        <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-amber-600">
+                                          <Link href={route('laporan-capaian.edit', id)} title="Edit">
+                                            {target ? (
                                             ( target_format == "Decimal" ? (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2}):
                                               (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}))
                                               ):(0)}
+                                          </Link>
                                         </Typography>
                                       </td>
                                       <td className="p-4">
