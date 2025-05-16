@@ -48,7 +48,7 @@ export default function ListIndikatorKompositor({ auth }) {
         setTermKompositor(value);
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         //if(term.length >= 2){
         router.visit('/kompositor/index-indikator/' + indikator.id, {
             method: 'get',
@@ -71,7 +71,7 @@ export default function ListIndikatorKompositor({ auth }) {
         });
         //}
 
-    }, [termIndeks, termKompositor]);
+    }, [termIndeks, termKompositor]);*/
 
     return (
         <NewAdminLayout
