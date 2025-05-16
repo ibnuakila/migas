@@ -409,7 +409,7 @@ class KompositorController extends Controller {
                     'sumber_kompositor_id' => str($request->input('sumber_kompositor_id'))
                 ];
                 //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
-                //$new_kompositor = Kompositor::create($ref_kom_data);
+                $new_kompositor = Kompositor::create($ref_kom_data);
                 //insert indikator-kompositor
                 //$validated = $validator->validated();            
                 IndikatorKompositor::create([
