@@ -292,7 +292,9 @@ class KompositorController extends Controller {
                     'indikator' => '',
             ]);
         }catch(\Exception $e){
-            return $e;
+            return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
+                'error' => 'Conflict occurred',
+                ])->toResponse(request())->setStatusCode(409);
         }
         
     }
