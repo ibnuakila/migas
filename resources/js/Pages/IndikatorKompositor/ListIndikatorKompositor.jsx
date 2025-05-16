@@ -57,7 +57,7 @@ export default function ListIndikatorKompositor({ auth }) {
             preserveState: true,
             onError: (errors) => {
                 console.error('Error occurred:', errors);
-                // You can show a toast or error message here
+                alert(errors);
             },
             onFinish: () => {
                 console.log('Request finished');
