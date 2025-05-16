@@ -560,7 +560,7 @@ class InputRealisasiController extends Controller
         //check for existing indikator
         if (is_object($kompositor)) {
             $result = 0;
-            if ($sumber_kompositor_id == 2) {//existing indikator
+            if ($sumber_kompositor_id == 2) { //existing indikator
                 //check for jenis_kompositor
                 if ($kompositor->jenis_kompositor_id == 2) { //agregasi
                     $realisasi_kompositor = RealisasiKompositor::query()
@@ -572,7 +572,7 @@ class InputRealisasiController extends Controller
                         ->where('realisasi_kompositor.nilai', '<>', 0)
                         ->first();
                     $data['realisasi_kompositor'] = $realisasi_kompositor;
-                    if(is_object($realisasi_kompositor)){
+                    if (is_object($realisasi_kompositor)) {
                         $result = $realisasi_kompositor->nilai;
                         $data['realisasi'] = $result;
                     }
@@ -606,32 +606,34 @@ class InputRealisasiController extends Controller
                     $formula = json_decode($indikator_formula->formula_realisasi);
                     $formula_map = json_decode($indikator_formula->mapping_realisasi);
 
-                    //mapping formula
-                    $kompositorMap = [];
-                    foreach ($temp_realisasi_kompositor as $kompositor) {
-                        if ($kompositor['nama_kompositor'] == 'Triwulan') {
-                            $kompositor['nilai'] = $input_realisasi->triwulan_id;
+                    if (is_array($formula) && is_array($formula_map)) {
+                        //mapping formula
+                        $kompositorMap = [];
+                        foreach ($temp_realisasi_kompositor as $kompositor) {
+                            if ($kompositor['nama_kompositor'] == 'Triwulan') {
+                                $kompositor['nilai'] = $input_realisasi->triwulan_id;
+                            }
+                            if ($kompositor['nilai'] !== 0) {
+                                $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                            }
                         }
-                        if ($kompositor['nilai'] !== 0) {
-                            $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                        //mapping kompositor to its formula
+                        foreach ($formula_map as $key => $name) {
+                            if (isset($kompositorMap[$name])) {
+                                $formula_map->$key = $kompositorMap[$name];
+                            }
                         }
-                    }
-                    //mapping kompositor to its formula
-                    foreach ($formula_map as $key => $name) {
-                        if (isset($kompositorMap[$name])) {
-                            $formula_map->$key = $kompositorMap[$name];
-                        }
-                    }
-                    $sheet = $spreadsheet->getActiveSheet();
+                        $sheet = $spreadsheet->getActiveSheet();
 
-                    //mapping each formula to each cell
-                    foreach ($formula as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
-                    }
+                        //mapping each formula to each cell
+                        foreach ($formula as $cell => $value) {
+                            $sheet->setCellValue($cell, $value);
+                        }
 
-                    //mapping formula to it's parameter value
-                    foreach ($formula_map as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
+                        //mapping formula to it's parameter value
+                        foreach ($formula_map as $cell => $value) {
+                            $sheet->setCellValue($cell, $value);
+                        }
                     }
                     //$result = $sheet->getCell('A1')->getCalculatedValue();
                 } else { //input

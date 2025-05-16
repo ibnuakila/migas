@@ -112,7 +112,8 @@ class KompositorController extends Controller {
                     DB::commit();
                 } catch (\Exception $e){
                     DB::rollBack();
-                    return $e;
+                    $message = ['message' => $e];
+                    return $message;
                 }
             } else if ($kompositor->jenis_kompositor_id == 2) {//agregasi
                 $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
