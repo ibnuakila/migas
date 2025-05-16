@@ -156,8 +156,8 @@ class KompositorController extends Controller {
                     DB::commit();
                 } catch (\Exception $e){
                     DB::rollBack();
-                    //$message = ['Message' => $e];
-                    return "Data tidak bisa dihapus karena berelasi!";//delete sub agregasi terlebih dahulu
+                    $message = ['message' => $e];
+                    return $message;//"Data tidak bisa dihapus karena berelasi!";//delete sub agregasi terlebih dahulu
                 }
             } else if ($kompositor->jenis_kompositor_id == 3) {//parameter
                 //pakai transaction -------------------------
