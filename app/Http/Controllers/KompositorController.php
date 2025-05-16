@@ -301,7 +301,7 @@ class KompositorController extends Controller {
 
     public function indexIndikator(\App\Models\Indikator $indikator, Request $request) {
         $this->authorize('kompositor-list-of-indikator');
-        
+        try{
             return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
                         'kompositors' => Kompositor::query()
                                 ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
@@ -331,7 +331,11 @@ class KompositorController extends Controller {
                                 ->get(),
                         'indikator' => $indikator,
             ]);
-        
+        }catch(\Exception $e){
+            return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
+                'error' => 'Conflict occurred',
+                ])->toResponse(request())->setStatusCode(409);
+        }
     }
 
     public function store(Request $request) {
