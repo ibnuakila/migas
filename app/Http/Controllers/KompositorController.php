@@ -275,7 +275,8 @@ class KompositorController extends Controller {
     }
 
     public function index() {
-        return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
+        try{
+            return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
                     'kompositors' => DB::table('kompositor')
                             ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                             ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
@@ -289,7 +290,11 @@ class KompositorController extends Controller {
                             ->orderBy('indeks.nama_indeks', 'asc')
                             ->get(),
                     'indikator' => '',
-        ]);
+            ]);
+        }catch(\Exception $e){
+            return $e;
+        }
+        
     }
 
     public function indexIndikator(\App\Models\Indikator $indikator, Request $request) {
