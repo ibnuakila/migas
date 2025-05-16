@@ -414,7 +414,7 @@ class KompositorController extends Controller {
                 //$validated = $validator->validated();            
                 IndikatorKompositor::create([
                     'indikator_id' => $request->input('indikator_id'),
-                    'kompositor_id' => $request->input('kompositor_id')
+                    'kompositor_id' => $new_kompositor->id //$request->input('kompositor_id')
                 ]);
 
                 //input kompositor of kompositor
