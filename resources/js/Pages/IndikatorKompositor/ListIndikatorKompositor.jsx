@@ -81,7 +81,7 @@ export default function ListIndikatorKompositor({ auth }) {
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             {indikator ? (
-                                <Typography variant="h4">Kompositor/Parameter Indikator: {indikator.nama_indikator}</Typography>
+                                <Typography variant="h4">Kompositor/Parameter Indikator: {indikator.nama_indikator} ({indikator.level_id})</Typography>
                             ) : (
                                 <Typography variant="h4">Kompositor/Parameter </Typography>
                             )}
