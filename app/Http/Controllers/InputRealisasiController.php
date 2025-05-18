@@ -605,7 +605,7 @@ class InputRealisasiController extends Controller
                     //get formula
                     $formula = json_decode($indikator_formula->formula_realisasi);
                     $formula_map = json_decode($indikator_formula->mapping_realisasi);
-
+                    $data['formula'] = $formula;
                     if (is_array($formula) && is_array($formula_map)) {
                         //mapping formula
                         $kompositorMap = [];
@@ -635,6 +635,7 @@ class InputRealisasiController extends Controller
                             $sheet->setCellValue($cell, $value);
                         }
                     }
+                    $data['formula_map'] = $formula_map;
                     //$result = $sheet->getCell('A1')->getCalculatedValue();
                 } else { //input
                     //get formula

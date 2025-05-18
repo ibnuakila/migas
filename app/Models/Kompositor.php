@@ -20,6 +20,10 @@ class Kompositor extends Model
         'sumber_kompositor_id'
     ];
     
+    public function realisasiKompositor(){
+        return $this->hasOne(realisasiKompositor::class);
+    }
+    
     public function inputRealisasi(){
         return $this->hasOne(InputRealisasi::class);
     }
