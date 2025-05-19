@@ -121,8 +121,8 @@ class KompositorController extends Controller
                     DB::commit();
                 } catch (\Illuminate\Database\QueryException $e) {
                     DB::rollBack();
-                    $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e);
+                    $message = $e->errorInfo[2] ;
+                    return Redirect::back()->with('message', $message);
                 }
                 // > Jika sumber_kompositor existing indikator (2)
             } elseif ($kompositor->sumber_kompositor_id == 2) {
@@ -141,8 +141,8 @@ class KompositorController extends Controller
                     DB::commit();
                 } catch (\Illuminate\Database\QueryException $e) {
                     DB::rollBack();
-                    $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e);
+                    $message = $e->errorInfo[2] ;
+                    return Redirect::back()->with('message', $message);
                 }
                 // > Jika sumber_kompositor existing kompositor (3)
             } elseif ($kompositor->sumber_kompositor_id == 3) {
@@ -164,8 +164,8 @@ class KompositorController extends Controller
                     DB::commit();
                 } catch (\Illuminate\Database\QueryException $e) {
                     DB::rollBack();
-                    $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e);
+                    $message = $e->errorInfo[2] ;
+                    return Redirect::back()->with('message', $message);
                 }
                 // > Jika sumber_kompositor existing parameter
             } elseif ($kompositor->sumber_kompositor_id == 4) {
@@ -193,8 +193,8 @@ class KompositorController extends Controller
                     $kompositor->delete();
                 } catch (\Illuminate\Database\QueryException $e) {
                     DB::rollBack();
-                    //$message = ['message' => $e];
-                    return Redirect::back()->with('message', $e);
+                    $message = $e->errorInfo[2] ;
+                    return Redirect::back()->with('message', $message);
                 }
             }
         } else {
