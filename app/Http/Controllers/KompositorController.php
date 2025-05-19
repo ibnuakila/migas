@@ -199,7 +199,7 @@ class KompositorController extends Controller
             }
         } else {
             $message = "Tidak bisa menghapus kompositor yang sudah memiliki realisasi!";
-            return Redirect::back()->with(['message' => $message, 'error' => '500']);
+            return Redirect::back()->with('message', $message);
         }
         $indikator_id = $request->input('indikator_id');
         //if ($request->inertia()) {
