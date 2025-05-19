@@ -98,7 +98,7 @@ export default function ListInputRealisasi({auth}){
                         <Alert open={open} icon={<Icon />} onClose={() => {
                                 setOpen(false); //router.reload();
                             }} 
-                            color="black" className="my-3 shadow-lg">
+                            color="green" className="my-3 shadow-lg">
                             {flash.message}
                         </Alert>
                     )}
@@ -218,8 +218,7 @@ export default function ListInputRealisasi({auth}){
                                     </tr>
                                 )}
                             </tbody>
-                        </table>
-                        
+                        </table>                        
                         </CardBody>
                     </Card>
                 </div>

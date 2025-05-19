@@ -122,7 +122,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return redirect()->back()->with('message', $e);
+                    return Redirect::back()->with('message', $e);
                 }
                 // > Jika sumber_kompositor existing indikator (2)
             } elseif ($kompositor->sumber_kompositor_id == 2) {
@@ -142,7 +142,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return redirect()->back()->with('message', $e);
+                    return Redirect::back()->with('message', $e);
                 }
                 // > Jika sumber_kompositor existing kompositor (3)
             } elseif ($kompositor->sumber_kompositor_id == 3) {
@@ -165,7 +165,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return redirect()->back()->with('message', $e);
+                    return Redirect::back()->with('message', $e);
                 }
                 // > Jika sumber_kompositor existing parameter
             } elseif ($kompositor->sumber_kompositor_id == 4) {
@@ -194,17 +194,17 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     //$message = ['message' => $e];
-                    return redirect()->back()->with('message', $e);
+                    return Redirect::back()->with('message', $e);
                 }
             }
         } else {
             $message = "Tidak bisa menghapus kompositor yang sudah memiliki realisasi!";
-            return redirect()->back()->with('success', $message);
+            return Redirect::back()->with(['message' => $message, 'error' => '500']);
         }
         $indikator_id = $request->input('indikator_id');
-        if ($request->inertia()) {
-            return redirect()->back()->with('message', 'Data deleted!');
-        }
+        //if ($request->inertia()) {
+            return Redirect::back()->with('message', 'Data deleted!');
+        //}
 
         //return Redirect::route('kompositor.index-indikator', $indikator_id);
     }

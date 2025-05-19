@@ -138,7 +138,7 @@ export default function EditKompositor(props) {
                                 <Alert open={open} icon={<Icon />} onClose={() => {
                                         setOpen(false); //router.reload();
                                     }} 
-                                    color="red" className="my-3 shadow-lg">
+                                    color="amber" className="my-3 shadow-lg">
                                     {flash.message}
                                 </Alert>
                             )}

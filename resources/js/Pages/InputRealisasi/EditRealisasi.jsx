@@ -269,7 +269,7 @@ export default function EditRealisasi(props) {
                 <div className="container mx-auto">
                     {flash.message && (
                         <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)}
-                            color="black" className="my-3 shadow-lg">
+                            color="green" className="my-3 shadow-lg">
                             {flash.message}
                         </Alert>
                     )}
