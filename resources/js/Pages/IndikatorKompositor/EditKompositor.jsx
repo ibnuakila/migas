@@ -47,7 +47,7 @@ export default function EditKompositor(props) {
         parameter_id: parameter ? parameter.id : null,
         pics: defPics
     });
-    
+    const { flash } = props;  
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');    
     const [isParameter, setIsParameter] = useState(kompositor.data.jenis_kompositor_id == 3 ? true : false);
@@ -107,6 +107,14 @@ export default function EditKompositor(props) {
                 auth = {auth}
                 children={(
                         <div className="container mx-auto">
+                            {flash.message && (
+                                <Alert open={open} icon={<Icon />} onClose={() => {
+                                        setOpen(false); //router.reload();
+                                    }} 
+                                    color="black" className="my-3 shadow-lg">
+                                    {flash.message}
+                                </Alert>
+                            )}
                                 <Card className="p-5 h-full w-45">                                    
                                 <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                     <Typography variant="h4" color="white">
