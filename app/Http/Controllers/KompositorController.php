@@ -122,7 +122,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e['errorInfo'][2]);
+                    return Redirect::back()->with('message', $e->errorInfo(2));
                 }
                 // > Jika sumber_kompositor existing indikator (2)
             } elseif ($kompositor->sumber_kompositor_id == 2) {
@@ -142,7 +142,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e['errorInfo'][2]);
+                    return Redirect::back()->with('message', $e->errorInfo(2));
                 }
                 // > Jika sumber_kompositor existing kompositor (3)
             } elseif ($kompositor->sumber_kompositor_id == 3) {
@@ -165,7 +165,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e['errorInfo'][2]);
+                    return Redirect::back()->with('message', $e->errorInfo(2));
                 }
                 // > Jika sumber_kompositor existing parameter
             } elseif ($kompositor->sumber_kompositor_id == 4) {
@@ -194,7 +194,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     //$message = ['message' => $e];
-                    return Redirect::back()->with('message', $e['errorInfo'][2]);
+                    return Redirect::back()->with('message', $e->errorInfo(2));
                 }
             }
         } else {
