@@ -142,7 +142,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return Redirect::back()->with('message', $e);
+                    return Redirect::back()->with('message', $e[2]);
                 }
                 // > Jika sumber_kompositor existing kompositor (3)
             } elseif ($kompositor->sumber_kompositor_id == 3) {
