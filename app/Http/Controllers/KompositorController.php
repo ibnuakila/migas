@@ -122,7 +122,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return $message;
+                    return redirect()->back()->with('error', $e);
                 }
                 // > Jika sumber_kompositor existing indikator (2)
             } elseif ($kompositor->sumber_kompositor_id == 2) {
@@ -142,7 +142,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return $message;
+                    return redirect()->back()->with('error', $e);
                 }
                 // > Jika sumber_kompositor existing kompositor (3)
             } elseif ($kompositor->sumber_kompositor_id == 3) {
@@ -165,7 +165,7 @@ class KompositorController extends Controller
                 } catch (\Exception $e) {
                     DB::rollBack();
                     $message = ['message' => $e];
-                    return $message;
+                    return redirect()->back()->with('error', $e);
                 }
                 // > Jika sumber_kompositor existing parameter
             } elseif ($kompositor->sumber_kompositor_id == 4) {
@@ -193,16 +193,20 @@ class KompositorController extends Controller
                     $kompositor->delete();
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    $message = ['message' => $e];
-                    return $message;
+                    //$message = ['message' => $e];
+                    return redirect()->back()->with('error', $e);
                 }
             }
         } else {
             $message = "Tidak bisa menghapus kompositor yang sudah memiliki realisasi!";
-            return $message;
+            return redirect()->back()->with('success', $message);
         }
         $indikator_id = $request->input('indikator_id');
-        return Redirect::route('kompositor.index-indikator', $indikator_id);
+        if ($request->inertia()) {
+            return redirect()->back()->with('success', 'Data deleted!');
+        }
+
+        //return Redirect::route('kompositor.index-indikator', $indikator_id);
     }
 
     public function _destroy(Kompositor $kompositor, Request $request)
