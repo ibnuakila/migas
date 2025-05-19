@@ -48,6 +48,7 @@ export default function EditKompositor(props) {
         pics: defPics
     });
     const { flash } = props;  
+    const [open, setOpen] = useState(true);
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');    
     const [isParameter, setIsParameter] = useState(kompositor.data.jenis_kompositor_id == 3 ? true : false);
@@ -108,7 +109,7 @@ export default function EditKompositor(props) {
                         });
         }
     }
-    
+
     function Icon() {
         return (
           <svg
