@@ -21,7 +21,7 @@ class Kompositor extends Model
     ];
     
     public function realisasiKompositor(){
-        return $this->hasOne(realisasiKompositor::class);
+        return $this->hasOne(RealisasiKompositor::class);
     }
     
     public function inputRealisasi(){
