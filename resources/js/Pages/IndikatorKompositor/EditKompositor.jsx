@@ -98,7 +98,14 @@ export default function EditKompositor(props) {
     
     const handleDestroy = (e) => {
         if (confirm('Apakah Anda yakin akan menghapus data kompositor?')) {
-            destroy(route('kompositor.destroy', kompositor.data.id));
+            //destroy(route('kompositor.destroy', kompositor.data.id));
+            router.visit('/kompositor/delete/' +  kompositor.data.id, {
+                            method: 'delete',
+                            //data:{laporan_capaian_id:laporan_capaian.id, triwulan_id:triwulan.id},
+                            /*onFinish: visit => {                    
+                                router.reload();
+                                },*/
+                        });
         }
     }
     
