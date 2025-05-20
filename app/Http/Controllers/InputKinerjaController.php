@@ -173,7 +173,7 @@ class InputKinerjaController extends Controller
             $formula = json_decode($indikator_formula->formula_kinerja);
             $data['mapping'] = $mapping; //json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
-            //if(is_array($mapping)){
+            if(is_object($mapping)){
                 foreach($mapping as $key => $name){
                     if(strtolower($name) == 'target'){
                         $mapping->$key = $obj_laporan_capaian->target;
@@ -182,16 +182,17 @@ class InputKinerjaController extends Controller
                         $mapping->$key = $obj_realisasi->realisasi;
                     }
                 }
-            //}
+            }
             $data['mapping_value'] = $mapping;
             //calculate the formula in virtual spreadsheet ------------------------------
             
             $sheet = $spreadsheet->getActiveSheet();
             //mapping each formula to each cell
-            foreach ($formula as $cell => $value){
-                $sheet->setCellValue($cell, $value);
+            if(is_object($formula)){
+                foreach ($formula as $cell => $value){
+                    $sheet->setCellValue($cell, $value);
+                }
             }
-        
             //mapping formula to it's parameter value
             foreach ($mapping as $cell => $value) {
                 $sheet->setCellValue($cell, $value);
