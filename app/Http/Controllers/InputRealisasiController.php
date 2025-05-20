@@ -554,6 +554,7 @@ class InputRealisasiController extends Controller
 
         //get kompositor
         $kompositor = Kompositor::find($kompositor_id);
+        $data['kompositor'] = $kompositor;
         //initialize spreadsheet
         $spreadsheet = new Spreadsheet();
 
