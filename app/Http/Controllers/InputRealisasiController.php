@@ -597,6 +597,7 @@ class InputRealisasiController extends Controller
                             'kompositor.satuan',
                             'kompositor.id as kompositor_id',
                             'kompositor.sumber_kompositor_id',
+                            'kompositor.jenis_kompositor_id',
                             'indeks.nama_indeks',
                             'jenis_kompositor.nama_jenis_kompositor'
                         )->get();
@@ -665,6 +666,7 @@ class InputRealisasiController extends Controller
                             'kompositor.satuan',
                             'kompositor.id as kompositor_id',
                             'kompositor.sumber_kompositor_id',
+                            'kompositor.jenis_kompositor_id',
                             'indeks.nama_indeks',
                             'jenis_kompositor.nama_jenis_kompositor'
                         )->get();
