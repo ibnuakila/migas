@@ -202,11 +202,9 @@ class KompositorController extends Controller
             return Redirect::back()->with('message', $message);
         }
         $indikator_id = $request->input('indikator_id');
-        //if ($request->inertia()) {
-            return Redirect::back()->with('message', 'Data deleted!');
-        //}
+        
 
-        //return Redirect::route('kompositor.index-indikator', $indikator_id);
+        return Redirect::route('kompositor.index-indikator', $indikator_id);
     }
 
     public function _destroy(Kompositor $kompositor, Request $request)
