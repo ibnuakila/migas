@@ -670,12 +670,12 @@ class InputRealisasiController extends Controller
                             'indeks.nama_indeks',
                             'jenis_kompositor.nama_jenis_kompositor'
                         )->get();
-                    $data['realisasi_kompositor'] = $realisasi_kompositor;
+                    $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
 
                     //get formula
                     $formula = json_decode($indikator_formula->formula_realisasi);
                     $formula_map = json_decode($indikator_formula->mapping_realisasi);
-
+                    $data['formula'] = $formula;
                     //mapping formula
                     $kompositorMap = [];
                     foreach ($realisasi_kompositor as $kompositor) {
@@ -704,6 +704,7 @@ class InputRealisasiController extends Controller
                         $sheet->setCellValue($cell, $value);
                     }
                     $result = $sheet->getCell('A1')->getCalculatedValue();
+                    $data['formula_map'] = $formula_map;
                 } else { //input
                     //get formula
 
