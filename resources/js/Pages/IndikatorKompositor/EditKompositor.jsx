@@ -102,7 +102,7 @@ export default function EditKompositor(props) {
             //destroy(route('kompositor.destroy', kompositor.data.id));
             router.visit('/kompositor/delete/' +  kompositor.data.id, {
                             method: 'delete',
-                            //data:{laporan_capaian_id:laporan_capaian.id, triwulan_id:triwulan.id},
+                            data:{indikator_id: data.indikator_id},
                             /*onFinish: visit => {                    
                                 router.reload();
                                 },*/
