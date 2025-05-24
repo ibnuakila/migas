@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Requests\KompositorRequest;
+use App\Models\Indikator;
 use App\Models\Kompositor;
 use App\Models\IndikatorKompositor;
 use Illuminate\Support\Facades\DB;
@@ -431,6 +432,8 @@ class KompositorController extends Controller
     public function indexIndikator(\App\Models\Indikator $indikator, Request $request)
     {
         $this->authorize('kompositor-list-of-indikator');
+        $temp_indikator = Indikator::where('id', $indikator->id)
+        ->with('level')->first();
         try {
             return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [
                 'kompositors' => Kompositor::query()
@@ -438,6 +441,7 @@ class KompositorController extends Controller
                     ->join('indikator', 'indikator.id', '=', 'indikator_kompositor.indikator_id')
                     ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
                     ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                    ->join('level', 'indikator.level_id', '=', 'level.id')
                     ->with('kompositorPics')
                     ->when($request->input('findeks'), function ($query, $search) {
                         if ($search != '') {
@@ -454,13 +458,13 @@ class KompositorController extends Controller
                         'kompositor.*',
                         'indikator.nama_indikator',
                         'jenis_kompositor.nama_jenis_kompositor',
-                        //'indeks.id as _indeks_id',
+                        'level.nama_level',
                         'indeks.nama_indeks'
                     )
                     ->where('indikator.id', '=', $indikator->id)
                     ->orderBy('indeks.id', 'asc')
                     ->get(),
-                'indikator' => $indikator,
+                'indikator' => $temp_indikator,
             ]);
         } catch (\Exception $e) {
             return Inertia::render('IndikatorKompositor/ListIndikatorKompositor', [

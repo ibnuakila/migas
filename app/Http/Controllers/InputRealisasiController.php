@@ -163,7 +163,9 @@ class InputRealisasiController extends Controller
     public function laporanCapaianTriwulan(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan)
     {
         $this->authorize('input-realisasi-list');
-        $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)->first();
+        $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)
+        ->with('level')
+        ->first();
         return Inertia::render('InputRealisasi/ListInputRealisasi', [
             'laporan_capaian' => $laporancapaian,
             'indikator' => $indikator,
@@ -177,7 +179,8 @@ class InputRealisasiController extends Controller
                 ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
                 ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
                 ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
-                ->with('realisasiKompositorPics')
+                ->join('level', 'indikator.level_id', '=', 'level.id')
+                ->with(['realisasiKompositorPics'])
                 ->when(Request::input('findeks'), function ($query, $search) {
                     if ($search != '') {
                         $query->where('indeks.nama_indeks', 'like', "%{$search}%");
@@ -200,7 +203,8 @@ class InputRealisasiController extends Controller
                     'kompositor.id as kompositor_id',
                     'kompositor.sumber_kompositor_id',
                     'indeks.nama_indeks',
-                    'jenis_kompositor.nama_jenis_kompositor'
+                    'jenis_kompositor.nama_jenis_kompositor',
+                    'level.nama_level'
                 )->distinct()
                 ->get(),
         ]);
