@@ -105,7 +105,7 @@ export default function ListInputRealisasi({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
                             <Typography variant="h4" color="white">
-                              Input Realisasi Kompositor/Parameter {indikator.nama_indikator} 
+                              Input Realisasi Kompositor/Parameter {indikator.nama_indikator}  {indikator.level_id}
                             </Typography>
                         </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
