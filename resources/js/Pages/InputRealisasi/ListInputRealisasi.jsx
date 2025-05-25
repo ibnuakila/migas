@@ -20,7 +20,7 @@ import {
 import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function ListInputRealisasi({auth}){
-    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
+    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Level", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
  
     const { input_realisasis, indikator, laporan_capaian, triwulan, realisasi_kompositor_pics } = usePage().props;
     const {
@@ -148,11 +148,12 @@ export default function ListInputRealisasi({auth}){
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>                                   
+                                    <th></th> 
+                                    <th></th>                                  
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai,  
+                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai, nama_level, 
                                     satuan, triwulan, realisasi_kompositor_pics, realisasi_kompositor_id}) => (
                                     <tr key={kompositor_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
@@ -168,6 +169,11 @@ export default function ListInputRealisasi({auth}){
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
                                           {nama_kompositor}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {nama_level}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
