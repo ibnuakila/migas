@@ -216,7 +216,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test', function () {
     
-    $result = App\Models\InputRealisasi::query()
+    /*$result = App\Models\InputRealisasi::query()
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
                 ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                 ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')    
@@ -279,8 +279,8 @@ Route::get('/test', function () {
                         'indeks.nama_indeks',
                         'jenis_kompositor.nama_jenis_kompositor'
                         )
-                ->get();*/
-    return $result;
+                ->get();
+    return $result;*/
 });
 
 Route::get('/test2', function () {
