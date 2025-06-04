@@ -101,7 +101,7 @@ class KompositorController extends Controller
                     $indikator_kompositor->delete();
                     //> Jika jenis kompositor agregasi
                     if ($kompositor->jenis_kompositor_id == 2) { //agregasi
-                        //> delete indeks
+                        //cari indeks
                         $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
                         
 
@@ -120,6 +120,7 @@ class KompositorController extends Controller
                     }
                     //> delete kompositor
                     $kompositor->delete();
+                    //> delete indeks
                     if(is_object($indeks)){
                         $indeks->delete();
                     }
