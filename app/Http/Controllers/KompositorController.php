@@ -100,6 +100,7 @@ class KompositorController extends Controller
                     $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
                     $indikator_kompositor->delete();
                     //> Jika jenis kompositor agregasi
+                    $indeks = null;
                     if ($kompositor->jenis_kompositor_id == 2) { //agregasi
                         //cari indeks
                         $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
