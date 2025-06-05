@@ -38,7 +38,7 @@ class KompositorController extends Controller
                 $query = "WITH RECURSIVE Hierarchy AS (
                                 -- Base case: Select the root node
                                 SELECT 
-                                    id,
+                                    indeks.id,
                                     nama_indeks,
                                     parent_id,
                                     level
@@ -103,8 +103,7 @@ class KompositorController extends Controller
                     $indeks = null;
                     if ($kompositor->jenis_kompositor_id == 2) { //agregasi
                         //cari indeks
-                        $indeks = \App\Models\Indeks::find($kompositor->indeks_id);
-                        
+                        $indeks = \App\Models\Indeks::find($kompositor->indeks_id);                        
 
                         //> Jika jenis kompositor parameter
                     } elseif ($kompositor->jenis_kompositor_id == 3) {
@@ -145,6 +144,7 @@ class KompositorController extends Controller
                     $indikator_kompositor->delete();
                     //> delete kompositor
                     $kompositor->delete();
+
                     DB::commit();
                 } catch (\Illuminate\Database\QueryException $e) {
                     DB::rollBack();
