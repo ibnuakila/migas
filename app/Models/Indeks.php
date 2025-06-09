@@ -14,6 +14,7 @@ class Indeks extends Model
     public $timestamps = false;
     protected $fillable = [        
         'nama_indeks',
-        'parent_id',        
+        'parent_id',  
+        'level'      
     ];
 }
