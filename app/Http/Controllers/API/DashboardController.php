@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Models\LaporanCapaian;
 use Illuminate\Http\Request;
