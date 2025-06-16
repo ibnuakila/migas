@@ -69,7 +69,8 @@ class DashboardController extends BaseController
         $data['rerata_capaian_kinerja'] = $rerata_capaian_kinerja;
         $data['capaian_pk'] = $capaian_pk;
         $data['dashboard_capaian'] = $qry_iksp;
-        return $this->sendResponse($data,'Success', $rerata_capaian_kinerja->count());
+        //return $this->sendResponse($data,'Success', $rerata_capaian_kinerja->count());
+        return view('dashboard', $data);
     }
 
 }
