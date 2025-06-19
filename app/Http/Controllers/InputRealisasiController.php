@@ -248,7 +248,7 @@ class InputRealisasiController extends Controller
         $kompositor = \App\Models\Kompositor::where('id', $request->input('kompositor_id'))->first();
         $lapcapaian = \App\Models\LaporanCapaian::where('id', $request->input('laporan_capaian_id'))->first();
         $indikator = \App\Models\Indikator::where('id', $lapcapaian->indikator_id)->first();
-        if ($kompositor->nama_kompositor == $indikator->nama_indikator) {
+        if (strtolower(trim($kompositor->nama_kompositor)) == strtolower(trim($indikator->nama_indikator))) {
             $update_status_1 = $inputrealisasi->update([
                 'realisasi' => (float) str_replace(',', '', $request->input('realisasi')),
                 'realisasi_format' => $request->input('realisasi_format'),
