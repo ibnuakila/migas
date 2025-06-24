@@ -342,7 +342,7 @@ export default function ListLaporanCapaian({auth}){
                                           <Link href={route('laporan-capaian.edit', id)} title="Edit">
                                             {target ? (
                                             ( target_format == "Decimal" ? (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2}):
-                                              (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}))
+                                              (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}))
                                               ):(0)}
                                           </Link>
                                         </Typography>
@@ -364,8 +364,8 @@ export default function ListLaporanCapaian({auth}){
                                                         <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} 
                                                         title="Realisasi Kompositor/Parameter" onClick={null}>
                                                             { realisasi_format=='Persentase' ? 
-                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}):
-                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:2})
+                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}):
+                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:5})
                                                             }
                                                         </Link>
                                                     </Typography>
@@ -408,7 +408,7 @@ export default function ListLaporanCapaian({auth}){
                                                 <td className="p-4 text-center" key={id+triwulan_id}>
                                                     <Typography  variant="small" color="blue-gray" className="font-normal text-blue-600">
                                                         <Link href={route('input-kinerja.edit', {laporancapaian:id, triwulan:triwulan_id})} title="Kinerja">
-                                                            {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
+                                                            {(parseFloat(kinerja)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'})}
                                                         </Link>
                                                     </Typography>
                                                 </td>
@@ -447,7 +447,7 @@ export default function ListLaporanCapaian({auth}){
                                       
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className={kinerja_color}>
-                                          {(parseFloat(kinerja_tahunan)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
+                                          {(parseFloat(kinerja_tahunan)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'})}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
@@ -460,7 +460,7 @@ export default function ListLaporanCapaian({auth}){
                                       </td>
                                       <td className="p-4">
                                         <Typography variant="small" color="blue-gray" className={kinerja_color}>
-                                        {(parseFloat(status_kinerja)).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'})}
+                                        {(parseFloat(status_kinerja)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'})}
                                         </Typography>
                                       </td>
                                       <td className="p-4">
