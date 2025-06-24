@@ -183,7 +183,7 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600 text-right">
-                                            {nilai ? ((parseFloat(nilai)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
+                                            {nilai ? ((parseFloat(nilai)).toLocaleString(undefined, {maximumFractionDigits:5})):(0)}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
