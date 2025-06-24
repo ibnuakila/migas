@@ -342,7 +342,7 @@ export default function ListLaporanCapaian({auth}){
                                           <Link href={route('laporan-capaian.edit', id)} title="Edit">
                                             {target ? (
                                             ( target_format == "Decimal" ? (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2}):
-                                              (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}))
+                                              (parseFloat(target.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}))
                                               ):(0)}
                                           </Link>
                                         </Typography>
@@ -364,8 +364,8 @@ export default function ListLaporanCapaian({auth}){
                                                         <Link href={route('input-realisasi.laporan-capaian-triwulan', {laporancapaian:id, triwulan:triwulan_id})} 
                                                         title="Realisasi Kompositor/Parameter" onClick={null}>
                                                             { realisasi_format=='Persentase' ? 
-                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}):
-                                                            (parseFloat(realisasi)).toLocaleString(undefined, {maximumFractionDigits:5})
+                                                            (parseFloat(realisasi.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:5, style:'percent'}):
+                                                            (parseFloat(realisasi.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:5})
                                                             }
                                                         </Link>
                                                     </Typography>
