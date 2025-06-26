@@ -619,9 +619,9 @@ class InputRealisasiController extends Controller
                             if ($kompositor['nama_kompositor'] == 'Triwulan') {
                                 $kompositor['nilai'] = $input_realisasi->triwulan_id;
                             }
-                            if ($kompositor['nilai'] !== 0) {
+                            //if ($kompositor['nilai'] !== 0) {
                                 $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
-                            }
+                            //}
                         }
                         //mapping kompositor to its formula
                         foreach ($formula_map as $key => $name) {
