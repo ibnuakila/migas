@@ -341,8 +341,8 @@ export default function ListLaporanCapaian({auth}){
                                         <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-amber-600">
                                           <Link href={route('laporan-capaian.edit', id)} title="Edit">
                                             {target ? (
-                                            ( target_format == "Decimal" ? (parseFloat(target)).toLocaleString(undefined, {maximumFractionDigits:2}):
-                                              (parseFloat(target.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:2, style:'percent'}))
+                                            ( target_format == "Decimal" ? (parseFloat(target.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:3}):
+                                              (parseFloat(target.toFixed(2))).toLocaleString(undefined, {maximumFractionDigits:3, style:'percent'}))
                                               ):(0)}
                                           </Link>
                                         </Typography>
