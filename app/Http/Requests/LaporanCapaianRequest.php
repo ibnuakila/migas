@@ -28,7 +28,7 @@ class LaporanCapaianRequest extends FormRequest
             'periode_id' => ['required', 'integer'],               
             'indikator_id' => ['required', 'integer'],
             'kategori_kinerja_id' =>['nullable'],
-            'target' => ['required', 'decimal'],
+            'target' => ['required', 'decimal:5'],
             'target_format' => ['required'],
             'status_kinerja' => ['nullable'],
             'kinerja_tahunan' => ['nullable'],
