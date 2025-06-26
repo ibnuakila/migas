@@ -160,7 +160,7 @@ export default function EditRealisasi(props) {
                         })
                         .then(res => {
                             console.log(res);
-                            if (res.data.realisasi) {
+                            //if (res.data.realisasi) {
                                 alert(res.data.realisasi);
 
                                 let realisasi = document.getElementById('realisasi');
@@ -168,9 +168,9 @@ export default function EditRealisasi(props) {
                                 //realisasi.setAttribute('value', res.data.result);
                                 setData('realisasi', parseFloat(res.data.realisasi).toLocaleString("en-US", { maximumFractionDigits: 5 }));
                                 //setData('nilai', res.data.realisasi);
-                            } else {
+                            /*} else {
                                 alert(res.data.message);
-                            }
+                            }*/
                         })
                         .catch((err) => {
                             if (err.response) {
