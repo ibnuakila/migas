@@ -572,6 +572,7 @@ class InputRealisasiController extends Controller
                         ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                         ->join('kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
                         ->where('nama_kompositor', '=', $nama_kompositor)
+                        ->where('sumber_kompositor_id', '=', 2)//agregasi
                         ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
                         ->where('input_realisasi.realisasi', '<>', 0)
                         ->where('realisasi_kompositor.nilai', '<>', 0)
