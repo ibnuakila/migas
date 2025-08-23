@@ -61,7 +61,7 @@ class DashboardController extends Controller
         $rerata_capaian_kinerja = DB::table('pic')
             ->join('laporan_capaian_pic', 'pic.id', '=', 'laporan_capaian_pic.pic_id')
             ->join('laporan_capaian', 'laporan_capaian_pic.laporan_capaian_id', '=', 'laporan_capaian.id')
-            ->select('pic.nama_pic', DB::raw('AVG(laporan_capaian.kinerja_tahunan) AS rerata_kinerja'))
+            ->select('pic.nama_pic', DB::raw('AVG(laporan_capaian.kinerja_tahunan::numeric) AS rerata_kinerja'))
             ->where('parent_id', 1)
             ->groupBy('pic.nama_pic')
             ->get();
