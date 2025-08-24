@@ -114,7 +114,7 @@ class LaporanCapaianController extends Controller
                 $user = $request->user();
                 $roles = $user->getRoleNames();
 
-                if (!$roles->contains('Administrator')) {
+                if ($roles->contains('Administrator')) {
                     $query->join('laporan_capaian_pic as lcp_user', 'laporan_capaian.id', '=', 'lcp_user.laporan_capaian_id');
                     $query->where('lcp_user.pic_id', '=', $user->pic_id);
                 }
