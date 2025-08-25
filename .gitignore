@@ -21,3 +21,4 @@ sicaki.bak
 /nbproject/private/
 /bootstrap/ssr/assets
 /bootstrap/
+config/database.php
