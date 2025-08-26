@@ -370,14 +370,25 @@ export default function ListLaporanCapaian({ auth }) {
                             </div>
                           </Typography>
                         </td>
-                        {input_realisasi.length > 0 ?
-                          (input_realisasi.map(({ realisasi, realisasi_format, triwulan_id }) => (
-                            <td className="p-4 text-center" key={id + triwulan_id}>
-                              <Typography variant="small" color="blue-gray" className="font-normal text-red-600">
-                                <Link href={route('input-realisasi.laporan-capaian-triwulan', { laporancapaian: id, triwulan: triwulan_id })}
-                                  title="Realisasi Kompositor/Parameter" onClick={null}>
-                                  {
-                                    realisasi_format === 'Persentase'
+
+                        {input_realisasi.length > 0 ? (
+                          [...input_realisasi]
+                            .sort((a, b) => a.triwulan_id - b.triwulan_id) // ✅ sort ascending by triwulan_id
+                            .map(({ realisasi, realisasi_format, triwulan_id }) => (
+                              <td className="p-4 text-center" key={id + triwulan_id}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal text-red-600"
+                                >
+                                  <Link
+                                    href={route('input-realisasi.laporan-capaian-triwulan', {
+                                      laporancapaian: id,
+                                      triwulan: triwulan_id
+                                    })}
+                                    title="Realisasi Kompositor/Parameter"
+                                  >
+                                    {realisasi_format === 'Persentase'
                                       ? Number(realisasi).toLocaleString(undefined, {
                                         style: 'percent',
                                         minimumFractionDigits: 2,
@@ -386,98 +397,93 @@ export default function ListLaporanCapaian({ auth }) {
                                       : Number(realisasi).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
-                                      })
-                                  }
+                                      })}
+                                  </Link>
+                                </Typography>
+                              </td>
+                            ))
+                        ) : (
+                          <>
+                            {[1, 2, 3, 4].map((tw) => (
+                              <td key={tw}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-medium mr-1 text-red-300"
+                                >
+                                  <Link
+                                    href={route('input-realisasi.laporan-capaian-triwulan', {
+                                      laporancapaian: id,
+                                      triwulan: tw
+                                    })}
+                                    title={`Realisasi Kompositor/Parameter TW ${tw}`}
+                                  >
+                                    <PencilIcon className="h-4 w-4" />
+                                  </Link>
+                                </Typography>
+                              </td>
+                            ))}
+                          </>
+                        )}
 
-                                </Link>
-                              </Typography>
-                            </td>
-                          ))) :
-                          (<>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                <Link href={route('input-realisasi.laporan-capaian-triwulan', { laporancapaian: id, triwulan: 1 })} title="Realisasi Kompositor/Parameter">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                <Link href={route('input-realisasi.laporan-capaian-triwulan', { laporancapaian: id, triwulan: 2 })} title="Realisasi Kompositor/Parameter">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                <Link href={route('input-realisasi.laporan-capaian-triwulan', { laporancapaian: id, triwulan: 3 })} title="Realisasi Kompositor/Parameter">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-red-300">
-                                <Link href={route('input-realisasi.laporan-capaian-triwulan', { laporancapaian: id, triwulan: 4 })} title="Realisasi Kompositor/Parameter">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                          </>)
-                        }
+                        {kinerja_triwulan.length > 0 ? (
+                          [...kinerja_triwulan]
+                            .sort((a, b) => a.triwulan_id - b.triwulan_id) // ✅ sort ascending
+                            .map(({ triwulan_id, kinerja }) => (
+                              <td className="p-4 text-center" key={id + triwulan_id}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal text-blue-600"
+                                >
+                                  <Link
+                                    href={route('input-kinerja.edit', {
+                                      laporancapaian: id,
+                                      triwulan: triwulan_id
+                                    })}
+                                    title="Kinerja"
+                                  >
+                                    {Number(kinerja).toLocaleString(undefined, {
+                                      style: 'percent',
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2
+                                    })}
+                                  </Link>
+                                </Typography>
+                              </td>
+                            ))
+                        ) : (
+                          <>
+                            {[1, 2, 3, 4].map((tw) => (
+                              <td key={tw}>
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-medium mr-1 text-blue-300"
+                                >
+                                  <Link
+                                    href={route('input-kinerja.edit', {
+                                      laporancapaian: id,
+                                      triwulan: tw
+                                    })}
+                                    title={`Kinerja TW ${tw}`}
+                                  >
+                                    <PencilIcon className="h-4 w-4" />
+                                  </Link>
+                                </Typography>
+                              </td>
+                            ))}
+                          </>
+                        )}
 
-                        {kinerja_triwulan.length > 0 ?
-                          (kinerja_triwulan.map(({ triwulan_id, kinerja }) => (
-                            <td className="p-4 text-center" key={id + triwulan_id}>
-                              <Typography variant="small" color="blue-gray" className="font-normal text-blue-600">
-                                <Link href={route('input-kinerja.edit', { laporancapaian: id, triwulan: triwulan_id })} title="Kinerja">
-                                  {Number(kinerja).toLocaleString(undefined, {
-                                    style: 'percent',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                  })}
-                                </Link>
-                              </Typography>
-                            </td>
-                          ))) :
-                          (<>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                <Link href={route('input-kinerja.edit', { laporancapaian: id, triwulan: 1 })} title="Kinerja TW I">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                <Link href={route('input-kinerja.edit', { laporancapaian: id, triwulan: 2 })} title="Kinerja TW II">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                <Link href={route('input-kinerja.edit', { laporancapaian: id, triwulan: 3 })} title="Kinerja TW III">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                            <td>
-                              <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-blue-300">
-                                <Link href={route('input-kinerja.edit', { laporancapaian: id, triwulan: 4 })} title="Kinerja TW IV">
-                                  <PencilIcon className="h-4 w-4" />
-                                </Link>
-                              </Typography>
-                            </td>
-                          </>)
-                        }
 
                         <td className="p-4">
                           <Typography variant="small" color="blue-gray" className={kinerja_color}>
                             {Number(kinerja_tahunan).toLocaleString(undefined, {
-                                    style: 'percent',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                  })}
+                              style: 'percent',
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
                           </Typography>
                         </td>
                         <td className="p-4">
@@ -491,10 +497,10 @@ export default function ListLaporanCapaian({ auth }) {
                         <td className="p-4">
                           <Typography variant="small" color="blue-gray" className={kinerja_color}>
                             {Number(status_kinerja).toLocaleString(undefined, {
-                                    style: 'percent',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                  })}
+                              style: 'percent',
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2
+                            })}
                           </Typography>
                         </td>
                         <td className="p-4">
