@@ -20,4 +20,8 @@ class IndikatorFormula extends Model
         'formula_kinerja',
         'mapping_kinerja'
     ];
+    
+    public function indikator() {
+        return $this->belongsTo(Indikator::class);
+    }
 }

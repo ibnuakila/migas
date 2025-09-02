@@ -1,31 +1,26 @@
 import { chartsConfig } from "@/configs/index.js";
 
 const websiteViewsChart = {
-  type: "line",
+  type: "bar",
   height: 220,
   series: [
     {
-      name: "Realisasi",
-      data: [50, 40, 100, 120],
+      name: "Views",
+      data: [50, 20, 10, 22, 50, 10, 40],
     },
   ],
   options: {
     ...chartsConfig,
-    colors: ["blue"],
-    stroke: {
-      lineCap: "round",
-    },
-    markers: {
-      size: 5,
+    colors: "#388e3c",
+    plotOptions: {
+      bar: {
+        columnWidth: "16%",
+        borderRadius: 5,
+      },
     },
     xaxis: {
       ...chartsConfig.xaxis,
-      categories: [
-        "TW 1",
-        "TW 2",
-        "TW 3",
-        "TW 4",
-      ],
+      categories: ["M", "T", "W", "T", "F", "S", "S"],
     },
   },
 };

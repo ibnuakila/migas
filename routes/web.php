@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group( function () {
     Route::get('/home', [\App\Http\Controllers\DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/iksk', [DashboardController::class, 'getIksk'])->name('dashboard.getiksk');
 });
 
 Route::middleware('auth')->group(function () {
@@ -125,7 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/input-kinerja/store', [InputKinerjaController::class, 'store'])->name('input-kinerja.store');
     Route::put('/input-kinerja/update/{kinerjatriwulan}', [InputKinerjaController::class, 'update'])->name('input-kinerja.update');
     Route::delete('/input-kinerja/delete/{kinerjatriwulan}', [InputKinerjaController::class, 'destroy'])->name('input-kinerja.destroy');
-    Route::post('/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
+    Route::match(['GET', 'POST'],'/input-kinerja/calculate-kinerja', [InputKinerjaController::class, 'calculateKinerja'])->name('input-kinerja.calculate-kinerja');
 });
 
 Route::middleware('auth')->group(function () {
@@ -150,7 +152,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/input-realisasi/delete/{inputrealisasi}', [InputRealisasiController::class, 'destroy'])->name('input-realisasi.destroy');
     Route::delete('/input-realisasi/delete-kompositor/{realisasikompositor}', [InputRealisasiController::class, 'destroyKompositor'])->name('input-realisasi.destroy-kompositor');
     Route::get('/input-realisasi/import-kompositor', [InputRealisasiController::class, 'importKompositor'])->name('input-realisasi.import-kompositor');
-    Route::post('/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
+    Route::match(['GET', 'POST'],'/input-realisasi/calculate-realization/', [InputRealisasiController::class, 'calculateRealization'])
             ->name('input-realisasi.calculate-realization');
     Route::get('/input-realisasi/laporancapaiantriwulan/{laporancapaian}/triwulan/{triwulan}', [InputRealisasiController::class, 'laporanCapaianTriwulan'])->name('input-realisasi.laporan-capaian-triwulan');
 });
@@ -214,7 +216,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test', function () {
     
-    $result = App\Models\InputRealisasi::query()
+    /*$result = App\Models\InputRealisasi::query()
                 ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
                 ->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
                 ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')    
@@ -277,8 +279,8 @@ Route::get('/test', function () {
                         'indeks.nama_indeks',
                         'jenis_kompositor.nama_jenis_kompositor'
                         )
-                ->get();*/
-    return $result;
+                ->get();
+    return $result;*/
 });
 
 Route::get('/test2', function () {

@@ -80,6 +80,9 @@ export default function ListIndikator({ auth }) {
       </svg>
     );
   }
+  function isObject(variable) {
+    return typeof variable === "object" && variable !== null;
+  }
   return (
     <NewAdminLayout
       auth={auth}
@@ -169,6 +172,13 @@ export default function ListIndikator({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
+                        >Formula</Typography>
+                      </th>
+                      <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
                         >Action</Typography>
                       </th>
 
@@ -201,7 +211,7 @@ export default function ListIndikator({ auth }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {indikators.data.map(({ id, nama_indikator, nama_satuan, nama_level, indikator_pics, indikator_kompositors, ordering, numbering }) => (
+                    {indikators.data.map(({ id, nama_indikator, nama_satuan, nama_level, indikator_pics, indikator_kompositors, indikator_formula, ordering, numbering }) => (
                       <tr key={id} className="even:bg-blue-gray-50/50">
                         <td className="p-4">
                           <Typography variant="small" color="blue-gray" className="font-normal">
@@ -243,28 +253,34 @@ export default function ListIndikator({ auth }) {
                         </td>
                         <td>
                           <div className='flex'>
-
                             <Typography variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
                               ({indikator_kompositors.length})
                             </Typography>
                           </div>
                         </td>
+                        <td>
+                          <div className='flex'>
+                            <Typography variant="small" color="blue-gray" className="font-normal text-gray-600 ml-1">
+                              ({isObject(indikator_formula)? 1:0})
+                            </Typography>
+                          </div>
+                        </td>
                         <td className="flex mt-2">
-                          <Typography as="a" href="#" variant="small" color="blue-gray" className="font-medium pr-1 text-red-300">
+                          <Typography variant="small" color="blue-gray" className="font-medium pr-1 text-red-300">
                             <Link href={route('indikator.edit', id)} title="Edit">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                               </svg>
                             </Link>
                           </Typography>
-                          <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal pr-1 text-blue-gray-400">
+                          <Typography title="Edit" variant="small" color="blue-gray" className="font-normal pr-1 text-blue-gray-400">
                             <Link href={route('kompositor.index-indikator', id)} title="Kompositor/Parameter Indikator">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLineJoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
                               </svg>
                             </Link>
                           </Typography>
-                          <Typography as="a" href="#" title="Edit" variant="small" color="blue-gray" className="font-normal pr-1 text-blue-gray-400">
+                          <Typography title="Edit" variant="small" color="blue-gray" className="font-normal pr-1 text-blue-gray-400">
                             <Link href={route('indikator.create-formula', id)} title="Formula Indikator">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLineJoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 0 0 2.25-2.25V6a2.25 2.25 0 0 0-2.25-2.25H6A2.25 2.25 0 0 0 3.75 6v2.25A2.25 2.25 0 0 0 6 10.5Zm0 9.75h2.25A2.25 2.25 0 0 0 10.5 18v-2.25a2.25 2.25 0 0 0-2.25-2.25H6a2.25 2.25 0 0 0-2.25 2.25V18A2.25 2.25 0 0 0 6 20.25Zm9.75-9.75H18a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 18 3.75h-2.25A2.25 2.25 0 0 0 13.5 6v2.25a2.25 2.25 0 0 0 2.25 2.25Z" />

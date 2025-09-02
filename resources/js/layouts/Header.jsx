@@ -84,7 +84,7 @@ export default function Header() {
                         </Typography>
                     </MenuHandler>
                     <MenuList>
-                    {auth.role == 'Administrator' ? (
+                    {auth.roles.includes('Administrator') ? (
                         <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>):null
                     }
                     <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
@@ -95,7 +95,7 @@ export default function Header() {
                     
                     </MenuList>
                 </Menu>
-                {auth.role == 'Administrator' ? (
+                {auth.roles.includes('Administrator') ? (
                     <Menu>
                         <MenuHandler>
                             <Typography

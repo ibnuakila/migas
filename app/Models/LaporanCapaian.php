@@ -20,6 +20,7 @@ class LaporanCapaian extends Model
         'status_kinerja',
         'kinerja_tahunan',
         'sumber_data',
+        'kinerja_color'
     ];
     
     public function indikator(){

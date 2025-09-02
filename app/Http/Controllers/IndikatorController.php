@@ -50,6 +50,7 @@ class IndikatorController extends Controller
                     ->join('satuan', 'indikator.satuan_id', '=', 'satuan.id')
                     ->with('indikatorPics')
                     ->with('indikatorKompositors')
+                    ->with('indikatorFormula')
                     ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                         if ($search != '') {
                             $query->where('level.nama_level', 'like', "%{$search}%");

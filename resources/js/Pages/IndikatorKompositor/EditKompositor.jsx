@@ -47,7 +47,8 @@ export default function EditKompositor(props) {
         parameter_id: parameter ? parameter.id : null,
         pics: defPics
     });
-    
+    const { flash } = props;  
+    const [open, setOpen] = useState(true);
     const [optionIndeks, setOptionIndeks] = useState('');
     const [optionJenisKompositor, setOptionJenisKompositor] = useState('');    
     const [isParameter, setIsParameter] = useState(kompositor.data.jenis_kompositor_id == 3 ? true : false);
@@ -98,15 +99,49 @@ export default function EditKompositor(props) {
     
     const handleDestroy = (e) => {
         if (confirm('Apakah Anda yakin akan menghapus data kompositor?')) {
-            destroy(route('kompositor.destroy', kompositor.data.id));
+            //destroy(route('kompositor.destroy', kompositor.data.id));
+            router.visit('/kompositor/delete/' +  kompositor.data.id, {
+                            method: 'delete',
+                            data:{indikator_id: data.indikator_id},
+                            /*onFinish: visit => {                    
+                                router.reload();
+                                },*/
+                        });
         }
     }
-    
+
+    function Icon() {
+        return (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+            />
+          </svg>
+        );
+    }
+
     return (
             <NewAdminLayout 
                 auth = {auth}
                 children={(
                         <div className="container mx-auto">
+                            {flash.message && (
+                                <Alert open={open} icon={<Icon />} onClose={() => {
+                                        setOpen(false); //router.reload();
+                                    }} 
+                                    color="amber" className="my-3 shadow-lg">
+                                    {flash.message}
+                                </Alert>
+                            )}
                                 <Card className="p-5 h-full w-45">                                    
                                 <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                     <Typography variant="h4" color="white">

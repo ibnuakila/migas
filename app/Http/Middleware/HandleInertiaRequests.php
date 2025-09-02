@@ -36,7 +36,10 @@ class HandleInertiaRequests extends Middleware
                     if($request->user() !== null){
                         return array_merge([
                             'user' => $request->user()->only('id', 'name', 'email'),                            
-                            'role' => $request->user()->getRoleNames(),
+                            //'role' => $request->user()->getRoleNames(),
+                            'roles' => method_exists($request->user(), 'getRoleNames')
+                            ? $request->user()->getRoleNames() // Spatie roles
+                            : [$request->user()->role],
                         ]);
                     }
                 },

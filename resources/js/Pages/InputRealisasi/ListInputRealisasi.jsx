@@ -20,7 +20,7 @@ import {
 import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function ListInputRealisasi({auth}){
-    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
+    const TABLE_HEAD = ["ID", "Indeks", "Nama Kompositor", "Level", "Jenis", "Realisasi", "Satuan", "Triwulan", "PIC", "Action"];
  
     const { input_realisasis, indikator, laporan_capaian, triwulan, realisasi_kompositor_pics } = usePage().props;
     const {
@@ -98,14 +98,14 @@ export default function ListInputRealisasi({auth}){
                         <Alert open={open} icon={<Icon />} onClose={() => {
                                 setOpen(false); //router.reload();
                             }} 
-                            color="black" className="my-3 shadow-lg">
+                            color="green" className="my-3 shadow-lg">
                             {flash.message}
                         </Alert>
                     )}
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-2 p-6">
                             <Typography variant="h4" color="white">
-                              Input Realisasi Kompositor/Parameter {indikator.nama_indikator} 
+                              Input Realisasi Kompositor/Parameter {indikator.nama_indikator}  ({indikator.level.nama_level})
                             </Typography>
                         </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
@@ -148,11 +148,12 @@ export default function ListInputRealisasi({auth}){
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th></th>                                   
+                                    <th></th> 
+                                    <th></th>                                  
                                 </tr>
                             </thead>
                             <tbody>                                                      
-                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai,  
+                                {input_realisasis.map(({ id, nama_indeks, nama_kompositor, kompositor_id, nama_jenis_kompositor, nilai, nama_level, 
                                     satuan, triwulan, realisasi_kompositor_pics, realisasi_kompositor_id}) => (
                                     <tr key={kompositor_id} className="even:bg-blue-gray-50/50">
                                       <td className="p-4">
@@ -172,12 +173,17 @@ export default function ListInputRealisasi({auth}){
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
+                                          {nama_level}
+                                        </Typography>                                                                                
+                                      </td>
+                                      <td className="p-4">                                      
+                                        <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
                                           {nama_jenis_kompositor}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
                                         <Typography variant="small" color="blue-gray" className="font-normal text-red-600 text-right">
-                                            {nilai ? ((parseFloat(nilai)).toLocaleString(undefined, {maximumFractionDigits:2})):(0)}
+                                            {nilai ? ((parseFloat(nilai)).toLocaleString(undefined, {maximumFractionDigits:5})):(0)}
                                         </Typography>                                                                                
                                       </td>
                                       <td className="p-4">                                      
@@ -218,8 +224,7 @@ export default function ListInputRealisasi({auth}){
                                     </tr>
                                 )}
                             </tbody>
-                        </table>
-                        
+                        </table>                        
                         </CardBody>
                     </Card>
                 </div>

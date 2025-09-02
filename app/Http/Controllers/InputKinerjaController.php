@@ -13,6 +13,8 @@ use App\Models\KinerjaTriwulan;
 use App\Http\Requests\KinerjaTriwulanRequest;
 use MathPHP\Statistics\Regression;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class InputKinerjaController extends Controller
 {
@@ -106,7 +108,32 @@ class InputKinerjaController extends Controller
         //$validate = $request->val
         $validated = $request->validated();
         
-        $update_status_1 = $kinerjatriwulan->update($validated);        
+        $update_status_1 = $kinerjatriwulan->update($validated); 
+        //update laporan capaian untuk status kinerja dan kinerja tahunan
+        $laporan_capaian = \App\Models\LaporanCapaian::where('id', $request->laporan_capaian_id)->first();
+        //hitung persentasi kinerja tahunan
+        if(is_object($laporan_capaian)){
+            $laporan_capaian->status_kinerja = $request->kinerja;
+            $laporan_capaian->kinerja_tahunan = $request->kinerja;
+            //hitung presentasi kinerja
+            $color = ''; $kategori = 0;
+            if($request->kinerja > 1){
+                $color = 'text-blue-600';
+                $kategori = 1; //max
+            }elseif($request->kinerja > 0.75){
+                $color = 'text-green-600';
+                $kategori = 3; //stabilize
+            }elseif($request->kinerja > 0.5){
+                $color = 'text-yellow-600';
+                $kategori = 2; //min
+            }else{
+                $color = 'text-red-300';
+                $kategori = 2; //min
+            }
+            $laporan_capaian->kategori_kinerja_id = $kategori; //dilihat presentasi kinerja
+            $laporan_capaian->kinerja_color = $color;
+            $laporan_capaian->update();
+        }
         if($update_status_1){
             $message = "Update berhasil!";
         }else{
@@ -140,57 +167,70 @@ class InputKinerjaController extends Controller
         
         $indikator_formula = IndikatorFormula::where('indikator_id', $indikator->id)->first();
         $data['indikator_formula'] = $indikator_formula;
+        $spreadsheet = new Spreadsheet();
         if(is_object($indikator_formula)){
             $mapping = json_decode($indikator_formula->mapping_kinerja);
             $formula = json_decode($indikator_formula->formula_kinerja);
-            $data['mapping'] = json_decode($indikator_formula->mapping_kinerja);
+            $data['mapping'] = $mapping; //json_decode($indikator_formula->mapping_kinerja);
             $data['formula'] = $formula;
-            //if(is_array($mapping)){
+            if(is_object($mapping)){
                 foreach($mapping as $key => $name){
-                    if($name == 'target'){
+                    if(strtolower($name) == 'target'){
                         $mapping->$key = $obj_laporan_capaian->target;
                     }
-                    if($name == 'realisasi'){
+                    if(strtolower($name) == 'realisasi'){
                         $mapping->$key = $obj_realisasi->realisasi;
                     }
                 }
-            //}
+            }
             $data['mapping_value'] = $mapping;
             //calculate the formula in virtual spreadsheet ------------------------------
-            $spreadsheet = new Spreadsheet();
+            
             $sheet = $spreadsheet->getActiveSheet();
-
-            //data persentasi kinerja
-            // $sheet->setCellValue('B2', 1.00); //realisasi
-            // $sheet->setCellValue('C2', 1.00); //kinerja
-            // $sheet->setCellValue('B3', 1.15); //realisasi
-            // $sheet->setCellValue('C3', 1.10); //kinerja
-            // $sheet->setCellValue('B4', 1.30); //realisasi
-            // $sheet->setCellValue('C4', 1.20); //kinerja
-
-            //if(is_array($formula)){
-                //mapping each formula to each cell
+            //mapping each formula to each cell
+            if(is_object($formula)){
                 foreach ($formula as $cell => $value){
                     $sheet->setCellValue($cell, $value);
                 }
-            //}
-
-            //if(is_array($mapping)){
-                //mapping formula to it's parameter value
-                foreach ($mapping as $cell => $value) {
-                    $sheet->setCellValue($cell, $value);
-                }       
-            //}        
-            
+            }
+            //mapping formula to it's parameter value
+            foreach ($mapping as $cell => $value) {
+                $sheet->setCellValue($cell, $value);
+            }       
+                        
             $result = $sheet->getCell('A1')->getCalculatedValue(); 
             $data['kinerja'] = $result;
-            unset($spreadsheet);
+            //unset($spreadsheet);
         }else{
             $data['response'] = "Formula not available";
         }
+        if ($request->isMethod('get')) {
+            // Set the headers to download the file
+            //header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //header('Content-Disposition: attachment;filename="check_formula.xlsx"');
+            //header('Cache-Control: max-age=0');
+            //header("Access-Control-Allow-Origin: *");
+            //header("Access-Control-Allow-Methods: GET, POST");
+            //header("Access-Control-Allow-Headers: Content-Type");
+
+
+            //Write the file to output
+            //$writer = new Xlsx($spreadsheet);
+            //$writer->save('php://output');
+
+            $writer = new Xlsx($spreadsheet);
+            $response = new StreamedResponse(function () use ($writer) {
+                $writer->save('php://output');
+            });
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            //$response->headers->set('Content-Disposition', 'attachment;filename="data-usulan-akreditasi.xlsx"');
+            //$response->headers->set('Cache-Control', 'max-age=0');
+            return $response;
+        } else {
+            return $data;
+        }
         
         
-        return $data;
     }
     
     public function _calculateKinerja(\Illuminate\Http\Request $request)

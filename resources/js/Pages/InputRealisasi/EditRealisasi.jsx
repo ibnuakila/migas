@@ -66,6 +66,12 @@ export default function EditRealisasi(props) {
     const handleSave = (e) => {
         e.preventDefault();
         put(route('input-realisasi.update', input_realisasi.id));
+        window.history.back(1);
+        setTimeout( () => {            
+            location.reload();
+        }, 300)
+        
+        
     }
 
     function handleChangeTriwulan(e) {
@@ -88,7 +94,8 @@ export default function EditRealisasi(props) {
 
     function handleChangeRealisasi(e) {
         console.log('handleChangeRealisasi triggered');
-        setData('realisasi', parseFloat(e.target.value).toLocaleString(undefined, { maximumFractionDigits: 2 }));
+        setData('realisasi', parseFloat(e.target.value).toLocaleString("en-US", { maximumFractionDigits: 5 }));
+        console.log(data.realisasi);
         //setData('nilai', e.target.value);
     }
 
@@ -97,6 +104,12 @@ export default function EditRealisasi(props) {
             destroy(route('input-realisasi.destroy-kompositor', realisasi_kompositor.id));
         }
     }
+
+    const handleRealisasiFormatChange = (e) => {
+        setRealisasiFormat({ selectValue: e });
+        setData('realisasi_format', e);
+    }
+
 
     const handleCancel = (e) => {
         window.history.back();
@@ -107,22 +120,25 @@ export default function EditRealisasi(props) {
             //alert(kompositor.jenis_kompositor_id);
             if (isAgregasi) {
                 if (isCheck) {
-                    axios.post(route('input-realisasi.calculate-realization'), { 
-                            responseType: 'blob',
+                    axios.get(route('input-realisasi.calculate-realization'), {
+                        params: {
+                            
                             input_realisasi_id: input_realisasi.id,
                             realisasi_kompositor_id: realisasi_kompositor.id,
                             kompositor_id: kompositor.id,
                             nama_kompositor: kompositor.nama_kompositor,
                             sumber_kompositor_id: kompositor.sumber_kompositor_id,
                             check_formula: isCheck
-                        }).then(res => {
-                            console.log(res.headers);
-                            const ctype = res.headers['content-type'];
-                            const blob = new Blob([res?.data], {type: ctype});
+                        },
+                        responseType: "arraybuffer"
+                    }).then(res => {
+                        console.log(res.headers);
+                        const ctype = res.headers['content-type'];
+                        const blob = new Blob([res?.data], { type: ctype });
                         const url = window.URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'check_formula.xlsx');  // Set the filename here
+                        link.setAttribute('download', 'check_formula_realisasi.xlsx');  // Set the filename here
                         document.body.appendChild(link);
                         link.click();
 
@@ -131,7 +147,7 @@ export default function EditRealisasi(props) {
                         window.URL.revokeObjectURL(url);
                     }).catch((error) => {
                         console.error("There was an error downloading the file", error);
-                      });
+                    });
                 } else {
                     axios.post(route('input-realisasi.calculate-realization'),
                         {
@@ -144,17 +160,17 @@ export default function EditRealisasi(props) {
                         })
                         .then(res => {
                             console.log(res);
-                            if (res.data.realisasi) {
+                            //if (res.data.realisasi) {
                                 alert(res.data.realisasi);
 
                                 let realisasi = document.getElementById('realisasi');
-                                realisasi.value = parseFloat(res.data.realisasi).toLocaleString(undefined, { maximumFractionDigits: 2 });
+                                realisasi.value = parseFloat(res.data.realisasi).toLocaleString("en-US", { maximumFractionDigits: 5 });
                                 //realisasi.setAttribute('value', res.data.result);
-                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, { maximumFractionDigits: 2 }));
+                                setData('realisasi', parseFloat(res.data.realisasi).toLocaleString("en-US", { maximumFractionDigits: 5 }));
                                 //setData('nilai', res.data.realisasi);
-                            } else {
+                            /*} else {
                                 alert(res.data.message);
-                            }
+                            }*/
                         })
                         .catch((err) => {
                             if (err.response) {
@@ -175,7 +191,7 @@ export default function EditRealisasi(props) {
                             //alert(res.data.value);
 
                             let realisasi = document.getElementById('realisasi');
-                            realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, { maximumFractionDigits: 2 });;
+                            realisasi.value = parseFloat(res.data.value).toLocaleString("en-US", { maximumFractionDigits: 5 });;
                             //setData('nilai', res.data.value);
                             setData('realisasi', res.data.value);
                             console.log(res.data.value);
@@ -200,9 +216,9 @@ export default function EditRealisasi(props) {
                             //alert(res.data.value);
 
                             let realisasi = document.getElementById('realisasi');
-                            realisasi.value = parseFloat(res.data.value).toLocaleString(undefined, { maximumFractionDigits: 2 });;
+                            realisasi.value = parseFloat(res.data.value).toLocaleString("en-US", { maximumFractionDigits: 5 });;
                             //setData('nilai', res.data.value);
-                            setData('realisasi', parseFloat(res.data.realisasi).toLocaleString(undefined, { maximumFractionDigits: 2 }));
+                            setData('realisasi', parseFloat(res.data.realisasi).toLocaleString("en-US", { maximumFractionDigits: 5 }));
                             //console.log(data);
 
                         }
@@ -253,7 +269,7 @@ export default function EditRealisasi(props) {
                 <div className="container mx-auto">
                     {flash.message && (
                         <Alert open={open} icon={<Icon />} onClose={() => setOpen(false)}
-                            color="black" className="my-3 shadow-lg">
+                            color="green" className="my-3 shadow-lg">
                             {flash.message}
                         </Alert>
                     )}
@@ -322,11 +338,10 @@ export default function EditRealisasi(props) {
                                     {isAgregasi ? (
                                         <div>
                                             <Select label="Realisasi Format" onChange={handleChangeRealisasiFormat}
-                                                defaultValue={input_realisasi.realisasi_format}
+                                                value={input_realisasi.realisasi_format}
                                                 error={errors.realisasi_format}>
-                                                {data_format.map(({ id, format }) => (
-                                                    <Option value={id} key={id}>{format}</Option>
-                                                ))}
+                                                <Option value="Decimal">Decimal</Option>
+                                                <Option value="Persentase">Persentase</Option>
                                             </Select>
                                             {errors.realisasi_format && <div className="text-red-400 mt-1">{errors.realisasi_format}</div>}
                                         </div>

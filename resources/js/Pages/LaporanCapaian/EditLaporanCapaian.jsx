@@ -179,6 +179,7 @@ export default function EditLaporanCapaian() {
                                         <div className="text-red-400 mt-1">{errors.kategori_kinerja_id}</div>
                                     }
                                     <Input label="Kinerja Tahunan" variant="outlined" id="kinerja-tahunan"
+                                        defaultValue={laporan_capaian.data[0].kinerja_tahunan}
                                         onChange={e => {
                                             setData('kinerja_tahunan', e.target.value)
                                         }}
@@ -187,6 +188,7 @@ export default function EditLaporanCapaian() {
                                         <div className="text-red-400 mt-1">{errors.kinerja_tahunan}</div>
                                     }
                                     <Input label="Status Kinerja" variant="outlined" id="status-kinerja"
+                                        defaultValue={laporan_capaian.data[0].status_kinerja}
                                         onChange={e => {
                                             setData('status_kinerja', e.target.value)
                                         }}
