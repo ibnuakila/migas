@@ -40,7 +40,7 @@ export default function ListPic( {auth}){
                         <>
                             <Head title="Pic" />
                                 <div className="container mx-auto max-w-screen-lg py-12">
-                                    <Card className="mt-12 mb-8 flex flex-col gap-12 bg-lime-50">
+                                    <Card className="mt-12 mb-8 flex flex-col gap-12">
                                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                             <Typography variant="h4" color="white">
                                                Daftar PIC 

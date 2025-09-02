@@ -106,7 +106,10 @@ class DashboardController extends Controller
                 ->with('laporanCapaianPic')
                 ->with('inputRealisasi')
                 ->with('kategoriKinerja')
-                ->select('laporan_capaian.*',
+                ->select('laporan_capaian.id',              // make sure PK is included
+                        'laporan_capaian.indikator_id',
+                        'laporan_capaian.periode_id',
+                        'laporan_capaian.*',
                         'indikator.nama_indikator',
                         'indikator.numbering',
                         'periode.periode',
