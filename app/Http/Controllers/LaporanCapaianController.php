@@ -77,7 +77,7 @@ class LaporanCapaianController extends Controller
 
     public function index(Request $request)
     {
-        
+
         $select = LaporanCapaian::query()
             ->join('indikator', 'laporan_capaian.indikator_id', '=', 'indikator.id')
             ->join('periode', 'laporan_capaian.periode_id', '=', 'periode.id')
@@ -128,8 +128,8 @@ class LaporanCapaianController extends Controller
                 'satuan.nama_satuan'
             )
             ->orderBy('indikator.id', 'asc');
-        
-        if(\Illuminate\Support\Facades\Request::filled('findikator')){
+
+        if (\Illuminate\Support\Facades\Request::filled('findikator')) {
             $records = $select->get();
             $data = [
                 'data' => $records,
@@ -140,9 +140,9 @@ class LaporanCapaianController extends Controller
                 'from' => 1,
                 'to' => $records->count(),
             ];
-        }else{
+        } else {
             $data = $select->paginate();
-        }            
+        }
 
         return Inertia::render('LaporanCapaian/ListLaporanCapaian', [
             //'filter' => Request::all('search', 'trashed'),
@@ -162,7 +162,7 @@ class LaporanCapaianController extends Controller
     public function update(LaporanCapaian $laporancapaian, LaporanCapaianRequest $request)
     {
         $input = $request->all();
-        $validation = Validator::make($input, [
+        $validation = \Illuminate\Support\Facades\Validator::make($input, [
             'periode_id' => 'required',
             'indikator_id' => 'required',
             'kategori_kinerja_id' => 'nullable',
@@ -197,6 +197,19 @@ class LaporanCapaianController extends Controller
                 DB::table('laporan_capaian_pic')->insert($data);
             }
         }
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($laporancapaian)
+            ->withProperties([
+                'ip' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+                'indikator_id' => $input['indikator_id'],
+                'target' => (float)str_replace(',', '', $input['target']),
+                'status_kinerja' => $input['status_kinerja']
+            ])
+            ->createdAt(now()->subDays(10))
+            ->event('update')
+            ->log('Laporan Capaian Update');
         return Redirect::route('laporan-capaian.index');
     }
 
@@ -250,111 +263,138 @@ class LaporanCapaianController extends Controller
         return Redirect::back()->with($json_data);
     }
 
-    public function importIndikator()
+    public function importIndikator(Request $request)
     {
-        //check active periode
-        $periode = DB::table('periode')
-            ->where('status', '=', 'Active')
-            ->get()->first();
+        $user = $request->user();
+        $roles = $user->getRoleNames();
 
-        //retrieve indikators data
-        $indikators = null;
-        $data['message'] = 'Undefined message';
-        if (is_object($periode)) {
-            //loop through indikators
-            // $indikators = DB::table('indikator')
-            //         ->select('indikator.*')
-            //         ->leftJoin('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
-            //         ->whereNull('laporan_capaian.id')
-            //         ->get();
-            $indikators = \App\Models\Indikator::whereNotIn('id', function ($query) use ($periode) {
-                $query->select('indikator_id')
-                    ->from('laporan_capaian')
-                    ->where('periode_id', '=', $periode->id);
-            })->get();
-            //insert or update into 
-            if ($indikators->count() > 1) {
-                foreach ($indikators as $row) {
-                    //model indikator
-                    $indikator = \App\Models\Indikator::where('id', $row->id)->first();
+        if ($roles->contains('Administrator')) {
 
-                    //insert laporan capaian
-                    $data_lap_cap = [
-                        'indikator_id' => $indikator->id,
-                        'periode_id' => $periode->id
-                    ];
-                    $obj_lap_capaian = LaporanCapaian::create($data_lap_cap);
-                    //insert laporan capaian pic
-                    $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
-                    if (($pics->count()) > 0) {
-                        foreach ($pics as $pic) {
-                            $obj_lc_pic = \App\Models\LaporanCapaianPic::where('laporan_capaian_id', '=', $obj_lap_capaian->id)
-                                ->where('pic_id', '=', $pic->pic_id)->first();
-                            if (is_object($obj_lc_pic)) {
-                                $obj_lc_pic->delete();
-                            }
-                            $pic_data = [
-                                'laporan_capaian_id' => $obj_lap_capaian->id,
-                                'pic_id' => $pic->pic_id,
-                                'nama_pic' => $pic->nama_pic
+
+            //check active periode
+            try {
+                DB::beginTransaction();
+                $periode = DB::table('periode')
+                    ->where('status', '=', 'Active')
+                    ->get()->first();
+
+                //retrieve indikators data
+                $indikators = null;
+                $data['message'] = 'Undefined message';
+                if (is_object($periode)) {
+                    //loop through indikators
+                    // $indikators = DB::table('indikator')
+                    //         ->select('indikator.*')
+                    //         ->leftJoin('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
+                    //         ->whereNull('laporan_capaian.id')
+                    //         ->get();
+                    $indikators = \App\Models\Indikator::whereNotIn('id', function ($query) use ($periode) {
+                        $query->select('indikator_id')
+                            ->from('laporan_capaian')
+                            ->where('periode_id', '=', $periode->id);
+                    })->get();
+                    //insert or update into 
+                    if ($indikators->count() > 1) {
+                        foreach ($indikators as $row) {
+                            //model indikator
+                            $indikator = \App\Models\Indikator::where('id', $row->id)->first();
+
+                            //insert laporan capaian
+                            $data_lap_cap = [
+                                'indikator_id' => $indikator->id,
+                                'periode_id' => $periode->id
                             ];
-                            $lap_pic = \App\Models\LaporanCapaianPic::create($pic_data);
-                        }
-                    }
-
-                    //insert kinerja triwulan
-                    $triwulans = DB::table('triwulan')->get();
-                    if ($triwulans->count() > 0) {
-                        foreach ($triwulans as $triwulan) {
-                            //insert kinerja triwulan                            
-                            $data_kinerja = [
-                                'laporan_capaian_id' => $obj_lap_capaian->id,
-                                'kinerja' => 0,
-                                'triwulan_id' => $triwulan->id
-                            ];
-                            \App\Models\KinerjaTriwulan::create($data_kinerja);
-
-                            //insert input realisasi
-                            $object = [
-                                'triwulan_id' => $triwulan->id,
-                                'realisasi' => 0,
-                                'laporan_capaian_id' => $obj_lap_capaian->id
-                            ];
-                            $obj_input_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $obj_lap_capaian->id)
-                                ->where('triwulan_id', $triwulan->id)->first();
-                            if (!is_object($obj_input_realisasi)) {
-                                $input = \App\Models\InputRealisasi::create($object);
-                            } else {
-                                $input = $obj_input_realisasi;
-                            }
-                            //insert input_realisasi_pic;
-                            if (!is_object($obj_input_realisasi)) {
-
-                                foreach ($pics as $rowpic) {
-                                    $obj_ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $input->id)
-                                        ->where('pic_id', '=', $rowpic->pic_id)->first();
-                                    if (is_object($obj_ir_pic)) {
-                                        $obj_ir_pic->delete();
+                            $obj_lap_capaian = LaporanCapaian::create($data_lap_cap);
+                            //insert laporan capaian pic
+                            $pics = \App\Models\IndikatorPic::where('indikator_id', $indikator->id)->get();
+                            if (($pics->count()) > 0) {
+                                foreach ($pics as $pic) {
+                                    $obj_lc_pic = \App\Models\LaporanCapaianPic::where('laporan_capaian_id', '=', $obj_lap_capaian->id)
+                                        ->where('pic_id', '=', $pic->pic_id)->first();
+                                    if (is_object($obj_lc_pic)) {
+                                        $obj_lc_pic->delete();
                                     }
-                                    $temp_lap_pic = [
-                                        'input_realisasi_id' => $input->id,
-                                        'pic_id' => $rowpic->pic_id,
-                                        'nama_pic' => $rowpic->nama_pic
+                                    $pic_data = [
+                                        'laporan_capaian_id' => $obj_lap_capaian->id,
+                                        'pic_id' => $pic->pic_id,
+                                        'nama_pic' => $pic->nama_pic
                                     ];
-                                    \App\Models\InputRealisasiPic::create($temp_lap_pic);
+                                    $lap_pic = \App\Models\LaporanCapaianPic::create($pic_data);
+                                }
+                            }
+
+                            //insert kinerja triwulan
+                            $triwulans = DB::table('triwulan')->get();
+                            if ($triwulans->count() > 0) {
+                                foreach ($triwulans as $triwulan) {
+                                    //insert kinerja triwulan                            
+                                    $data_kinerja = [
+                                        'laporan_capaian_id' => $obj_lap_capaian->id,
+                                        'kinerja' => 0,
+                                        'triwulan_id' => $triwulan->id
+                                    ];
+                                    \App\Models\KinerjaTriwulan::create($data_kinerja);
+
+                                    //insert input realisasi
+                                    $object = [
+                                        'triwulan_id' => $triwulan->id,
+                                        'realisasi' => 0,
+                                        'laporan_capaian_id' => $obj_lap_capaian->id
+                                    ];
+                                    $obj_input_realisasi = \App\Models\InputRealisasi::where('laporan_capaian_id', $obj_lap_capaian->id)
+                                        ->where('triwulan_id', $triwulan->id)->first();
+                                    if (!is_object($obj_input_realisasi)) {
+                                        $input = \App\Models\InputRealisasi::create($object);
+                                    } else {
+                                        $input = $obj_input_realisasi;
+                                    }
+                                    //insert input_realisasi_pic;
+                                    if (!is_object($obj_input_realisasi)) {
+
+                                        foreach ($pics as $rowpic) {
+                                            $obj_ir_pic = InputRealisasiPic::where('input_realisasi_id', '=', $input->id)
+                                                ->where('pic_id', '=', $rowpic->pic_id)->first();
+                                            if (is_object($obj_ir_pic)) {
+                                                $obj_ir_pic->delete();
+                                            }
+                                            $temp_lap_pic = [
+                                                'input_realisasi_id' => $input->id,
+                                                'pic_id' => $rowpic->pic_id,
+                                                'nama_pic' => $rowpic->nama_pic
+                                            ];
+                                            \App\Models\InputRealisasiPic::create($temp_lap_pic);
+                                        }
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        $data['message'] = 'No indikator left';
                     }
+                    activity()
+                        ->causedBy(auth()->user())
+                        //->performedOn($indikators)
+                        ->withProperties([
+                            'ip' => request()->ip(),
+                            'user_agent' => request()->header('User-Agent'),
+                            'indikator imported' => $indikators->count(),
+                            'periode' => $periode->periode
+                        ])
+                        ->createdAt(now()->subDays(10))
+                        ->event('import indikator')
+                        ->log('Indikator Import');
+                } else {
+                    $data['message'] = 'No Active Periode Found';
                 }
-            } else {
-                $data['message'] = 'No indikator left';
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return $e;
             }
+            return Redirect::back()->with('message', 'Import Berhasil!');
         } else {
-            $data['message'] = 'No Active Periode Found';
+            return Redirect::back()->with('message', 'Diperlukan otoritas Administrator!');
         }
-
-        return Redirect::back()->with('message', 'Import Berhasil!');
     }
 
     public function deleteAllByPeriode($periode_id)
@@ -390,7 +430,7 @@ class LaporanCapaianController extends Controller
     public function uploadMatrixCapaian(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
+        $validator = \Illuminate\Support\Facades\Validator::make($input, [
             'file' => ['required', 'extensions:xlsx', 'max:2048'],
             'periode' => 'required'
         ]);

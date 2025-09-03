@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KinerjaTriwulan extends Model
+class KinerjaTriwulan extends Model 
 {
-    use HasFactory;
+    use HasFactory;     
     protected $table = 'kinerja_triwulan';
     protected $primaryKey = 'id';
     public $timestamps = false;

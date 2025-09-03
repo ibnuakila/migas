@@ -4,15 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class LaporanCapaian extends Model
 {
     use HasFactory;
+    use LogsActivity;
     protected $table = 'laporan_capaian';
     protected $primaryKey = 'id';
     public $timestamps = false;
-    protected $fillable = [       
-        'periode_id',                
+    protected $fillable = [
+        'periode_id',
         'indikator_id',
         'kategori_kinerja_id',
         'target',
@@ -22,29 +25,42 @@ class LaporanCapaian extends Model
         'sumber_data',
         'kinerja_color'
     ];
-    
-    public function indikator(){
+
+    public function indikator()
+    {
         return $this->belongsTo(Indikator::class);
     }
-    
-    public function periode() {
+
+    public function periode()
+    {
         return $this->belongsTo(Periode::class);
     }
-        
-    public function kategoriKinerja() {
+
+    public function kategoriKinerja()
+    {
         return $this->belongsTo(KategoriKinerja::class);
     }
-    
-    public function laporanCapaianPic() {
+
+    public function laporanCapaianPic()
+    {
         return $this->hasMany(LaporanCapaianPic::class);
     }
-    
-    public function kinerjaTriwulan(){
+
+    public function kinerjaTriwulan()
+    {
         return $this->hasMany(KinerjaTriwulan::class);
     }
-    
-    public function inputRealisasi(){
+
+    public function inputRealisasi()
+    {
         return $this->hasMany(InputRealisasi::class);
     }
-    
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['indikator_id', 'periode_id', 'target', 'status_kinerja']) // fields you want to track
+            ->logOnlyDirty() // only log changes
+            ->dontSubmitEmptyLogs();
+    }
 }
