@@ -19,6 +19,7 @@ use App\Models\LaporanCapaian;
 use App\Http\Resources\LaporanCapaianCollection;
 use App\Http\Resources\LaporanCapaianResource;
 use App\Http\Requests\LaporanCapaianRequest;
+use App\Models\Periode;
 use Illuminate\Support\Facades\DB;
 use Storage;
 use Validator;
@@ -108,6 +109,9 @@ class LaporanCapaianController extends Controller
             ->when(\Illuminate\Support\Facades\Request::input('fperiode'), function ($query, $search) {
                 if ($search !== '') {
                     $query->where('periode.periode', '=', $search);
+                }else{
+                    $periode = Periode::where('status', '=', 'Active')->first();
+                    $query->where('periode.periode', '=', $periode->periode);
                 }
             })
             ->when($request->user(), function ($query) use ($request) {
@@ -118,6 +122,10 @@ class LaporanCapaianController extends Controller
                     $query->join('laporan_capaian_pic as lcp_user', 'laporan_capaian.id', '=', 'lcp_user.laporan_capaian_id');
                     $query->where('lcp_user.pic_id', '=', $user->pic_id);
                 }
+            })
+            ->when(empty(request('fperiode')), function ($query, $search) {                
+                $periode = Periode::where('status', '=', 'Active')->first();
+                $query->where('periode.periode', '=', $periode->periode);                
             })
             ->select(
                 'laporan_capaian.*',
@@ -282,12 +290,7 @@ class LaporanCapaianController extends Controller
                 $indikators = null;
                 $data['message'] = 'Undefined message';
                 if (is_object($periode)) {
-                    //loop through indikators
-                    // $indikators = DB::table('indikator')
-                    //         ->select('indikator.*')
-                    //         ->leftJoin('laporan_capaian', 'indikator.id', '=', 'laporan_capaian.indikator_id')
-                    //         ->whereNull('laporan_capaian.id')
-                    //         ->get();
+                    //loop through indikators                    
                     $indikators = \App\Models\Indikator::whereNotIn('id', function ($query) use ($periode) {
                         $query->select('indikator_id')
                             ->from('laporan_capaian')

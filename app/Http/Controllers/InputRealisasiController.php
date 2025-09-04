@@ -160,7 +160,7 @@ class InputRealisasiController extends Controller
         //return \App\Http\Resources\IndikatorPeriodeCollection::collection($indikator_periode);
     }
 
-    public function laporanCapaianTriwulan(\App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan)
+    public function laporanCapaianTriwulan(\Illuminate\Http\Request $request, \App\Models\LaporanCapaian $laporancapaian, \App\Models\Triwulan $triwulan)
     {
         $this->authorize('input-realisasi-list');
         $indikator = \App\Models\Indikator::where('id', $laporancapaian->indikator_id)
@@ -191,6 +191,15 @@ class InputRealisasiController extends Controller
                         $query->where('kompositor.nama_kompositor', 'like', "%{$search}%");
                     }
                 })
+                ->when($request->user(), function ($query) use ($request) {
+                    $user = $request->user();
+                    $roles = $user->getRoleNames();
+
+                    if (!$roles->contains('Administrator')) {
+                        //$query->join('laporan_capaian_pic as lcp_user', 'laporan_capaian.id', '=', 'lcp_user.laporan_capaian_id');
+                        $query->whereIn('kompositor.jenis_kompositor_id', ['1','3']);
+                    }
+                })
                 ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
                 ->where('input_realisasi.triwulan_id', $triwulan->id)
                 ->select(
@@ -219,7 +228,6 @@ class InputRealisasiController extends Controller
 
     public function update(InputRealisasi $inputrealisasi, \Illuminate\Http\Request $request)
     {
-
         $validator_1 = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'kompositor_id' => ['required'],
             'input_realisasi_id' => ['required'],

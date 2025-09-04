@@ -85,12 +85,17 @@ export default function Header() {
                     </MenuHandler>
                     <MenuList>
                     {auth.roles.includes('Administrator') ? (
-                        <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>):null
+                        <>
+                            <MenuItem><Link href={route('periode.index')}>Setup Periode</Link></MenuItem>
+                            <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
+                            <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
+                            <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
+                        </>
+                        ):null
                     }
-                    <MenuItem><Link href={route('indikator.index')}>Master Indikator</Link></MenuItem>
-                    <MenuItem><Link href={route('pic.index')}>Master PIC</Link></MenuItem>
+                    
                     <MenuItem><Link href={route('satuan.index')}>Master Satuan</Link></MenuItem>
-                    <MenuItem><Link href={route('level.index')}>Master Level</Link></MenuItem>
+                    
                     
                     
                     </MenuList>
