@@ -53,25 +53,25 @@ class IndikatorController extends Controller
                     ->with('indikatorFormula')
                     ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                         if ($search != '') {
-                            $query->where('level.nama_level', 'like', "%{$search}%");
+                            $query->where('level.nama_level', 'ilike', "%{$search}%");
                         }
                     })
                     ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
                         if ($search != '') {
                             $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
-                            $query->where('indikator_pic.nama_pic', 'like', "%{$search}%");
+                            $query->where('indikator_pic.nama_pic', 'ilike', "%{$search}%");
                         }
                     })
                     ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
                         if ($search != '') {
-                            $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                            $query->where('indikator.nama_indikator', 'ilike', "%{$search}%");
                         }
                     })
                     ->when($request->user(), function ($query) use ($request) {
                         $roles = $request->user()->getRoleNames();
-                        if ($roles[0] !== 'Administrator') {
-                            $user_id = $request->user()->only('id');
-                            $user = \App\Models\User::where('id', $user_id)->first();
+                        $user = $request->user();
+
+                        if (!$roles->contains('Administrator')) {   
                             $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
                             $query->where('indikator_pic.pic_id', '=', $user->pic_id);
                         }

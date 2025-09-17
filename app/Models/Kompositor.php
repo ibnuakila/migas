@@ -17,7 +17,8 @@ class Kompositor extends Model
         'satuan',
         'indeks_id',
         'jenis_kompositor_id',
-        'sumber_kompositor_id'
+        'sumber_kompositor_id',
+        'status'
     ];
     
     public function realisasiKompositor(){
@@ -51,5 +52,9 @@ class Kompositor extends Model
     
     public function jenisKompositor(){
         return $this->belongsTo(JenisKompositor::class);
+    }
+
+    public function statusKompositor() {
+        return $this->belongsTo(StatusKompositor::class);
     }
 }

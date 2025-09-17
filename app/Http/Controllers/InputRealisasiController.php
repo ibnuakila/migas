@@ -46,23 +46,30 @@ class InputRealisasiController extends Controller
     public function destroyKompositor(RealisasiKompositor $realisasikompositor, Request $request)
     { //delete kompositor
         $this->authorize('input-realisasi-delete');
+        try {
+            DB::beginTransaction();
+            $input_realisasi_id = $realisasikompositor->input_realisasi_id;
+            $input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
+            $laporan_capaian_id = $input_realisasi->laporan_capaian_id;
+            $triwulan_id = $input_realisasi->triwulan_id;
+            $kompositor = Kompositor::find($realisasikompositor->kompositor_id);
 
-        $input_realisasi_id = $realisasikompositor->input_realisasi_id;
-        $input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
-        $laporan_capaian_id = $input_realisasi->laporan_capaian_id;
-        $triwulan_id = $input_realisasi->triwulan_id;
-        $kompositor = Kompositor::find($realisasikompositor->kompositor_id);
+            //delete pic
+            DB::table('realisasi_kompositor_pic')
+                ->where('realisasi_kompositor_id', '=', $realisasikompositor->id)
+                ->delete();
+            //delete realisasi kompositor
+            $realisasikompositor->delete();
 
-        //delete pic
-        DB::table('realisasi_kompositor_pic')
-            ->where('realisasi_kompositor_id', '=', $realisasikompositor->id)
-            ->delete();
-        //delete realisasi kompositor
-        $realisasikompositor->delete();
-
-        if ($kompositor->jenis_kompositor_id == 2) {
-            $input_realisasi->realisasi = 0;
-            $input_realisasi->update();
+            // if ($kompositor->jenis_kompositor_id == 2) {
+            //     $input_realisasi->realisasi = 0; //realisasi yg ada dibiarkan saja
+            //     $input_realisasi->update();
+            // }
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            $message = $e->errorInfo[2];
+            return Redirect::back()->with('message', $message);
         }
 
         return Inertia::location('/input-realisasi/laporancapaiantriwulan/' . $laporan_capaian_id . '/triwulan/' . $triwulan_id);
@@ -197,7 +204,7 @@ class InputRealisasiController extends Controller
 
                     if (!$roles->contains('Administrator')) {
                         //$query->join('laporan_capaian_pic as lcp_user', 'laporan_capaian.id', '=', 'lcp_user.laporan_capaian_id');
-                        $query->whereIn('kompositor.jenis_kompositor_id', ['1','3']);
+                        $query->whereIn('kompositor.jenis_kompositor_id', ['1', '3']);
                     }
                 })
                 ->where('input_realisasi.laporan_capaian_id', $laporancapaian->id)
@@ -287,7 +294,7 @@ class InputRealisasiController extends Controller
                     DB::table('input_realisasi_pic')->insert($data);
                 }
             }
-            
+
             activity()
                 ->causedBy(auth()->user())
                 ->performedOn($laporancapaian)
@@ -613,11 +620,80 @@ class InputRealisasiController extends Controller
         //check for existing indikator
         if (is_object($kompositor)) {
             $result = 0;
-            if ($sumber_kompositor_id == 2) { //existing indikator
+            if ($sumber_kompositor_id == 1) { //new indikator
+                if ($kompositor->jenis_kompositor_id == 2) { //agregasi
+                    //get sub kompositor
+                    $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
+                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                        ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
+                        //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                        ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
+                        ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
+                        ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
+                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
+                        ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
+                        ->where('input_realisasi.laporan_capaian_id', $input_realisasi->laporan_capaian_id)
+                        ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                        ->select(
+                            'input_realisasi.*',
+                            'triwulan.triwulan',
+                            'realisasi_kompositor.id as realisasi_kompositor_id',
+                            'realisasi_kompositor.nilai',
+                            'kompositor.nama_kompositor',
+                            'kompositor.satuan',
+                            'kompositor.id as kompositor_id',
+                            'kompositor.sumber_kompositor_id',
+                            'kompositor.jenis_kompositor_id',
+                            'indeks.nama_indeks',
+                            'jenis_kompositor.nama_jenis_kompositor'
+                        )->get();
+                    $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
+
+                    //get formula
+                    $formula = json_decode($indikator_formula->formula_realisasi);
+                    $formula_map = json_decode($indikator_formula->mapping_realisasi);
+                    $data['formula'] = $formula;
+                    //mapping formula
+                    $kompositorMap = [];
+                    foreach ($realisasi_kompositor as $kompositor) {
+                        if ($kompositor['nama_kompositor'] == 'Triwulan') {
+                            $kompositor['nilai'] = $input_realisasi->triwulan_id;
+                        }
+                        if ($kompositor['nilai'] !== 0) {
+                            $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
+                        }
+                    }
+                    //mapping kompositor to its formula
+                    foreach ($formula_map as $key => $name) {
+                        if (isset($kompositorMap[$name])) {
+                            $formula_map->$key = $kompositorMap[$name];
+                        }
+                    }
+                    $sheet = $spreadsheet->getActiveSheet();
+
+                    //mapping each formula to each cell
+                    foreach ($formula as $cell => $value) {
+                        $sheet->setCellValue($cell, $value);
+                    }
+
+                    //mapping formula to it's parameter value
+                    foreach ($formula_map as $cell => $value) {
+                        $sheet->setCellValue($cell, $value);
+                    }
+                    $result = $sheet->getCell('A1')->getCalculatedValue();
+                    $data['formula_map'] = $formula_map;
+                } else { //input
+                    //get formula
+
+                    //mapping formula
+                }
+
+                
+            } else if($sumber_kompositor_id == 2) { // existing indikator
                 //check for jenis_kompositor
                 if ($kompositor->jenis_kompositor_id == 2) { //agregasi
                     $realisasi_kompositor = RealisasiKompositor::query()
-                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                        ->join('input_realisasix', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                         ->join('kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
                         ->where('nama_kompositor', '=', $nama_kompositor)
                         ->where('jenis_kompositor_id', '=', 2) //agregasi
@@ -697,73 +773,8 @@ class InputRealisasiController extends Controller
 
                     //mapping formula
                 }
-            } else { // new indikator
-                if ($kompositor->jenis_kompositor_id == 2) { //agregasi
-                    //get sub kompositor
-                    $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
-                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
-                        ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
-                        //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
-                        ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
-                        ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
-                        ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
-                        ->join('indeks', 'kompositor.indeks_id', '=', 'indeks.id')
-                        ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
-                        ->where('input_realisasi.laporan_capaian_id', $input_realisasi->laporan_capaian_id)
-                        ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
-                        ->select(
-                            'input_realisasi.*',
-                            'triwulan.triwulan',
-                            'realisasi_kompositor.id as realisasi_kompositor_id',
-                            'realisasi_kompositor.nilai',
-                            'kompositor.nama_kompositor',
-                            'kompositor.satuan',
-                            'kompositor.id as kompositor_id',
-                            'kompositor.sumber_kompositor_id',
-                            'kompositor.jenis_kompositor_id',
-                            'indeks.nama_indeks',
-                            'jenis_kompositor.nama_jenis_kompositor'
-                        )->get();
-                    $data['temp_realisasi_kompositor'] = $realisasi_kompositor;
+            }else if($sumber_kompositor_id == 3){
 
-                    //get formula
-                    $formula = json_decode($indikator_formula->formula_realisasi);
-                    $formula_map = json_decode($indikator_formula->mapping_realisasi);
-                    $data['formula'] = $formula;
-                    //mapping formula
-                    $kompositorMap = [];
-                    foreach ($realisasi_kompositor as $kompositor) {
-                        if ($kompositor['nama_kompositor'] == 'Triwulan') {
-                            $kompositor['nilai'] = $input_realisasi->triwulan_id;
-                        }
-                        if ($kompositor['nilai'] !== 0) {
-                            $kompositorMap[$kompositor['nama_kompositor']] = $kompositor['nilai'];
-                        }
-                    }
-                    //mapping kompositor to its formula
-                    foreach ($formula_map as $key => $name) {
-                        if (isset($kompositorMap[$name])) {
-                            $formula_map->$key = $kompositorMap[$name];
-                        }
-                    }
-                    $sheet = $spreadsheet->getActiveSheet();
-
-                    //mapping each formula to each cell
-                    foreach ($formula as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
-                    }
-
-                    //mapping formula to it's parameter value
-                    foreach ($formula_map as $cell => $value) {
-                        $sheet->setCellValue($cell, $value);
-                    }
-                    $result = $sheet->getCell('A1')->getCalculatedValue();
-                    $data['formula_map'] = $formula_map;
-                } else { //input
-                    //get formula
-
-                    //mapping formula
-                }
             }
 
             $data['realisasi'] = $result;

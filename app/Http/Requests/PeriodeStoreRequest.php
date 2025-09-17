@@ -24,7 +24,7 @@ class PeriodeStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'periode' => ['required'],
+            'periode' => ['required','integer'],
             'status' => ['required']
         ];
     }

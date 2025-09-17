@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\PeriodeStoreRequest;
 use App\Http\Resources\PeriodeCollection;
 use App\Http\Resources\PeriodeResource;
+use Illuminate\Support\Facades\DB;
 
 class PeriodeController extends Controller //implements ICrud
 {
@@ -44,9 +45,13 @@ class PeriodeController extends Controller //implements ICrud
     }
 
     public function update(Periode $periode, PeriodeStoreRequest $request) {
+        if($request['status']=='Active'){
+            DB::table('periode')->update(['status'=>'Closed']);
+        }
         $periode->update(
             $request->validated()
         );
+        
         return Redirect::route('periode.index')->with('success', 'Periode updated.');      
     }
 
@@ -58,6 +63,9 @@ class PeriodeController extends Controller //implements ICrud
     }
 
     public function store(PeriodeStoreRequest $request) {
+        if($request['status']=='Active'){
+            DB::table('periode')->update(['status'=>'Closed']);
+        }
         $validPeriode = $request->validated();
         $objPeriode = new Periode();        
         $objPeriode->create($validPeriode);
