@@ -280,7 +280,7 @@ export default function FormKompositor(props) {
                                             }
                                         </div>
                                     ) : null}
-                                    <div className="sm:w-full md:w-full lg:w-full">
+                                    {/* <div className="sm:w-full md:w-full lg:w-full">
                                         <Select label="Status" id="jenis-kompositor"
                                             onChange={handleChangeStatus}
                                             // value={kompositor.data.status_kompositor_id}
@@ -290,7 +290,7 @@ export default function FormKompositor(props) {
                                             ))}
                                         </Select>
                                         {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex">
                                         <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>

@@ -197,7 +197,7 @@ export default function EditKompositor(props) {
                                         {errors.indikator_id && <div className="text-red-400 mt-1">{errors.indikator_id}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Select label="Sumber Kompositor" id="type-kompositor"
+                                        <Select label="Sumber Kompositor" id="type-kompositor" disabled="true"
                                             value={String(kompositor.data.sumber_kompositor_id)}
                                             onChange={handleChangeSumberKompositor}>
                                             {sumber_kompositor.map(({ id, nama_sumber_kompositor }) => (
@@ -319,7 +319,7 @@ export default function EditKompositor(props) {
                                             <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                         }
                                     </div>
-                                    <div className="sm:w-full md:w-full lg:w-full">
+                                    {/* <div className="sm:w-full md:w-full lg:w-full">
                                         <Select label="Status" id="jenis-kompositor"
                                             onChange={handleChangeStatus}
                                             value={kompositor.data.status_kompositor_id.toString()}
@@ -329,7 +329,7 @@ export default function EditKompositor(props) {
                                             ))}
                                         </Select>
                                         {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
-                                    </div>
+                                    </div> */}
 
                                 </div>
 

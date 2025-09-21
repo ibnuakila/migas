@@ -693,7 +693,7 @@ class InputRealisasiController extends Controller
                 //check for jenis_kompositor
                 if ($kompositor->jenis_kompositor_id == 2) { //agregasi
                     $realisasi_kompositor = RealisasiKompositor::query()
-                        ->join('input_realisasix', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
+                        ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                         ->join('kompositor', 'kompositor.id', '=', 'realisasi_kompositor.kompositor_id')
                         ->where('nama_kompositor', '=', $nama_kompositor)
                         ->where('jenis_kompositor_id', '=', 2) //agregasi

@@ -18,7 +18,7 @@ class Kompositor extends Model
         'indeks_id',
         'jenis_kompositor_id',
         'sumber_kompositor_id',
-        'status'
+        //'status'
     ];
     
     public function realisasiKompositor(){

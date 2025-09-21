@@ -13,7 +13,9 @@ use App\Http\Requests\KompositorRequest;
 use App\Models\Indikator;
 use App\Models\Kompositor;
 use App\Models\IndikatorKompositor;
+use App\Models\InputRealisasi;
 use App\Models\InputRealisasiPic;
+use App\Models\KompositorOfKompositor;
 use App\Models\KompositorPic;
 use App\Models\RealisasiKompositor;
 use App\Models\RealisasiKompositorPic;
@@ -90,7 +92,7 @@ class KompositorController extends Controller
                 ->select('parameter.*', 'indeks.nama_indeks')
                 ->get(),
             'sumber_kompositor' => \App\Models\SumberKompositor::all(),
-            'status_kompositor' => \App\Models\StatusKompositor::all(),
+            //'status_kompositor' => \App\Models\StatusKompositor::all(),
             'pics' => \App\Models\PIC::all(),
         ]);
     }
@@ -98,141 +100,184 @@ class KompositorController extends Controller
     public function destroy(Kompositor $kompositor, Request $request)
     {
         $this->authorize('kompositor-delete');
-        //check apakah sudah ada realisasi_kompositor
-        if (!$kompositor->realisasiKompositor()->exists()) {
-            // > Jika sumber_kompositor new (1)
+        DB::beginTransaction();
+        $data['kompositor'] = $kompositor;
+        try {
+            // C1: check apakah sudah ada realisasi_kompositor
+            if ($kompositor->realisasiKompositor()->exists()) {
+                $data['C1'] = "Executed with True";
+                // ---------------- hapus realisasi kompositor -------------------
+                $realisasikompositor = $kompositor->realisasiKompositor()->get();
+                // C1.1: check object realisasi kompositor ------------
+                if($realisasikompositor->count()>0){
+                    $data['C1.1'] = "Executed with True";
+                    $data['D1'] = ['realisasi-kompositor' => $realisasikompositor];
+                    foreach ($realisasikompositor as $item_realisasi) {
+                        // $input_realisasi_id = $item_realisasi->input_realisasi_id;
+                        // $input_realisasi = InputRealisasi::where('id', $input_realisasi_id)->first();
+                        // $laporan_capaian_id = $input_realisasi->laporan_capaian_id;
+                        // $triwulan_id = $input_realisasi->triwulan_id;
+                        //$kompositor = Kompositor::find($realisasikompositor->kompositor_id);
+
+                        // Q1: delete pic realisasi kompositor
+                        $data['Q1'] = DB::table('realisasi_kompositor_pic')
+                            ->where('realisasi_kompositor_id', '=', $item_realisasi->id)
+                            ->delete();
+                        // Q2: delete realisasi kompositor
+                        $data['Q2'] = $item_realisasi->delete();
+                    }
+                }
+
+            }
+            // C2: Jika sumber_kompositor new (1)
             if ($kompositor->sumber_kompositor_id == 1) {
-                try {
-                    DB::beginTransaction();
-                    //> delete kompositor_pic 
-                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                $data['C2'] = "Executed with True";
+                //> delete kompositor_pic 
+                $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                // C2.1: check eksistensi kompositor pic
+                if($kompositor_pic->count()>0){
+                    $data['C2.1'] = "Executed with True";
                     foreach ($kompositor_pic as $kom_pic) {
-                        $kom_pic->delete();
+                        $data['Q3'] = $kom_pic->delete();
                     }
-                    //> delete indikator_kompositor
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator = Indikator::where('id', $indikator_kompositor->indikator_id)
-                        ->with('level')
+                }
+                //> delete indikator_kompositor
+                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->get();
+                $data['D2'] = $indikator_kompositor;
+                $indikator = Indikator::where('id', $indikator_kompositor->first()->indikator_id)
+                    ->with('level')
+                    ->first();
+                // C2.2: check jumlah item
+                if($indikator_kompositor->count()>0){
+                    $data['C2.2'] = "Executed with True";
+                    foreach($indikator_kompositor as $ind_komp){
+                        $data['Q4'] = $ind_komp->delete();
+                    }
+                }
+                //> Jika jenis kompositor agregasi
+                $indeks = '';
+                // C2.3: check jenis kompositor -----------------
+                if ($kompositor->jenis_kompositor_id == 2) { //agregasi
+                    $data['C2.3'] = "Executed with True";
+                    //cari indeks
+                    $indeks = \App\Models\Indeks::where('nama_indeks', $kompositor->nama_kompositor .
+                        ' (' . $indikator->level->nama_level . ')')
+                        ->where('level', $indikator->level_id)
                         ->first();
-                    $indikator_kompositor->delete();
-                    //> Jika jenis kompositor agregasi
-                    $indeks = '';
-                    if ($kompositor->jenis_kompositor_id == 2) { //agregasi
-                        //cari indeks
-                        $indeks = \App\Models\Indeks::where('nama_indeks', $kompositor->nama_kompositor .
-                            ' (' . $indikator->level->nama_level . ')')
-                            ->where('level', $indikator->level_id)
-                            ->first();
 
-                        //> Jika jenis kompositor parameter
-                    } elseif ($kompositor->jenis_kompositor_id == 3) {
-                        //> delete kompositor_parameter
-                        $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
-                        if (is_object($parameter)) {
-                            $komp_param = \App\Models\KompositorParameter::where([
-                                //'kompositor_id' => $kompositor->id,
-                                'parameter_id' => $request->input('parameter_id')
-                            ])->delete();
-                            //> delete parameter
-                            $parameter->delete();
-                        }
-                    }
-                    //> delete kompositor
-                    $kompositor->delete();
-                    //> delete indeks
-                    if (is_object($indeks)) {
-                        if ($indeks->parent_id !== 0) {
-                            $indeks->delete();
-                        }
-                    }
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollBack();
-                    $message = $e->errorInfo[2];
-                    return Redirect::back()->with('message', $message);
-                }
-                // > Jika sumber_kompositor existing indikator (2)
-            } elseif ($kompositor->sumber_kompositor_id == 2) {
-                try {
-                    DB::beginTransaction();
-                    //> delete kompositor_pic
-                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
-                    foreach ($kompositor_pic as $kom_pic) {
-                        $kom_pic->delete();
-                    }
-                    //> delete indikator_kompositor
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_kompositor->delete();
-                    //> delete kompositor
-                    $kompositor->delete();
-
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollBack();
-                    $message = $e->errorInfo[2];
-                    return Redirect::back()->with('message', $message);
-                }
-                // > Jika sumber_kompositor existing kompositor (3)
-            } elseif ($kompositor->sumber_kompositor_id == 3) {
-                try {
-                    DB::beginTransaction();
-                    //> delete kompositor_pic
-                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
-                    foreach ($kompositor_pic as $kom_pic) {
-                        $kom_pic->delete();
-                    }
-                    //> delete kompositor_of_kompositor
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_kompositor->delete();
-                    //> delete indikator_kompositor
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_kompositor->delete();
-                    //> delete kompositor
-                    $kompositor->delete();
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollBack();
-                    $message = $e->errorInfo[2];
-                    return Redirect::back()->with('message', $message);
-                }
-                // > Jika sumber_kompositor existing parameter
-            } elseif ($kompositor->sumber_kompositor_id == 4) {
-                try {
-                    DB::beginTransaction();
-                    //> delete kompositor_pic
-                    $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
-                    foreach ($kompositor_pic as $kom_pic) {
-                        $kom_pic->delete();
-                    }
+                    // C2.4: Jika jenis kompositor parameter
+                } elseif ($kompositor->jenis_kompositor_id == 3) {
+                    $data['C2.4'] = "Executed with True";
                     //> delete kompositor_parameter
                     $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
-                    if (is_object($parameter)) {
-                        $komp_param = \App\Models\KompositorParameter::where([
+                    // C2.3.1: check eksistensi objek
+                    if ($parameter) {
+                        $data['C2.3.1'] = "Executed with True";
+                        $data['Q5'] = \App\Models\KompositorParameter::where([
                             //'kompositor_id' => $kompositor->id,
                             'parameter_id' => $request->input('parameter_id')
                         ])->delete();
                         //> delete parameter
-                        $parameter->delete();
+                        $data['Q6']=$parameter->delete();
                     }
-                    //> delete indikator_kompositor
-                    $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                    $indikator_kompositor->delete();
-                    //> delete kompositor
-                    $kompositor->delete();
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollBack();
-                    $message = $e->errorInfo[2];
-                    return Redirect::back()->with('message', $message);
                 }
+                //> delete kompositor
+                $data['Q7'] = $kompositor->delete();
+                // C2.5: check eksistensi objek
+                if ($indeks) {
+                    $data['C2.5'] = "Executed with True";
+                    if ($indeks->parent_id !== 0) {
+                        // hapus indeks
+                        $data['Q8']=$indeks->delete();
+                    }
+                }
+                
+                // C3: Jika sumber_kompositor existing indikator (2)
+            } elseif ($kompositor->sumber_kompositor_id == 2) {
+                $data['C3'] = "Executed with True";
+                //> delete kompositor_pic
+                $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                // C3.1: check jumlah item
+                if($kompositor_pic->count()>0){
+                    $data['C3.1'] = "Executed with True";
+                    foreach ($kompositor_pic as $kom_pic) {
+                        $data['Q9']=$kom_pic->delete();
+                    }
+                }
+                //> delete indikator_kompositor
+                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                // C3.2: check eksistensi objek
+                if($indikator_kompositor){
+                    $data['Q10'] = $indikator_kompositor->delete();
+                }
+                //> delete kompositor
+                $data['Q11'] = $kompositor->delete();
+
+                // C4: Jika sumber_kompositor existing kompositor (3)
+            } elseif ($kompositor->sumber_kompositor_id == 3) {
+                $data['C4'] = "Executed with True";
+                //> delete kompositor_pic
+                $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                // C4.1: check jumlah item
+                if($kompositor_pic->count()>0){
+                    $data['C4.1'] = "Executed with True";
+                    foreach ($kompositor_pic as $kom_pic) {
+                        $data['Q12'] = $kom_pic->delete();
+                    }
+                }
+                //> delete kompositor_of_kompositor
+                $kompositor_kompositor = KompositorOfKompositor::where('ref_kompositor_id', $kompositor->id)->first();
+                // C4.2: check eksistensi objek
+                if($kompositor_kompositor){
+                    $data['C4.2'] = "Executed with True";
+                    $data['Q13'] = $kompositor_kompositor->delete();
+                }
+                //> delete indikator_kompositor
+                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                // C4.3: check eksistensi objek
+                if($indikator_kompositor){
+                    $data['C4.3'] = "Executed with True";
+                    $data['Q14'] = $indikator_kompositor->delete();
+                }
+                //> delete kompositor
+                $data['Q15'] = $kompositor->delete();
+                
+                // C5: Jika sumber_kompositor existing parameter
+            } elseif ($kompositor->sumber_kompositor_id == 4) {
+                $data['C5'] = "Executed with True";
+                // //> delete kompositor_pic
+                // $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+
+                // foreach ($kompositor_pic as $kom_pic) {
+                //     $kom_pic->delete();
+                // }
+                // //> delete kompositor_parameter
+                // $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
+                // if (is_object($parameter)) {
+                //     $komp_param = \App\Models\KompositorParameter::where([
+                //         //'kompositor_id' => $kompositor->id,
+                //         'parameter_id' => $request->input('parameter_id')
+                //     ])->delete();
+                //     //> delete parameter
+                //     $parameter->delete();
+                // }
+                // //> delete indikator_kompositor
+                // $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                // $indikator_kompositor->delete();
+                // //> delete kompositor
+                // $kompositor->delete();
+                
             }
-        } else {
-            $message = "Tidak bisa menghapus kompositor yang sudah memiliki realisasi!";
-            return Redirect::back()->with('message', $message);
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            $temp_message =  $e->errorInfo[2];
+            $data['error'] = $temp_message;
+            //return Redirect::back()->with('message', $temp_message);
+            return $data;
         }
         $indikator_id = $request->input('indikator_id');
-
-
+        //return $data;
         return Redirect::route('kompositor.index-indikator', $indikator_id);
     }
 
@@ -420,7 +465,7 @@ class KompositorController extends Controller
                 ->select('parameter.*', 'indeks.nama_indeks')
                 ->get(),
             'sumber_kompositor' => \App\Models\SumberKompositor::all(),
-            'status_kompositor' => \App\Models\StatusKompositor::all(),
+            //'status_kompositor' => \App\Models\StatusKompositor::all(),
             'def_pics' => ($this->getPics($kompositor)),
             'pics' => \App\Models\PIC::all(),
         ]);
@@ -516,9 +561,12 @@ class KompositorController extends Controller
 
         $kompositor = null;
         $indeks = null;
+        $data[] = null;
         try {
             DB::beginTransaction();
+            // C1: check sumber kompositor
             if ($request->input('sumber_kompositor_id') == '1') { //new
+                $data['C1'] = "Executed with True";
                 //validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                     'nama_kompositor' => ['required'],
@@ -532,22 +580,23 @@ class KompositorController extends Controller
 
                 //insert kompositor
                 $kompositor = Kompositor::create($validated);
-
+                $data['Q1'] = $kompositor;
                 //insert indikator-kompositor
-                $data = [
+                $temp_data = [
                     'indikator_id' => $request->input('indikator_id'),
                     'kompositor_id' => $kompositor->id
                 ];
-                IndikatorKompositor::create($data);
+                $data['Q2']=IndikatorKompositor::create($temp_data);
                 $indikator = Indikator::query()
                     ->where('id', $request->input('indikator_id'))
                     ->with('level')
                     ->first();
 
-                //check jenis kompositor
+                // C1.1: check jenis kompositor
                 if ($request->input('jenis_kompositor_id') == '2') { //agregasi
+                    $data['C1.1'] = "Executed with True";
                     $nama_level = '';
-                    if (is_object($indikator)) {
+                    if ($indikator) {
                         $nama_level = $indikator->level->nama_level;
                     }
                     $data_indeks = [
@@ -556,45 +605,50 @@ class KompositorController extends Controller
                         'level' => $indikator->level_id
                     ];
                     //hapus nama indeks jika sudah ada
-                    DB::table('indeks')
+                    $data['Q3']= DB::table('indeks')
                         ->where('nama_indeks', '=', $request->input('nama_kompositor') . ' (' . $nama_level . ')')
                         ->where('parent_id', '=', $request->input('indeks_id'))
                         ->where('level', '=', $indikator->level_id)
                         ->delete();
                     //insert indeks baru
-                    $indeks = \App\Models\Indeks::create($data_indeks);
+                    $data['Q4'] = \App\Models\Indeks::create($data_indeks);
+                // C1.2: parameter    
                 } elseif ($request->input('jenis_kompositor_id') == '3') { //parameter
+                    $data['C1.2'] = "Executed with True";
                     $data_param = [
                         'parameter_id' => $request->input('parameter_id'),
                         'kompositor_id' => $kompositor->id
                     ];
 
-                    //simpan parameter
+                    // C1.2.1: check parameter id
                     if ($data_param['parameter_id'] == '') { //parameter baru
+                        $data['C1.2.1'] = "Executed with True";
                         $parameter = \App\Models\Parameter::create([
                             'nama_parameter' => $request->input('nama_kompositor'),
                             'kalkulasi' => $request->input('kalkulasi'),
                             'value' => $request->input('value'),
                             'indeks_id' => $request->input('indeks_id')
                         ]);
-
-                        \App\Models\KompositorParameter::create([
+                        $data['Q5'] = $parameter;
+                        $data['Q6'] = \App\Models\KompositorParameter::create([
                             'parameter_id' => $parameter->id,
                             'kompositor_id' => $kompositor->id
                         ]);
                     }
                 }
+            // C2: existing indikator
             } elseif ($request->input('sumber_kompositor_id') == '2') { //existing indikator *perlu evaluasi
+                $data['C2'] = "Executed with True";
                 //tambahkan validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                     'indikator_id' => 'required',
                     'kompositor_id' => 'required',
                     'indeks_id' => 'required'
                 ])->validate();
-                
+
                 //get existing indikator-kompositor
                 $kompositor = Kompositor::where('id', $request->input('kompositor_id'))->first();
-
+                $data['Q7'] = $kompositor;
                 $ref_kom_data = [
                     'nama_kompositor' => str($kompositor->nama_kompositor),
                     'satuan' => str($kompositor->satuan),
@@ -605,9 +659,10 @@ class KompositorController extends Controller
                 ];
                 //tambahkan kompositor baru dari data kompositor existing ? bisa mengakibatkan double data
                 $new_kompositor = Kompositor::create($ref_kom_data);
+                $data['Q8'] = $new_kompositor;
                 //insert indikator-kompositor
                 //$validated = $validator->validated();            
-                IndikatorKompositor::create([
+                $data['Q9'] = IndikatorKompositor::create([
                     'indikator_id' => $request->input('indikator_id'),
                     'kompositor_id' => $new_kompositor->id //$request->input('kompositor_id')
                 ]);
@@ -616,7 +671,9 @@ class KompositorController extends Controller
                 /*$data_kompositor_of = ['kompositor_id' => $new_kompositor->id,
                     'ref_kompositor_id' => $request->input('kompositor_id')];
                 \App\Models\KompositorOfKompositor::create($data_kompositor_of);*/
-            } elseif ($request->input('sumber_kompositor_id') == '3') { //existing kompositor
+            // C3: existing kompositor
+            } elseif ($request->input('sumber_kompositor_id') == '3') { //existing kompositor *tidak diguanakan lagi
+                $data['C3'] = "Executed with True";
                 //tambahkan validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
                     'indeks_id' => 'required',
@@ -648,7 +705,9 @@ class KompositorController extends Controller
                     'kompositor_id' => $kompositor->id
                 ];
                 IndikatorKompositor::create($data_indikator_kompositor);
-            } else if ($request->input('sumber_kompositor_id') == '4') { //existing parameter
+            // C4: existing parameter
+            } else if ($request->input('sumber_kompositor_id') == '4') { //existing parameter *tidak digunakan lagi
+                $data['C4'] = "Executed with True";
                 //insert kompositor
                 //validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -674,11 +733,11 @@ class KompositorController extends Controller
                 ]);
 
                 //insert indikator-kompositor
-                $data = [
+                $temp_data = [
                     'indikator_id' => $request->input('indikator_id'),
                     'kompositor_id' => $kompositor->id
                 ];
-                IndikatorKompositor::create($data);
+                IndikatorKompositor::create($temp_data);
 
                 //insert kompositor-parameter
                 if ($parameter !== null) {
@@ -688,30 +747,34 @@ class KompositorController extends Controller
                     ]);
                 }
             }
-
+            // C5: check objek kompositor
             if ($kompositor !== null) {
+                $data['C5'] = "Executed with True";
                 $pics = $request->input('pics');
                 if (is_array($pics)) {
-                    DB::table('kompositor_pic')
+                    $data['Q10'] = DB::table('kompositor_pic')
                         ->where('kompositor_id', '=', $kompositor->id)
                         ->delete();
                     foreach ($pics as $pic) {
-                        $data = [
+                        $temp_data = [
                             'kompositor_id' => $kompositor->id,
                             'pic_id' => $pic['value'],
                             'nama_pic' => $pic['label']
                         ];
-                        DB::table('kompositor_pic')->insert($data);
+                        $data['Q11'] = DB::table('kompositor_pic')->insert($temp_data);
                     }
                 }
             }
+
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-            $message = $e->errorInfo[2];
-            return Redirect::back()->with('message', $message);
+            $data['error'] = $e->errorInfo[2];
+            //return Redirect::back()->with('message', $message);
+            return $data;
         }
         //return Redirect::back()->with('message', $indeks);
+        //return $data;
         return Redirect::route('kompositor.index-indikator', $request->input('indikator_id'));
     }
 
@@ -788,7 +851,7 @@ class KompositorController extends Controller
                     'kompositor_id' => 'required',
                     'indeks_id' => 'required'
                 ])->validate();
-                
+
 
                 //bersihkan relasi yang terdapat pada New terlebih dahulu 
                 //jika update berubah dari New ke Existing Indikator
@@ -823,15 +886,15 @@ class KompositorController extends Controller
                             WHERE parent_id = ?
                             ORDER BY level, id;";
                 $indekses = DB::select($query, [$old_indeks_id, $old_indeks_id]);
-                if(count($indekses)>0){
+                if (count($indekses) > 0) {
                     //$result['indeksis'] = $indekses;
                     //looping cari data kompositor yang menjadi sub dari indeks
-                    foreach($indekses as $indeks){
+                    foreach ($indekses as $indeks) {
                         $kompositor_with_idx = Kompositor::where('indeks_id', '=', $indeks->id)->first();
-                        if(is_object($kompositor_with_idx)){
+                        if (is_object($kompositor_with_idx)) {
                             //cari realisasinya terlebih dahulu
                             $realisasi_kompositor = RealisasiKompositor::where('kompositor_id', '=', $kompositor_with_idx->id)->first();
-                            if(is_object($realisasi_kompositor)){
+                            if (is_object($realisasi_kompositor)) {
                                 //cari pic realisasinya dan hapus
                                 RealisasiKompositorPic::where('realisasi_kompositor_id', '=', $realisasi_kompositor->id)->delete();
                                 //hapus realisasinya
@@ -846,7 +909,7 @@ class KompositorController extends Controller
                         $kompositor_with_idx->delete();
                     }
                 }
-                
+
                 //get existing indikator-kompositor
                 $ref_kompositor = Kompositor::where('id', $request->input('ref_kompositor_id'))->first();
 
@@ -854,7 +917,7 @@ class KompositorController extends Controller
                     'nama_kompositor' => str($ref_kompositor->nama_kompositor),
                     'satuan' => str($ref_kompositor->satuan),
                     'indeks_id' => $request->input('indeks_id'),
-                    'jenis_kompositor_id' => $ref_kompositor->jenis_kompositor_id, 
+                    'jenis_kompositor_id' => $ref_kompositor->jenis_kompositor_id,
                     'indikator_id' => $request->input('indikator_id'),
                     'sumber_kompositor_id' => str($request->input('sumber_kompositor_id')),
                     'status_kompositor_id' => $ref_kompositor->status_kompositor_id
@@ -868,7 +931,6 @@ class KompositorController extends Controller
                     'kompositor_id' => $request->input('kompositor_id'),
                     'indikator_id' => $request->input('indikator_id')
                 ]);
-
             } elseif ($request->input('sumber_kompositor_id') == '3') { //existing kompositor *sementara tidak terpakai
                 //tambahkan validasi
                 $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
