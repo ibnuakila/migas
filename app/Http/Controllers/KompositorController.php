@@ -245,27 +245,27 @@ class KompositorController extends Controller
                 // C5: Jika sumber_kompositor existing parameter
             } elseif ($kompositor->sumber_kompositor_id == 4) {
                 $data['C5'] = "Executed with True";
-                // //> delete kompositor_pic
-                // $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
+                //> delete kompositor_pic
+                $kompositor_pic = \App\Models\KompositorPic::where('kompositor_id', $kompositor->id)->get();
 
-                // foreach ($kompositor_pic as $kom_pic) {
-                //     $kom_pic->delete();
-                // }
-                // //> delete kompositor_parameter
-                // $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
-                // if (is_object($parameter)) {
-                //     $komp_param = \App\Models\KompositorParameter::where([
-                //         //'kompositor_id' => $kompositor->id,
-                //         'parameter_id' => $request->input('parameter_id')
-                //     ])->delete();
-                //     //> delete parameter
-                //     $parameter->delete();
-                // }
-                // //> delete indikator_kompositor
-                // $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
-                // $indikator_kompositor->delete();
-                // //> delete kompositor
-                // $kompositor->delete();
+                foreach ($kompositor_pic as $kom_pic) {
+                    $data['Q16'] = $kom_pic->delete();
+                }
+                //> delete kompositor_parameter
+                $parameter = \App\Models\Parameter::where('id', $request->input('parameter_id'))->first();
+                if (is_object($parameter)) {
+                    $data['Q17'] = \App\Models\KompositorParameter::where([
+                        //'kompositor_id' => $kompositor->id,
+                        'parameter_id' => $request->input('parameter_id')
+                    ])->delete();
+                    //> delete parameter
+                    $data['Q18'] = $parameter->delete();
+                }
+                //> delete indikator_kompositor
+                $indikator_kompositor = IndikatorKompositor::where('kompositor_id', $kompositor->id)->first();
+                $data['Q19'] = $indikator_kompositor->delete();
+                //> delete kompositor
+                $data['Q20'] = $kompositor->delete();
                 
             }
             DB::commit();
