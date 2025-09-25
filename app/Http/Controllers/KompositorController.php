@@ -1032,12 +1032,12 @@ class KompositorController extends Controller
                     ->where('kompositor_id', '=', $kompositor->id)
                     ->delete();
                 foreach ($pics as $pic) {
-                    $temp_data = [
+                    $data_pic = [
                         'kompositor_id' => $kompositor->id,
                         'pic_id' => $pic['value'],
                         'nama_pic' => $pic['label']
                     ];
-                    $data['Q16'] = DB::table('kompositor_pic')->insert($data);
+                    $data['Q16'] = DB::table('kompositor_pic')->insert($data_pic);
                 }
             }
             DB::commit();
