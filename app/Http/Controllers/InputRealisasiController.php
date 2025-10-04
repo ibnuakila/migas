@@ -626,7 +626,7 @@ class InputRealisasiController extends Controller
                     $realisasi_kompositor = \App\Models\RealisasiKompositor::query()
                         ->join('input_realisasi', 'realisasi_kompositor.input_realisasi_id', '=', 'input_realisasi.id')
                         ->join('triwulan', 'input_realisasi.triwulan_id', '=', 'triwulan.id')
-                        //->join('realisasi_kompositor', 'input_realisasi.id', '=', 'realisasi_kompositor.input_realisasi_id')
+                        ->join('laporan_capaian', 'input_realisasi.laporan_capaian_id', '=', 'laporan_capaian.id')
                         ->join('kompositor', 'realisasi_kompositor.kompositor_id', '=', 'kompositor.id')
                         ->join('indikator_kompositor', 'kompositor.id', '=', 'indikator_kompositor.kompositor_id')
                         ->join('indikator', 'indikator_kompositor.indikator_id', '=', 'indikator.id')
@@ -634,6 +634,7 @@ class InputRealisasiController extends Controller
                         ->join('jenis_kompositor', 'kompositor.jenis_kompositor_id', '=', 'jenis_kompositor.id')
                         ->where('input_realisasi.laporan_capaian_id', $input_realisasi->laporan_capaian_id)
                         ->where('input_realisasi.triwulan_id', $input_realisasi->triwulan_id)
+                        ->where('laporan_capaian.periode_id', $laporan_capaian->periode_id)
                         ->select(
                             'input_realisasi.*',
                             'triwulan.triwulan',
