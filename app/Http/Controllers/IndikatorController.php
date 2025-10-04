@@ -17,8 +17,10 @@ use App\Http\Requests\IndikatorPicRequest;
 use App\Http\Resources\IndikatorResource;
 use App\Http\Requests\IndikatorKompositorRequest;
 use App\Models\IndikatorKompositor;
+use App\Models\InputRealisasi;
 use App\Models\Kompositor;
 use App\Models\LaporanCapaian;
+use App\Models\RealisasiKompositor;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -128,16 +130,21 @@ class IndikatorController extends Controller
         Try{
             DB::beginTransaction();
         
-            //hapus di laporan_capaian dahulu
-            $data['Q1'] = LaporanCapaian::where('indikator_id', $indikator->id)->delete();
-            //hapus di indikator_formula
-            $data['Q2'] = IndikatorFormula::where('indikator_id', $indikator->id)->delete();
-            //hapus di indikator_kompositor
-            $data['Q3'] = IndikatorKompositor::where('indikator_id', $indikator->id)->delete();
-            //hapus pic
-            foreach ($indikator->indikatorPics as $pic) {
-                $pic->delete();
-            }
+            // //hapus di laporan_capaian dahulu
+            // $data['Q1'] = LaporanCapaian::where('indikator_id', $indikator->id)->delete();
+            // //hapus di indikator_formula
+            // $data['Q2'] = IndikatorFormula::where('indikator_id', $indikator->id)->delete();
+            // //hapus di indikator_kompositor
+            // $data['Q3'] = IndikatorKompositor::where('indikator_id', $indikator->id)->delete();
+            // //hapus di input_realisasi
+            // $data['D1'] = InputRealisasi::where('laporan_capaian_id', $data['Q'])
+            // //hapus di realisasi_kompositor dan picnya
+            // $data['D2'] = RealisasiKompositor::where('')
+            
+            // //hapus pic
+            // foreach ($indikator->indikatorPics as $pic) {
+            //     $pic->delete();
+            // }
             $data['Q4'] = $indikator->delete();
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
