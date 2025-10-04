@@ -18,7 +18,9 @@ use App\Http\Resources\IndikatorResource;
 use App\Http\Requests\IndikatorKompositorRequest;
 use App\Models\IndikatorKompositor;
 use App\Models\Kompositor;
+use App\Models\LaporanCapaian;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class IndikatorController extends Controller
 {
@@ -122,12 +124,27 @@ class IndikatorController extends Controller
     public function destroy(Indikator $indikator, Request $request)
     {
         $this->authorize('indikator-delete');
-
-        //$ind_pic = $indikator->indikatorPics();
-        foreach ($indikator->indikatorPics as $pic) {
-            $pic->delete();
+        $data = null;
+        Try{
+            DB::beginTransaction();
+        
+            //hapus di laporan_capaian dahulu
+            $data['Q1'] = LaporanCapaian::where('indikator_id', $indikator->id)->delete();
+            //hapus di indikator_formula
+            $data['Q2'] = IndikatorFormula::where('indikator_id', $indikator->id)->delete();
+            //hapus di indikator_kompositor
+            $data['Q3'] = IndikatorKompositor::where('indikator_id', $indikator->id)->delete();
+            //hapus pic
+            foreach ($indikator->indikatorPics as $pic) {
+                $pic->delete();
+            }
+            $data['Q4'] = $indikator->delete();
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            $data['error'] = $e->errorInfo[2];
+            return $data;
         }
-        $indikator->delete();
         return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
     }
 
