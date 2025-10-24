@@ -40,6 +40,17 @@ class InputRealisasiController extends Controller
         $this->authorize('input-realisasi-delete');
 
         $inputrealisasi->delete();
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($inputrealisasi)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'input_realisasi_id' => $inputrealisasi->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroy')
+                ->log('Input Realisasi Delete');
         return Redirect::route('input-realisasi.index')->with('success', 'Input Realisasi deleted!');
     }
 
@@ -66,6 +77,17 @@ class InputRealisasiController extends Controller
             //     $input_realisasi->update();
             // }
             DB::commit();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($realisasikompositor)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'realisasi_kompositor_id' => $realisasikompositor->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroyKompositor')
+                ->log('Input Realisasi Delete Kompositor');
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             $message = $e->errorInfo[2];
@@ -230,6 +252,17 @@ class InputRealisasiController extends Controller
     {
         $validated = $request->validated();
         $object = InputRealisasi::create($validated);
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($object)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'input_realisasi_id' => $object->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('store')
+                ->log('Input Realisasi Insert');
         return Redirect::route('input-realisasi.index-indikator');
     }
 

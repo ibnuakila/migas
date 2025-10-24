@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Znck\Eloquent\Relations\BelongsToThrough;
+//use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Indikator extends Model
 {
@@ -20,7 +20,7 @@ class Indikator extends Model
         'level_id',
         'parent_id',
         'ordering',
-        'numbering'
+        'numbering'        
     ];
     
     public function satuan()

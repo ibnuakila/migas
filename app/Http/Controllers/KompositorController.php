@@ -269,6 +269,17 @@ class KompositorController extends Controller
                 
             }
             DB::commit();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($kompositor)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'kompositor_id' => $kompositor->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroy')
+                ->log('Kompositor Delete');
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             $temp_message =  $e->errorInfo[2];
@@ -767,6 +778,17 @@ class KompositorController extends Controller
             }
 
             DB::commit();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($kompositor)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'kompositor_id' => $kompositor->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('store')
+                ->log('Kompositor Delete');
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             $data['error'] = $e->errorInfo[2];
@@ -1041,6 +1063,17 @@ class KompositorController extends Controller
                 }
             }
             DB::commit();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($kompositor)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'kompositor_id' => $kompositor->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('update')
+                ->log('Kompositor Update');
             //return $result;
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();

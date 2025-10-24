@@ -162,8 +162,22 @@ class LaporanCapaianController extends Controller
     public function store(LaporanCapaianRequest $request)
     {
         $validRequest = $request->validated();
+        $input = $request->all();
         $object = new LaporanCapaian();
         $object->create($validRequest);
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($object)
+            ->withProperties([
+                'ip' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+                'indikator_id' => $input['indikator_id'],
+                'target' => (float)str_replace(',', '', $input['target']),
+                'status_kinerja' => $input['status_kinerja']
+            ])
+            ->createdAt(now()->subDays(10))
+            ->event('store')
+            ->log('Laporan Capaian Insert');
         return Redirect::route('laporan-capaian.index');
     }
 

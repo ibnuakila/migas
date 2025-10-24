@@ -94,6 +94,7 @@ class IndikatorController extends Controller
     public function update(Indikator $indikator, IndikatorRequest $request)
     {
         $this->authorize('indikator-edit');
+        $input = $request->all();
         try {
             DB::beginTransaction();
             $request->validate(['pics' => ['required']]);
@@ -114,6 +115,17 @@ class IndikatorController extends Controller
                     DB::table('indikator_pic')->insert($data);
                 }
             }
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($indikator)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'indikator_id' => $indikator->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('insert')
+                ->log('Indikator Update');
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -146,6 +158,17 @@ class IndikatorController extends Controller
             //     $pic->delete();
             // }
             $data['Q4'] = $indikator->delete();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($indikator)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'indikator_id' => $indikator->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroy')
+                ->log('Indikator Delete');
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
@@ -194,7 +217,7 @@ class IndikatorController extends Controller
     public function store(IndikatorRequest $request)
     {
         $this->authorize('indikator-create');
-
+        $input = $request->all();
         $request->validate(['pics' => ['required']]);
         $validIndikator = $request->validated();
         $indikator = Indikator::create($validIndikator);
@@ -212,6 +235,17 @@ class IndikatorController extends Controller
                 DB::table('indikator_pic')->insert($data);
             }
         }
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($indikator)
+            ->withProperties([
+                'ip' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+                'indikator_id' => $indikator->id                
+            ])
+            ->createdAt(now()->subDays(10))
+            ->event('store')
+            ->log('Indikator Insert');
         return Redirect::route('indikator.index');
     }
 
