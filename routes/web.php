@@ -26,6 +26,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KompositorController;
 use App\Http\Controllers\InputKinerjaController;
+use App\Http\Controllers\LogController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -224,7 +225,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/create-role', [UserController::class, 'createRole'])->name('user.create-role');
 });
 
-
+Route::middleware('auth')->group(function () {
+    Route::get('/log/index', [LogController::class, 'index'])->name('log.index');    
+});
 
 Route::get('/test', function () {
     

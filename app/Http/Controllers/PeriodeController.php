@@ -29,7 +29,7 @@ class PeriodeController extends Controller //implements ICrud
                         $query->where('Periode','like', "%{$search}%");
                     })
                     ->paginate(10)
-                    ->withQueryString()
+                    //->withQueryString()
             //)
                 ]);
     }
