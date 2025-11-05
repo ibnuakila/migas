@@ -128,7 +128,9 @@ export default function ListLog({ auth }) {
 
                       <th className="p-2">
                         <Input variant="outlined" size="md" className="!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10"
-                          onChange={''} labelProps={{
+                          onChange={(value)=>{
+                            setNama(value);
+                          }} labelProps={{
                             className: "hidden",
                           }} placeholder="Name" icon={<MagnifyingGlassIcon className="h-5 w-5" />} />
                       </th>

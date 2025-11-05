@@ -35,15 +35,20 @@ class LogController extends Controller //implements ICrud
         ->when($request->date, function ($query, $start) {
             $query->whereDate('created_at', '=', $start);
         })
-        ->when($request->end_date, function ($query, $end) {
-            $query->whereDate('created_at', '<=', $end);
+        // ->when($request->nama, function ($query, $end) {
+        //     $query->where('causer_id', '=', $end);
+        // })
+        ->when($request->filled('nama'),function ($query) use ($request){
+            $query->whereHas('causer', function ($q) use ($request){
+                $q->where('name', 'ILIKE', "%{$request->nama}%");
+            });
         })
-        ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
-            $query->whereBetween('created_at', [
-                $request->start_date,
-                $request->end_date,
-            ]);
-        })
+        // ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
+        //     $query->whereBetween('created_at', [
+        //         $request->start_date,
+        //         $request->end_date,
+        //     ]);
+        // })
         ->latest()
         ->paginate(15);
 
