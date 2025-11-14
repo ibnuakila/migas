@@ -60,8 +60,8 @@ export default function ListIndikator({ auth }) {
         preserveState: true
       });
     }
-
   }, [termIndikator, termPic, termLevel]);
+  
   function Icon() {
     return (
       <svg

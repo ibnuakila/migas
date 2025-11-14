@@ -50,7 +50,7 @@ class LogController extends Controller //implements ICrud
         //     ]);
         // })
         ->latest()
-        ->paginate(15);
+        ->paginate(10);
 
         return Inertia::render('AuditLogs/ListLog', [
             'logs' => $logs,
