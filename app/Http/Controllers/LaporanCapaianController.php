@@ -92,18 +92,18 @@ class LaporanCapaianController extends Controller
             ])
             ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                 if ($search !== '') {
-                    $query->where('level.nama_level', 'like', "%{$search}%");
+                    $query->where('level.nama_level', 'ilike', "%{$search}%");
                 }
             })
             ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
                 if ($search !== '') {
                     $query->leftJoin('laporan_capaian_pic as lcp', 'laporan_capaian.id', '=', 'lcp.laporan_capaian_id');
-                    $query->where('lcp.nama_pic', 'like', "%{$search}%");
+                    $query->where('lcp.nama_pic', 'ilike', "%{$search}%");
                 }
             })
             ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
                 if ($search !== '') {
-                    $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                    $query->where('indikator.nama_indikator', 'ilike', "%{$search}%");
                 }
             })
             ->when(\Illuminate\Support\Facades\Request::input('fperiode'), function ($query, $search) {
@@ -162,8 +162,22 @@ class LaporanCapaianController extends Controller
     public function store(LaporanCapaianRequest $request)
     {
         $validRequest = $request->validated();
+        $input = $request->all();
         $object = new LaporanCapaian();
         $object->create($validRequest);
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($object)
+            ->withProperties([
+                'ip' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+                'indikator_id' => $input['indikator_id'],
+                'target' => (float)str_replace(',', '', $input['target']),
+                'status_kinerja' => $input['status_kinerja']
+            ])
+            ->createdAt(now()->subDays(10))
+            ->event('store')
+            ->log('Laporan Capaian Insert');
         return Redirect::route('laporan-capaian.index');
     }
 

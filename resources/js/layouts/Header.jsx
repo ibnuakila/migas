@@ -101,6 +101,7 @@ export default function Header() {
                     </MenuList>
                 </Menu>
                 {auth.roles.includes('Administrator') ? (
+                    
                     <Menu>
                         <MenuHandler>
                             <Typography
@@ -116,8 +117,10 @@ export default function Header() {
                         </MenuHandler>
                         <MenuList>
                         <MenuItem><Link href={route('user.index')}>Users</Link></MenuItem>                        
+                        <MenuItem><Link href={route('log.index')}>Logs</Link></MenuItem>   
                         </MenuList>
                     </Menu>):null
+                    
                 }
                 <Typography
                     as="li"

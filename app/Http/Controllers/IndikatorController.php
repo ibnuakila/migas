@@ -17,8 +17,12 @@ use App\Http\Requests\IndikatorPicRequest;
 use App\Http\Resources\IndikatorResource;
 use App\Http\Requests\IndikatorKompositorRequest;
 use App\Models\IndikatorKompositor;
+use App\Models\InputRealisasi;
 use App\Models\Kompositor;
+use App\Models\LaporanCapaian;
+use App\Models\RealisasiKompositor;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class IndikatorController extends Controller
 {
@@ -53,25 +57,25 @@ class IndikatorController extends Controller
                     ->with('indikatorFormula')
                     ->when(\Illuminate\Support\Facades\Request::input('flevel'), function ($query, $search) {
                         if ($search != '') {
-                            $query->where('level.nama_level', 'like', "%{$search}%");
+                            $query->where('level.nama_level', 'ilike', "%{$search}%");
                         }
                     })
                     ->when(\Illuminate\Support\Facades\Request::input('fpic'), function ($query, $search) {
                         if ($search != '') {
                             $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
-                            $query->where('indikator_pic.nama_pic', 'like', "%{$search}%");
+                            $query->where('indikator_pic.nama_pic', 'ilike', "%{$search}%");
                         }
                     })
                     ->when(\Illuminate\Support\Facades\Request::input('findikator'), function ($query, $search) {
                         if ($search != '') {
-                            $query->where('indikator.nama_indikator', 'like', "%{$search}%");
+                            $query->where('indikator.nama_indikator', 'ilike', "%{$search}%");
                         }
                     })
                     ->when($request->user(), function ($query) use ($request) {
                         $roles = $request->user()->getRoleNames();
-                        if ($roles[0] !== 'Administrator') {
-                            $user_id = $request->user()->only('id');
-                            $user = \App\Models\User::where('id', $user_id)->first();
+                        $user = $request->user();
+
+                        if (!$roles->contains('Administrator')) {   
                             $query->join('indikator_pic', 'indikator.id', '=', 'indikator_pic.indikator_id');
                             $query->where('indikator_pic.pic_id', '=', $user->pic_id);
                         }
@@ -90,6 +94,7 @@ class IndikatorController extends Controller
     public function update(Indikator $indikator, IndikatorRequest $request)
     {
         $this->authorize('indikator-edit');
+        $input = $request->all();
         try {
             DB::beginTransaction();
             $request->validate(['pics' => ['required']]);
@@ -110,6 +115,17 @@ class IndikatorController extends Controller
                     DB::table('indikator_pic')->insert($data);
                 }
             }
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($indikator)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'indikator_id' => $indikator->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('insert')
+                ->log('Indikator Update');
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -122,12 +138,43 @@ class IndikatorController extends Controller
     public function destroy(Indikator $indikator, Request $request)
     {
         $this->authorize('indikator-delete');
-
-        //$ind_pic = $indikator->indikatorPics();
-        foreach ($indikator->indikatorPics as $pic) {
-            $pic->delete();
+        $data = null;
+        Try{
+            DB::beginTransaction();
+        
+            // //hapus di laporan_capaian dahulu
+            // $data['Q1'] = LaporanCapaian::where('indikator_id', $indikator->id)->delete();
+            // //hapus di indikator_formula
+            // $data['Q2'] = IndikatorFormula::where('indikator_id', $indikator->id)->delete();
+            // //hapus di indikator_kompositor
+            // $data['Q3'] = IndikatorKompositor::where('indikator_id', $indikator->id)->delete();
+            // //hapus di input_realisasi
+            // $data['D1'] = InputRealisasi::where('laporan_capaian_id', $data['Q'])
+            // //hapus di realisasi_kompositor dan picnya
+            // $data['D2'] = RealisasiKompositor::where('')
+            
+            // //hapus pic
+            // foreach ($indikator->indikatorPics as $pic) {
+            //     $pic->delete();
+            // }
+            $data['Q4'] = $indikator->delete();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($indikator)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'indikator_id' => $indikator->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroy')
+                ->log('Indikator Delete');
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            $data['error'] = $e->errorInfo[2];
+            return $data;
         }
-        $indikator->delete();
         return Redirect::route('indikator.index')->with('success', 'Indikator deleted!');
     }
 
@@ -170,7 +217,7 @@ class IndikatorController extends Controller
     public function store(IndikatorRequest $request)
     {
         $this->authorize('indikator-create');
-
+        $input = $request->all();
         $request->validate(['pics' => ['required']]);
         $validIndikator = $request->validated();
         $indikator = Indikator::create($validIndikator);
@@ -188,6 +235,17 @@ class IndikatorController extends Controller
                 DB::table('indikator_pic')->insert($data);
             }
         }
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($indikator)
+            ->withProperties([
+                'ip' => request()->ip(),
+                'user_agent' => request()->header('User-Agent'),
+                'indikator_id' => $indikator->id                
+            ])
+            ->createdAt(now()->subDays(10))
+            ->event('store')
+            ->log('Indikator Insert');
         return Redirect::route('indikator.index');
     }
 

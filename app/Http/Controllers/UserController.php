@@ -10,6 +10,7 @@ use Inertia\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 
 class UserController extends Controller
 {
@@ -236,6 +237,17 @@ class UserController extends Controller
             $role = \Spatie\Permission\Models\Role::findById($request->input('role'));
             $user->assignRole([$role->id]);
             $message = "User Created!";
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($user)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'user_id' => $user->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('store')
+                ->log('User Insert');
             return Redirect::back()->with('message', $message);
         
     }
@@ -307,6 +319,17 @@ class UserController extends Controller
         $role = \Spatie\Permission\Models\Role::findById($request->input('role'));
         $user->syncRoles([$role->id]);
         $message = "User Updated!";
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($user)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'user_id' => $user->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('update')
+                ->log('User Update');
         return Redirect::back()->with('message', $message);
     }
 

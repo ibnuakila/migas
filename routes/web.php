@@ -26,6 +26,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KompositorController;
 use App\Http\Controllers\InputKinerjaController;
+use App\Http\Controllers\LogController;
 use App\Models\Periode;
 use App\Models\Indikator;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,9 @@ use Illuminate\Support\Facades\DB;
 use MathPHP\Statistics\Multivariate\PLS;
 use MathPHP\LinearAlgebra\MatrixFactory;
 use MathPHP\Statistics\Regression;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -53,17 +57,26 @@ Route::get('/', function () {
     ]);
 });
 
+//Auth::routes(['verify' => true]);
+
 /*Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');*/
+Route::get('/test-mail', function () {
+    Mail::raw('This is a test email from Laravel', function ($message) {
+        $message->to('ibnu.ial@bsi.ac.id')->subject('Hello from Mailpit');
+    });
 
-Route::middleware('auth')->group(function () {
+    return 'Mail sent!';
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('auth')->group( function () {
+Route::middleware(['auth', 'verified'])->group( function () {
     Route::get('/home', [\App\Http\Controllers\DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/iksk', [DashboardController::class, 'getIksk'])->name('dashboard.getiksk');
@@ -212,7 +225,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/create-role', [UserController::class, 'createRole'])->name('user.create-role');
 });
 
-
+Route::middleware('auth')->group(function () {
+    Route::get('/log/index', [LogController::class, 'index'])->name('log.index');    
+});
 
 Route::get('/test', function () {
     

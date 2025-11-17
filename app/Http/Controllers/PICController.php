@@ -31,11 +31,33 @@ class PICController extends Controller //implements ICrud
         $pic->update(
             $request->validated()
         );
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($pic)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'pic_id' => $pic->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('update')
+                ->log('PIC Update');
         return Redirect::route('pic.index');
     }
 
     public function destroy(PIC $pic) {
         $pic->delete();
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($pic)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'pic_id' => $pic->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('destroy')
+                ->log('PIC Delete');
         return Redirect::route('pic.index');
     }
 
@@ -50,6 +72,17 @@ class PICController extends Controller //implements ICrud
         $valid = $request->validated();
         $obj = new PIC();        
         $obj->create($valid);
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($obj)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'pic_id' => $obj->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('store')
+                ->log('PIC Insert');
         return Redirect::route('pic.index');
     }
 }

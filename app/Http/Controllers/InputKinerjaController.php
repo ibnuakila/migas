@@ -54,15 +54,20 @@ class InputKinerjaController extends Controller
         }else{
             KinerjaTriwulan::where('laporan_capaian_id',$request->laporan_capaian_id)
                 ->where('triwulan_id', $request->triwulan_id)
-                    ->update($validated);
-            
+                    ->update($validated);            
         }
-        $message = '';
-        if($update_status_1 && $update_status_2){
-            $message = "Update berahasil!";
-        }else{
-            $message = "Update gagal!";
-        }
+        $message = 'Kinerja Tersimpan';
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($kinerja_triwulan)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'kinerja_triwulan_id' => $kinerja_triwulan->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('store')
+                ->log('Kinerja Triwulan Insert');
         return Redirect::back()->with('message', $message);
     }
 
@@ -134,11 +139,20 @@ class InputKinerjaController extends Controller
             $laporan_capaian->kinerja_color = $color;
             $laporan_capaian->update();
         }
-        if($update_status_1){
-            $message = "Update berhasil!";
-        }else{
-            $message = "Update gagal!";
-        }
+        
+        $message = "Update berhasil!";
+        activity()
+                ->causedBy(auth()->user())
+                ->performedOn($kinerjatriwulan)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'user_agent' => request()->header('User-Agent'),
+                    'kinerja_triwulan_id' => $kinerjatriwulan->id                
+                ])
+                ->createdAt(now()->subDays(10))
+                ->event('update')
+                ->log('Kinerja Triwulan Update');
+        
         return Redirect::back()->with('message', $message);
     }
 

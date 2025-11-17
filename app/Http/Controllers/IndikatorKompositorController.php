@@ -21,7 +21,7 @@ class IndikatorKompositorController extends Controller //implements ICrud
     }
 
     public function destroy(IndikatorKompositor $indikatorkompositor) {
-        $indikator_kompositor->delete();
+        $indikatorkompositor->delete();
         return Redirect::route('indikator-kompositor.index');
     }
 
