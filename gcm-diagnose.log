@@ -1,0 +1,217 @@
+﻿Diagnose log at 2025-11-14T02:40:58Z
+
+Executable: C:\Program Files\Git\mingw64\libexec\git-core\git-credential-manager-core.exe
+Version: 2.0.605+97323d1677
+
+------------
+Diagnostic: Environment
+Skipped: False
+Success: True
+Exception: None
+Log:
+OSType: Windows
+OSVersion: 10.0 (build 19045)
+Reading environment variables... OK
+ Variables:
+HOMEPATH=\Users\akila
+DriverData=C:\Windows\System32\Drivers\DriverData
+COMPUTERNAME=DESKTOP-64I6U9J
+CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+OneDrive=C:\Users\akila\OneDrive
+VSCODE_INJECTION=1
+HOME=C:\Users\akila
+PROCESSOR_REVISION=3c03
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+GIT_ASKPASS=c:\Users\akila\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass.sh
+TMP=C:\Users\akila\AppData\Local\Temp
+TEMP=C:\Users\akila\AppData\Local\Temp
+LOCALAPPDATA=C:\Users\akila\AppData\Local
+MSYSTEM=MINGW64
+TERM=cygwin
+COLORTERM=truecolor
+windir=C:\Windows
+USERDOMAIN=DESKTOP-64I6U9J
+ProgramFiles(x86)=C:\Program Files (x86)
+Path=C:/Program Files/Git/mingw64/libexec/git-core;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\akila\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\PuTTY\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\php-8.3;C:\ProgramData\ComposerSetup\bin;C:\Users\akila\AppData\Local\Microsoft\WindowsApps;C:\Users\akila\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\akila\AppData\Local\GitHubDesktop\bin;C:\Users\akila\AppData\Roaming\npm;C:\Users\akila\AppData\Roaming\Composer\vendor\bin
+TERM_PROGRAM=vscode
+PROCESSOR_LEVEL=6
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 60 Stepping 3, GenuineIntel
+TMPDIR=C:\Users\akila\AppData\Local\Temp
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+TERM_PROGRAM_VERSION=1.106.0
+VSCODE_GIT_ASKPASS_MAIN=c:\Users\akila\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass-main.js
+PSModulePath=C:\Users\akila\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+PUBLIC=C:\Users\Public
+NUMBER_OF_PROCESSORS=2
+CommonProgramFiles=C:\Program Files (x86)\Common Files
+VSCODE_NONCE=fbc36a2e-a4bd-42cd-817a-7dc061334be6
+VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-dbc84ef276-sock
+CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_8940_XDLXYRLPOMHBGFGU
+PLINK_PROTOCOL=ssh
+ProgramData=C:\ProgramData
+ProgramW6432=C:\Program Files
+ProgramFiles=C:\Program Files (x86)
+VSCODE_GIT_ASKPASS_NODE=C:\Users\akila\AppData\Local\Programs\Microsoft VS Code\Code.exe
+SystemRoot=C:\Windows
+ORIGINAL_XDG_CURRENT_DESKTOP=undefined
+SESSIONNAME=Console
+VSCODE_STABLE=1
+CommonProgramW6432=C:\Program Files\Common Files
+LOGONSERVER=\\DESKTOP-64I6U9J
+GIT_EXEC_PATH=C:/Program Files/Git/mingw64/libexec/git-core
+USERDOMAIN_ROAMINGPROFILE=DESKTOP-64I6U9J
+APPDATA=C:\Users\akila\AppData\Roaming
+HOMEDRIVE=C:
+VSCODE_A11Y_MODE=0
+USERNAME=akila
+PROCESSOR_ARCHITEW6432=AMD64
+PROCESSOR_ARCHITECTURE=x86
+USERPROFILE=C:\Users\akila
+OS=Windows_NT
+ComSpec=C:\Windows\system32\cmd.exe
+SystemDrive=C:
+PT8HOME=C:\Program Files\Cisco Packet Tracer 8.2.2
+LANG=en_US.UTF-8
+ALLUSERSPROFILE=C:\ProgramData
+
+
+------------
+Diagnostic: File system
+Skipped: False
+Success: True
+Exception: None
+Log:
+Temporary directory is 'C:\Users\akila\AppData\Local\Temp\'...
+Checking basic file I/O...
+Writing to temporary file 'C:\Users\akila\AppData\Local\Temp\ebed473c88c0ed8dc73e3e42'... OK
+Reading from temporary file 'C:\Users\akila\AppData\Local\Temp\ebed473c88c0ed8dc73e3e42'... OK
+Deleting temporary file 'C:\Users\akila\AppData\Local\Temp\ebed473c88c0ed8dc73e3e42'... OK
+Testing IFileSystem instance...
+UserHomePath: C:\Users\akila
+UserDataDirectoryPath: C:\Users\akila\.gcm
+GetCurrentDirectory(): D:\Document\PROJECTS\WEB\migas
+
+------------
+Diagnostic: Networking
+Skipped: False
+Success: False
+Exception:
+System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The remote name could not be resolved: 'example.com'
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.Http.HttpClientHandler.GetResponseCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitCredentialManager.Diagnostics.NetworkingDiagnostic.<RunTestAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitCredentialManager.Diagnostics.NetworkingDiagnostic.<RunInternalAsync>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitCredentialManager.Diagnostics.Diagnostic.<RunAsync>d__5.MoveNext()
+Log:
+Checking basic networking and HTTP stack...
+Creating HTTP client... OK
+IsNetworkAvailable: True
+Sending HEAD request to http://example.com...
+------------
+Diagnostic: Git
+Skipped: False
+Success: True
+Exception: None
+Log:
+Getting Git version... OK
+Git version is '2.34.1.windows.1'
+Locating current repository... OK
+Git repository at 'D:/Document/PROJECTS/WEB/migas/.git'
+Listing all Git configuration... OK
+Git configuration:
+file:C:/Program Files/Git/etc/gitconfig	diff.astextplain.textconv=astextplain
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.clean=git-lfs clean -- %f
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.smudge=git-lfs smudge -- %f
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.process=git-lfs filter-process
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.required=true
+file:C:/Program Files/Git/etc/gitconfig	http.sslbackend=openssl
+file:C:/Program Files/Git/etc/gitconfig	http.sslcainfo=C:/Program Files/Git/mingw64/ssl/certs/ca-bundle.crt
+file:C:/Program Files/Git/etc/gitconfig	core.autocrlf=true
+file:C:/Program Files/Git/etc/gitconfig	core.fscache=true
+file:C:/Program Files/Git/etc/gitconfig	core.symlinks=false
+file:C:/Program Files/Git/etc/gitconfig	pull.rebase=false
+file:C:/Program Files/Git/etc/gitconfig	credential.helper=manager-core
+file:C:/Program Files/Git/etc/gitconfig	credential.https://dev.azure.com.usehttppath=true
+file:C:/Program Files/Git/etc/gitconfig	init.defaultbranch=master
+file:C:/Users/akila/.gitconfig	filter.lfs.clean=git-lfs clean -- %f
+file:C:/Users/akila/.gitconfig	filter.lfs.smudge=git-lfs smudge -- %f
+file:C:/Users/akila/.gitconfig	filter.lfs.process=git-lfs filter-process
+file:C:/Users/akila/.gitconfig	filter.lfs.required=true
+file:C:/Users/akila/.gitconfig	user.name=Ibnu Akil
+file:C:/Users/akila/.gitconfig	user.email=71995277+ibnuakila@users.noreply.github.com
+file:.git/config	core.repositoryformatversion=0
+file:.git/config	core.filemode=false
+file:.git/config	core.bare=false
+file:.git/config	core.logallrefupdates=true
+file:.git/config	core.symlinks=false
+file:.git/config	core.ignorecase=true
+file:.git/config	submodule.active=.
+file:.git/config	remote.origin.url=https://github.com/ibnuakila/migas.git
+file:.git/config	remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+file:.git/config	branch.main.remote=origin
+file:.git/config	branch.main.merge=refs/heads/main
+file:.git/config	branch.main.vscode-merge-base=origin/main
+file:.git/config	lfs.repositoryformatversion=0
+file:.git/config	branch.master.remote=origin
+file:.git/config	branch.master.merge=refs/heads/master
+file:.git/config	branch.master.vscode-merge-base=origin/master
+
+
+------------
+Diagnostic: Credential storage
+Skipped: False
+Success: True
+Exception: None
+Log:
+ICredentialStore instance is of type: CredentialStore
+Writing test credential... OK
+Reading test credential... OK
+Deleting test credential... OK
+
+------------
+Diagnostic: Microsoft authentication (AAD/MSA)
+Skipped: False
+Success: True
+Exception: None
+Log:
+Broker not supported.
+Flow type is: Auto
+Gathering MSAL token cache data... OK
+CacheDirectory: C:\Users\akila\AppData\Local\.IdentityService
+CacheFileName: msal.cache
+CacheFilePath: C:\Users\akila\AppData\Local\.IdentityService\msal.cache
+Creating cache helper... OK
+Verifying MSAL token cache persistence... OK
+
+------------
+Diagnostic: GitHub API
+Skipped: False
+Success: False
+Exception:
+System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The remote name could not be resolved: 'api.github.com'
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.Http.HttpClientHandler.GetResponseCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitHub.GitHubRestApi.<GetMetaInfoAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitHub.Diagnostics.GitHubApiDiagnostic.<RunInternalAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at GitCredentialManager.Diagnostics.Diagnostic.<RunAsync>d__5.MoveNext()
+Log:
+Using 'https://github.com/' as API target.
+Querying '/meta' endpoint...
