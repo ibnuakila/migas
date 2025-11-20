@@ -10,4 +10,15 @@ export default defineConfig({
         }),
         react(),
     ],
+    server: {
+        host: true,       // allow external access inside Docker
+        port: 5173,
+        hmr: {
+            host: 'localhost',  // <--- IMPORTANT
+            protocol: 'ws',
+        },
+        watch: {
+            usePolling: true, // <--- required for Windows + Docker
+        },
+    },
 });
