@@ -12,12 +12,19 @@ class DashboardController extends BaseController
 {
     //
     public function index(){
-        $rerata_capaian_kinerja =DB::table('pic')
+        // $rerata_capaian_kinerja =DB::table('pic')
+        //     ->join('laporan_capaian_pic', 'pic.id', '=', 'laporan_capaian_pic.pic_id')
+        //     ->join('laporan_capaian', 'laporan_capaian_pic.laporan_capaian_id', '=', 'laporan_capaian.id')
+        //     ->select('pic.nama_pic', DB::raw('AVG(laporan_capaian.kinerja_tahunan) AS rerata_kinerja'))
+        //     ->where('parent_id', 1)
+        //     ->groupBy('pic.nama_pic')
+        //     ->get();
+        $rerata_capaian_kinerja = DB::table('pic')
             ->join('laporan_capaian_pic', 'pic.id', '=', 'laporan_capaian_pic.pic_id')
             ->join('laporan_capaian', 'laporan_capaian_pic.laporan_capaian_id', '=', 'laporan_capaian.id')
-            ->select('pic.nama_pic', DB::raw('AVG(laporan_capaian.kinerja_tahunan) AS rerata_kinerja'))
-            ->where('parent_id', 1)
-            ->groupBy('pic.nama_pic')
+            ->select('pic.id', 'pic.nama_pic', DB::raw('AVG(laporan_capaian.kinerja_tahunan) AS rerata_kinerja'))
+            ->where('pic.parent_id', 1)
+            ->groupBy('pic.id', 'pic.nama_pic')
             ->get();
 
         $biru = DB::table('indikator')

@@ -17,6 +17,9 @@ import AdminLayout from '@/layouts/AdminLayout';
 //import FormKompositor from './FormKompositor';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
+import SSelect from "@/Components/SSelect";
+import { number } from "prop-types";
+import axios from "axios";
 
 export default function FormIndikator() {
     const {auth, satuans, levels, pics, parents, indikator, indikator_kompositors, message} = usePage().props;
@@ -33,9 +36,12 @@ export default function FormIndikator() {
     const [optionSatuan, setOptionSatuan] = useState('');
     const [optionLevel, setOptionLevel] = useState('');
     const [optionParent, setOptionParent] = useState('');
+    const [optsParent, setOptsParent] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState([]);
+    const [isIksp, setIsIksp] = useState(false);
     const TABLE_HEAD = ["ID", "Nama Kompositor", "Indeks", "Satuan", "Sifat Kalkulasi", "Jenis Kompositor", "Action"];
+
     console.log(usePage().props);
     const msg = 'No Data Found!';
     
@@ -62,18 +68,44 @@ export default function FormIndikator() {
 
     function handleChangeLevel(e) {
         setOptionLevel({selectValue: e});
+        if(e == 1){
+            setIsIksp(true);
+            setData('parent_id', 0);
+        }else{
+            setIsIksp(false);
+        }
         setData('level_id', e);
+        getParent(e);
         console.log(optionLevel);
     }
 
     function handleChangeParent(e) {
-        setOptionParent({selectValue: e});
-        setData('parent_id', e);
+        //setOptionParent({selectValue: e});
+        setData('parent_id', e.value);
         console.log(optionParent);
     }
     const optPic = pics.map(pic => {
         return {value:pic.id, label:pic.nama_pic};
     })
+
+    // setOptionParent(parents.map(({ id, nama_indikator, level_id, numbering, level }) => {
+    //     return { value: level_id, label: nama_indikator + " (" + level.nama_level + ")" };
+    // }))
+
+    function getParent(level)
+    {
+        axios.get(route('indikator.get-parent'), {params:{level_id:level}}
+        ).then(result => {
+            console.log(result)
+            setOptsParent(result.data.map(({ id, nama_indikator, level_id, numbering, level }) => {
+                return { value: level_id, label: nama_indikator + " (" + level.nama_level + ")" };
+            }))
+            // let parent = document.getElementById('opt-parent');
+            // parent.options = optParent;
+        }).catch((error) => {
+            console.error("There was an error downloading the file", error);
+        });
+    }
     
     return (
             <NewAdminLayout 
@@ -120,17 +152,16 @@ export default function FormIndikator() {
                                                     </Select>
                                                     {errors.satuan_id && <div className="text-red-400 mt-1">{errors.satuan_id}</div>}
                                                 </div>
-                                                
-                                                <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Parent" onChange={handleChangeParent}
-                                                            value={optionParent.selectValue}
-                                                            error={errors.parent_id}>
-                                                        {parents.map(({id, numbering, nama_indikator}) => (
-                                                            <Option value={id.toString()} key={id}>{numbering + " | " + nama_indikator}</Option>
-                                                                            ))}
-                                                    </Select>
+                                                {!isIksp? (
+                                                    <div className="sm:w-full md:w-full lg:w-full">                                                    
+                                                    <SSelect label="Select Parent" id="opt-parent" options={optsParent}
+                                                        onChange={handleChangeParent}
+                                                        error={errors.parent_id}>                                                        
+                                                    </SSelect>
                                                     {errors.parent_id && <div className="text-red-400 mt-1">{errors.parent_id}</div>}
                                                 </div>
+                                                ):(null)}
+                                                
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Input label="Ordering" variant="outlined" id="Ordering" 
                                                            onChange={e => {

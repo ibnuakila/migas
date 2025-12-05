@@ -28,4 +28,13 @@ class PeriodeStoreRequest extends FormRequest
             'status' => ['required']
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'periode.required' => 'Periode wajib diisi!',
+            'periode.integer' => 'Periode harus bilangan bulat',
+            'status.required' => 'Status wajib dipilih!'
+        ];
+    }
 }

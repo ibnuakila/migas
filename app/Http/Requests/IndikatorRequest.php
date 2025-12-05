@@ -29,8 +29,21 @@ class IndikatorRequest extends FormRequest
             'satuan_id' => ['required'],
             'level_id' => ['required'],
             'ordering' => ['required'],
-            'numbering' => ['required'],
-            'parent_id' => ['required']
+            //'numbering' => ['required'],
+            'parent_id' => ['required'],
+            'pics' => ['required']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'nama_indikator.required' => 'Nama indikator wajib diisi!',
+            'satuan_id.required' => 'Satuan wajib diisi!',
+            'level_id.required' => 'Level wajib dipilih!',
+            'ordering.required' => 'Order wajib diisi!',
+            'parent_id.required' => 'Parent wajib diisi!',
+            'pics.required' => 'PIC wajib diisi'            
         ];
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Requests\PeriodeStoreRequest;
 use App\Http\Resources\PeriodeCollection;
 use App\Http\Resources\PeriodeResource;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 class PeriodeController extends Controller //implements ICrud
 {
@@ -51,13 +52,19 @@ class PeriodeController extends Controller //implements ICrud
         $periode->update(
             $request->validated()
         );
-        activity()
+        $agent = new Agent();
+            $agent->setUserAgent($request()->header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
+            activity()
                 ->causedBy(auth()->user())
                 ->performedOn($periode)
                 ->withProperties([
                     'ip' => request()->ip(),
-                    'user_agent' => request()->header('User-Agent'),
-                    'periode_id' => $periode->id                
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
                 ])
                 ->createdAt(now()->subDays(10))
                 ->event('update')
@@ -68,13 +75,19 @@ class PeriodeController extends Controller //implements ICrud
 
     public function destroy(Periode $periode) {
         $periode->delete();
-        activity()
+        $agent = new Agent();
+            $agent->setUserAgent($request()->header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
+            activity()
                 ->causedBy(auth()->user())
                 ->performedOn($periode)
                 ->withProperties([
                     'ip' => request()->ip(),
-                    'user_agent' => request()->header('User-Agent'),
-                    'periode_id' => $periode->id                
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
                 ])
                 ->createdAt(now()->subDays(10))
                 ->event('destroy')
@@ -90,13 +103,19 @@ class PeriodeController extends Controller //implements ICrud
         $validPeriode = $request->validated();
         $objPeriode = new Periode();        
         $objPeriode->create($validPeriode);
-        activity()
+        $agent = new Agent();
+            $agent->setUserAgent(Request::header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
+            activity()
                 ->causedBy(auth()->user())
                 ->performedOn($objPeriode)
                 ->withProperties([
                     'ip' => request()->ip(),
-                    'user_agent' => request()->header('User-Agent'),
-                    'periode_id' => $objPeriode->id                
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
                 ])
                 ->createdAt(now()->subDays(10))
                 ->event('store')

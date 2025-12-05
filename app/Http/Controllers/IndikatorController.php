@@ -23,6 +23,7 @@ use App\Models\LaporanCapaian;
 use App\Models\RealisasiKompositor;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
+use Jenssegers\Agent\Agent;
 
 class IndikatorController extends Controller
 {
@@ -36,9 +37,10 @@ class IndikatorController extends Controller
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
             //'indikator_kompositors' => \App\Models\IndikatorKompositor::all(),
-            'parents' => Indikator::query()
-                ->whereIn('level_id', ['1', '2', '3'])
-                ->get(),
+            // 'parents' => Indikator::query()
+            //     ->whereIn('level_id', ['1', '2', '3'])
+            //     ->with('level')
+            //     ->get(),
             'pics' => \App\Models\PIC::all()
         ]);
     }
@@ -115,13 +117,19 @@ class IndikatorController extends Controller
                     DB::table('indikator_pic')->insert($data);
                 }
             }
+            $agent = new Agent();
+            $agent->setUserAgent(\Illuminate\Support\Facades\Request::header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
             activity()
                 ->causedBy(auth()->user())
                 ->performedOn($indikator)
                 ->withProperties([
                     'ip' => request()->ip(),
-                    'user_agent' => request()->header('User-Agent'),
-                    'indikator_id' => $indikator->id                
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
                 ])
                 ->createdAt(now()->subDays(10))
                 ->event('insert')
@@ -158,13 +166,19 @@ class IndikatorController extends Controller
             //     $pic->delete();
             // }
             $data['Q4'] = $indikator->delete();
+            $agent = new Agent();
+            $agent->setUserAgent(\Illuminate\Support\Facades\Request::header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
             activity()
                 ->causedBy(auth()->user())
                 ->performedOn($indikator)
                 ->withProperties([
                     'ip' => request()->ip(),
-                    'user_agent' => request()->header('User-Agent'),
-                    'indikator_id' => $indikator->id                
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
                 ])
                 ->createdAt(now()->subDays(10))
                 ->event('destroy')
@@ -187,7 +201,7 @@ class IndikatorController extends Controller
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
             'parents' => Indikator::query()
-                ->whereIn('level_id', ['1', '2', '3'])
+                ->whereIn('level_id', ['1', '2', '3', '4'])
                 ->get(),
             'indikator_kompositors' => IndikatorKompositor::query()
                 ->where('indikator_id', '=', $indikator->id)
@@ -218,7 +232,7 @@ class IndikatorController extends Controller
     {
         $this->authorize('indikator-create');
         $input = $request->all();
-        $request->validate(['pics' => ['required']]);
+        //$request->validate(['pics.required' => 'PIC wajib diisi!']);
         $validIndikator = $request->validated();
         $indikator = Indikator::create($validIndikator);
         $pics = $request->input('pics');
@@ -235,14 +249,20 @@ class IndikatorController extends Controller
                 DB::table('indikator_pic')->insert($data);
             }
         }
-        activity()
-            ->causedBy(auth()->user())
-            ->performedOn($indikator)
-            ->withProperties([
-                'ip' => request()->ip(),
-                'user_agent' => request()->header('User-Agent'),
-                'indikator_id' => $indikator->id                
-            ])
+        $agent = new Agent();
+            $agent->setUserAgent(\Illuminate\Support\Facades\Request::header('User-Agent'));
+            $browser = $agent->browser();
+            $version = $agent->version($browser);
+            $platform = $agent->platform();
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($indikator)
+                ->withProperties([
+                    'ip' => request()->ip(),
+                    'Browser' => $browser,
+                    'Browser Version' => $version,
+                    'Platform' => $platform               
+                ])
             ->createdAt(now()->subDays(10))
             ->event('store')
             ->log('Indikator Insert');
@@ -309,5 +329,14 @@ class IndikatorController extends Controller
         }
         
         return Redirect::route('indikator.index');
+    }
+
+    public function getParent(Request $request)
+    {
+        $parent_indikator = Indikator::query()
+                ->where('level_id', $request['level_id'] - 1)
+                ->with('level')
+                ->get();
+        return $parent_indikator;
     }
 }

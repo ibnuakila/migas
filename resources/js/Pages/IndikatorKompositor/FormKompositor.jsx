@@ -17,6 +17,7 @@ import AdminLayout from '@/layouts/AdminLayout';
 import MSelect from '../../Components/MSelect';
 import NewAdminLayout from "@/layouts/NewAdminLayout";
 import SSelect from "@/Components/SSelect";
+import axios from "axios";
 
 export default function FormKompositor(props) {
 
@@ -107,8 +108,7 @@ export default function FormKompositor(props) {
     const handleSave = (e) => {
         e.preventDefault();
         post(route('kompositor.store', indikator.id));
-    }
-
+    }   
 
     return (
         <NewAdminLayout

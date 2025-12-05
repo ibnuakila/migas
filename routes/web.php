@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/indikator/delete/{indikator}', [IndikatorController::class, 'destroy'])->name('indikator.destroy');
     Route::get('/indikator/create-formula/{indikator}', [IndikatorController::class, 'createFormula'])->name('indikator.create-formula');
     Route::post('/indikator/store-formula/', [IndikatorController::class, 'storeFormula'])->name('indikator.store-formula');
+    Route::get('/indikator/getparent', [IndikatorController::class, 'getParent'])->name('indikator.get-parent');
 });
 
 Route::middleware('auth')->group(function () {
