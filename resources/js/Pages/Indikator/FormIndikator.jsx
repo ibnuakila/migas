@@ -73,6 +73,7 @@ export default function FormIndikator() {
             setData('parent_id', 0);
         }else{
             setIsIksp(false);
+            setData('parent_id', e);
         }
         setData('level_id', e);
         getParent(e);
@@ -97,8 +98,8 @@ export default function FormIndikator() {
         axios.get(route('indikator.get-parent'), {params:{level_id:level}}
         ).then(result => {
             console.log(result)
-            setOptsParent(result.data.map(({ id, nama_indikator, level_id, numbering, level }) => {
-                return { value: level_id, label: nama_indikator + " (" + level.nama_level + ")" };
+            setOptsParent(result.data.map(({ id, nama_indikator, parent_id, numbering, level }) => {
+                return { value: id, label: nama_indikator + " (" + level.nama_level + ")" };
             }))
             // let parent = document.getElementById('opt-parent');
             // parent.options = optParent;

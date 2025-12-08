@@ -201,8 +201,13 @@ class IndikatorController extends Controller
             'satuans' => \App\Models\Satuan::all(),
             'levels' => \App\Models\Level::all(),
             'parents' => Indikator::query()
-                ->whereIn('level_id', ['1', '2', '3', '4'])
+                ->where('level_id', $indikator->level_id - 1)
+                ->with('level')
                 ->get(),
+            'parent' => Indikator::query()
+                ->where('id', $indikator->parent_id)
+                ->with('level')
+                ->get(),            
             'indikator_kompositors' => IndikatorKompositor::query()
                 ->where('indikator_id', '=', $indikator->id)
                 ->get(),
