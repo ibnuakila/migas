@@ -566,7 +566,7 @@ class KompositorController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(KompositorRequest $request)
     {
         $this->authorize('kompositor-create');
 
@@ -579,15 +579,16 @@ class KompositorController extends Controller
             if ($request->input('sumber_kompositor_id') == '1') { //new
                 $data['C-1'] = "Executed with True";
                 //validasi
-                $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-                    'nama_kompositor' => ['required'],
-                    'satuan' => ['required'],
-                    'indeks_id' => ['required'],
-                    'jenis_kompositor_id' => ['required'],
-                    'indikator_id' => ['required'],
-                    'sumber_kompositor_id' => ['required']
-                ]);
-                $validated = $validator->validated();
+                // $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                //     'nama_kompositor' => ['required'],
+                //     'satuan' => ['required'],
+                //     'indeks_id' => ['required'],
+                //     'jenis_kompositor_id' => ['required'],
+                //     'indikator_id' => ['required'],
+                //     'sumber_kompositor_id' => ['required']
+                // ]);
+                $request->scenario = 'New';
+                $validated = $request->validated();
 
                 //insert kompositor
                 $kompositor = Kompositor::create($validated);
@@ -651,11 +652,13 @@ class KompositorController extends Controller
             } elseif ($request->input('sumber_kompositor_id') == '2') { //existing indikator *perlu evaluasi
                 $data['C-2'] = "Executed with True";
                 //tambahkan validasi
-                $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-                    'indikator_id' => 'required',
-                    'kompositor_id' => 'required',
-                    'indeks_id' => 'required'
-                ])->validate();
+                // $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+                //     'indikator_id' => 'required',
+                //     'kompositor_id' => 'required',
+                //     'indeks_id' => 'required'
+                // ])->validate();
+                $request->scenario = 'Existing Indikator';
+                $request->validated();
 
                 //get existing indikator-kompositor
                 $kompositor = Kompositor::where('id', $request->input('kompositor_id'))->first();
