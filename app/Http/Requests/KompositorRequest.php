@@ -34,7 +34,7 @@ class KompositorRequest extends FormRequest
                 'jenis_kompositor_id' => ['required'],
                 'indikator_id' => ['required'],
                 //'type_kompositor' => ['required'],
-                //'kalkulasi' => ['nullable'],
+                'pics' => ['required'],
                 'sumber_kompositor' => ['required']
             ];
         }elseif($this->scenario === 'Existing Indikator'){
@@ -45,7 +45,7 @@ class KompositorRequest extends FormRequest
                 //'jenis_kompositor_id' => ['required'],
                 'indikator_id' => ['required'],
                 'kompositor_id' => ['required'],
-                //'kalkulasi' => ['nullable'],
+                'pics' => ['required'],
                 //'sumber_kompositor' => ['required']
             ];
         }elseif($this->scenario === 'Existing Kompositor'){
@@ -56,7 +56,7 @@ class KompositorRequest extends FormRequest
                 //'jenis_kompositor_id' => ['required'],
                 //'indikator_id' => ['required'],
                 //'type_kompositor' => ['required'],
-                //'kalkulasi' => ['nullable'],
+                'pics' => ['required'],
                 'kompositor_id' => ['required']
             ];
         }else{
@@ -67,7 +67,7 @@ class KompositorRequest extends FormRequest
                 'jenis_kompositor_id' => ['required'],
                 'indikator_id' => ['required'],
                 //'type_kompositor' => ['required'],
-                //'kalkulasi' => ['nullable'],
+                'pics' => ['required'],
                 'sumber_kompositor' => ['required']
             ];
         }
@@ -81,7 +81,8 @@ class KompositorRequest extends FormRequest
                 'satuan.required' => 'Satuan wajib diisi!',
                 'indeks_id.required' => 'Indeks wajib dipilih!',
                 'jenis_kompositor_id.required' => 'Jenis kompositor wajib dipilih!',
-                'sumber_kompositor.required' => 'Sumber kompositor wajib dipilih!'
+                'sumber_kompositor.required' => 'Sumber kompositor wajib dipilih!',
+                'pics.required' => 'PIC wajib diisi!'
             ];
         }elseif($this->scenario === 'Existing Indikator'){
             return [
@@ -89,12 +90,14 @@ class KompositorRequest extends FormRequest
                 //'satuan.required' => 'Satuan wajib diisi!',
                 'indikator_id.required' => 'Indikator wajib dipilih!',
                 'kompositor_id.required' => 'Kompositor wajib dipilih!',
-                'indeks_id.required' => 'Indeks wajib dipilih!'
+                'indeks_id.required' => 'Indeks wajib dipilih!',
+                'pics.required' => 'PIC wajib diisi!'
             ];
         }elseif($this->scenario === 'Existing Kompositor'){
             return[
                 'indeks_id.required' => 'Indeks wajib dipilih!',
-                'kompositor_id.required' => 'Kompositor wajib dipilih!'
+                'kompositor_id.required' => 'Kompositor wajib dipilih!',
+                'pics.required' => 'PIC wajib diisi!'
             ];
         }else{
             return [
@@ -102,7 +105,8 @@ class KompositorRequest extends FormRequest
                 'satuan.required' => 'Satuan wajib diisi!',
                 'indeks_id.required' => 'Indeks wajib dipilih!',
                 'jenis_kompositor_id.required' => 'Jenis kompositor wajib dipilih!',
-                'sumber_kompositor.required' => 'Sumber kompositor wajib dipilih!'
+                'sumber_kompositor.required' => 'Sumber kompositor wajib dipilih!',
+                'pics.required' => 'PIC wajib diisi!'
             ];
         }
     }

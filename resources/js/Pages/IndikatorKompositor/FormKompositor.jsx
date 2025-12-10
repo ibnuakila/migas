@@ -36,7 +36,7 @@ export default function FormKompositor(props) {
         nama_kompositor: '',
         kalkulasi: '',
         satuan: '',
-        indeks_id: '1',
+        indeks_id: '',
         jenis_kompositor_id: '',
         sumber_kompositor_id: '',
         status_kompositor_id: '',
@@ -137,6 +137,7 @@ export default function FormKompositor(props) {
                                                 <Option value={id.toString()} key={id}>{nama_sumber_kompositor}</Option>
                                             ))}
                                         </Select>
+                                        {errors.sumber_kompositor && <div className="text-red-400 mt-1">{errors.sumber_kompositor}</div>}
                                     </div>
                                     {newKompositor ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
@@ -175,14 +176,13 @@ export default function FormKompositor(props) {
                                                 </Select>
                                             </div>) : (
                                             <>
-                                                <div className="sm:w-full md:w-full lg:w-full">
+                                                {/* <div className="sm:w-full md:w-full lg:w-full">
                                                     <Input label="Kalkulasi" variant="outlined" id="kalkulasi"
                                                         onChange={e => {
                                                             setData('kalkulasi', e.target.value)
                                                         }}
-                                                    />
-                                                    {errors.kalkulasi && <div className="text-red-400 mt-1">{errors.kalkulasi}</div>}
-                                                </div>
+                                                    />                                                  
+                                                </div> */}
                                                 <div className="sm:w-full md:w-full lg:w-full">
                                                     <Input label="Value" variant="outlined" id="value"
                                                         onChange={e => {
@@ -275,8 +275,8 @@ export default function FormKompositor(props) {
                                                     console.log(selectedValue)
                                                 }}
                                             />
-                                            {errors.pic_id &&
-                                                <div className="text-red-400 mt-1">{errors.pic_id}</div>
+                                            {errors.pics &&
+                                                <div className="text-red-400 mt-1">{errors.pics}</div>
                                             }
                                         </div>
                                     ) : null}
