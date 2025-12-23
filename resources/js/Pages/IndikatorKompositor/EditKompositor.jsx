@@ -184,7 +184,7 @@ export default function EditKompositor(props) {
                     <Card className="p-5 h-full w-45">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                Edit Kompositor/Parameter
+                                Sunting Kompositor/Parameter
                             </Typography>
                         </CardHeader>
                         <CardBody>
@@ -218,7 +218,7 @@ export default function EditKompositor(props) {
                                         </div>) : (null)}
                                     {existingIndikator ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <SSelect label="Select Indikator" id="indeks" options={optExistIndikator}
+                                            <SSelect label="Pilih Indikator" id="indeks" options={optExistIndikator}
                                                 onChange={(e) => {
                                                     setData('ref_kompositor_id', e.value);
                                                     console.log(e);
@@ -232,7 +232,7 @@ export default function EditKompositor(props) {
                                         </div>) : (null)}
                                     {existingKompositor ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Select Kompositor" id="indeks"
+                                            <Select label="Pilih Kompositor" id="indeks"
                                                 onChange={handleChangeKompositor}
                                                 error={errors.kompositor_id}>
                                                 {kompositors.map(({ id, nama_kompositor, jenis_kompositor_id }) => (
@@ -242,7 +242,7 @@ export default function EditKompositor(props) {
                                             {errors.kompositor_id && <div className="text-red-400 mt-1">{errors.kompositor_id}</div>}
                                         </div>) : (null)}
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Select label="Select Indeks" id="indeks"
+                                        <Select label="Pilih Indeks" id="indeks"
                                             onChange={handleChangeIndeks}
                                             value={kompositor.data.indeks_id.toString()}
                                             error={errors.indeks_id}>
@@ -262,7 +262,7 @@ export default function EditKompositor(props) {
                                         {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Select label="Select Jenis Kompositor" id="jenis-kompositor"
+                                        <Select label="Pilih Jenis Kompositor" id="jenis-kompositor"
                                             onChange={handleChangeJenisKompositor}
                                             value={kompositor.data.jenis_kompositor_id.toString()}
                                             error={errors.indeks_id}>
@@ -297,7 +297,7 @@ export default function EditKompositor(props) {
                                                 {errors.kalkulasi && <div className="text-red-400 mt-1">{errors.kalkulasi}</div>}
                                             </div>
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Input label="Value" variant="outlined" id="value"
+                                                <Input label="Nilai" variant="outlined" id="value"
                                                     defaultValue={parameter ? parameter.value:null}
                                                     onChange={e => {
                                                         setData('value', e.target.value)
@@ -338,10 +338,10 @@ export default function EditKompositor(props) {
                         </CardBody>
                         <CardFooter className="space-x-2">
                             <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                Delete
+                                Hapus
                             </Button>
                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                Save
+                                Simpan
                             </Button>
 
                         </CardFooter>

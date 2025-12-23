@@ -105,13 +105,12 @@ export default function FormIndikatorPeriode() {
                                                     {errors.pic_id && 
                                                         <div className="text-red-400 mt-1">{errors.pic_id}</div>
                                                     }
-                                            </div>
-                                
+                                            </div>                                
                                 
                                         </CardBody>
                                         <CardFooter className="space-x-2">                                            
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                                Save
+                                                Simpan
                                             </Button>
                                         </CardFooter>
                                     </form>

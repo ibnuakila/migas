@@ -150,7 +150,7 @@ export default function EditLaporanCapaian() {
                     <Card className="p-5 h-full w-45">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                Edit Kinerja
+                                Sunting Kinerja
                             </Typography>
                         </CardHeader>
 
@@ -183,7 +183,7 @@ export default function EditLaporanCapaian() {
                                             color="blue"
                                             className="!absolute right-1 top-1 rounded"
                                             onClick={handleCalculate}
-                                        >Get</Button>
+                                        >Ambil Data</Button>
                                         {errors.kinerja && <div className="text-red-400 mt-1">{errors.kinerja}</div>}
                                     </div>
                                     <div>
@@ -215,10 +215,10 @@ export default function EditLaporanCapaian() {
                             </CardBody>
                             <CardFooter className="space-x-2">
                                 <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                    Delete
+                                    Hapus
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={handleSave}>
-                                    Save
+                                    Simpan
                                 </Button>
                             </CardFooter>
                         </form>

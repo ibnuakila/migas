@@ -49,7 +49,7 @@ export default function ListPic( {auth}){
                                         <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                                             <div className="flex my-2">
                                                 <Link href={route('pic.create')}>
-                                                    <Button size="sm" className="ml-2" color="blue">Add</Button>
+                                                    <Button size="sm" className="ml-2" color="blue">Tambah</Button>
                                                 </Link>
                                             </div>
                             

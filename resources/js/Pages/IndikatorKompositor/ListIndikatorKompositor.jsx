@@ -90,7 +90,7 @@ export default function ListIndikatorKompositor({ auth }) {
                             <div className="flex my-2">
                                 {indikator ? (
                                     <Link href={route('kompositor.create', indikator.id)}>
-                                        <Button size="sm" className="ml-2" color="blue">Add</Button>
+                                        <Button size="sm" className="ml-2" color="blue">Tambah</Button>
                                     </Link>) : (null)}
                             </div>
 
@@ -131,7 +131,7 @@ export default function ListIndikatorKompositor({ auth }) {
                                         </th>
                                         <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                             <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
-                                                Action
+                                                Tindakan
                                             </Typography>
                                         </th>
                                     </tr>

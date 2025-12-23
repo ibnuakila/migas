@@ -87,10 +87,10 @@ export default function ListIndikatorPeriode({ auth }) {
                         </div>
                         <div className="flex my-2">
                             <Link href={route('indikator-periode.create')}>
-                                <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
+                                <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Tambah</Button>
                             </Link>
 
-                            <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator</Button>
+                            <Button size="sm" className="ml-2" onClick={handleImport} color="green">Impor Indikator</Button>
 
                         </div>
 
@@ -158,7 +158,7 @@ export default function ListIndikatorPeriode({ auth }) {
                                 {data.length === 0 && (
                                     <tr>
                                         <td className="px-6 py-4 border-t" colSpan="4">
-                                            No data found.
+                                            Tidak ada data.
                                         </td>
                                     </tr>
                                 )}

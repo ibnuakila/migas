@@ -46,7 +46,7 @@ export default function FormPeriode() {
                                 
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
-                                            New Periode
+                                            Tambah Periode
                                         </Typography>
                                     </CardHeader>
                                 
@@ -82,7 +82,7 @@ export default function FormPeriode() {
                                         <CardFooter className="space-x-2 ">
                                         
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                                Save
+                                                Simpan
                                             </Button>
                                         
                                         </CardFooter>

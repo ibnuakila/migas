@@ -277,7 +277,7 @@ export default function EditRealisasi(props) {
                         <form action="">
                             <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                 <Typography variant="h4" color="white">
-                                    Edit Realisasi
+                                    Sunting Realisasi
                                 </Typography>
                             </CardHeader>
                             <CardBody>
@@ -320,19 +320,19 @@ export default function EditRealisasi(props) {
                                             color="blue"
                                             className="!absolute right-1 top-1 rounded"
                                             onClick={handleCalculate}
-                                        >Get Agregasi</Button>) : ("")}
+                                        >Ambil Data Agregasi</Button>) : ("")}
                                         {kompositor.jenis_kompositor_id == 3 ? (<Button
                                             size="sm"
                                             color="blue"
                                             className="!absolute right-1 top-1 rounded"
                                             onClick={handleCalculate}
-                                        >Get Parameter</Button>) : ("")}
+                                        >Ambil Data Parameter</Button>) : ("")}
                                         {kompositor.jenis_kompositor_id == 4 ? (<Button
                                             size="sm"
                                             color="blue"
                                             className="!absolute right-1 top-1 rounded"
                                             onClick={handleCalculate}
-                                        >Get Value</Button>) : ("")}
+                                        >Ambil Nilai</Button>) : ("")}
                                         {errors.realisasi && <div className="text-red-400 mt-1">{errors.realisasi}</div>}
                                     </div>
                                     {isAgregasi ? (
@@ -340,7 +340,7 @@ export default function EditRealisasi(props) {
                                             <Select label="Realisasi Format" onChange={handleChangeRealisasiFormat}
                                                 value={input_realisasi.realisasi_format}
                                                 error={errors.realisasi_format}>
-                                                <Option value="Decimal">Decimal</Option>
+                                                <Option value="Desimal">Desimal</Option>
                                                 <Option value="Persentase">Persentase</Option>
                                             </Select>
                                             {errors.realisasi_format && <div className="text-red-400 mt-1">{errors.realisasi_format}</div>}
@@ -381,13 +381,13 @@ export default function EditRealisasi(props) {
                             </CardBody>
                             <CardFooter className="space-x-2">
                                 <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                    Delete Kompositor
+                                    Hapus Kompositor
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                    Save
+                                    Simpan
                                 </Button>
                                 <Button variant="gradient" color="blue" onClick={(e) => handleCancel(e)}>
-                                    Cancel
+                                    Batal
                                 </Button>
                             </CardFooter>
                         </form>

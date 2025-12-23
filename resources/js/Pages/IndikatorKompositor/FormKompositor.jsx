@@ -118,7 +118,7 @@ export default function FormKompositor(props) {
                     <Card className="p-5 h-full w-45">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                New Kompositor/Parameter
+                                Tambah Kompositor/Parameter
                             </Typography>
                         </CardHeader>
                         <CardBody>
@@ -141,7 +141,7 @@ export default function FormKompositor(props) {
                                     </div>
                                     {newKompositor ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Select Jenis Kompositor" id="jenis-kompositor"
+                                            <Select label="Pilih Jenis Kompositor" id="jenis-kompositor"
                                                 onChange={(e) => {
                                                     setOptionJenisKompositor({ selectValue: e });
                                                     setData('jenis_kompositor_id', e);
@@ -217,7 +217,7 @@ export default function FormKompositor(props) {
                                     {existingIndikator ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
                                             
-                                            <SSelect label="Select Indikator" id="indeks" options={optExistIndikator}
+                                            <SSelect label="Pilih Indikator" id="indeks" options={optExistIndikator}
                                                 onChange={(e) => {
                                                     setData('kompositor_id', e.value);
                                                     console.log(e);
@@ -231,7 +231,7 @@ export default function FormKompositor(props) {
                                         </div>) : (null)}
                                     {existingKompositor ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <Select label="Select Kompositor" id="indeks"
+                                            <Select label="Pilih Kompositor" id="indeks"
                                                 onChange={(e) => {
                                                     setData('kompositor_id', e);
                                                 }}
@@ -244,7 +244,7 @@ export default function FormKompositor(props) {
                                         </div>) : (null)}
 
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Select label="Select Indeks" id="indeks"
+                                        <Select label="Pilih Indeks" id="indeks"
                                             onChange={(e) => {
                                                 setOptionIndeks({ selectValue: e });
                                                 setData('indeks_id', e);
@@ -294,7 +294,7 @@ export default function FormKompositor(props) {
 
                                     <div className="flex">
                                         <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                            Save
+                                            Simpan
                                         </Button>
                                     </div>
                                 </div>

@@ -117,7 +117,7 @@ export default function ListLaporanCapaian({ auth }) {
               <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                 <div className="flex my-2">
 
-                  <Button size="sm" className="ml-2" onClick={handleImport} color="green">Import Indikator</Button>
+                  <Button size="sm" className="ml-2" onClick={handleImport} color="green">Impor Indikator</Button>
                 </div>
 
                 <table className="w-full min-w-max table-auto text-left">
@@ -149,7 +149,7 @@ export default function ListLaporanCapaian({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Level</Typography>
+                        >Tingkatan</Typography>
                       </th>
                       <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <Typography
@@ -219,7 +219,7 @@ export default function ListLaporanCapaian({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Action</Typography>
+                        >Tindakan</Typography>
                       </th>
                     </tr>
                     <tr className="border-b-2">
@@ -522,7 +522,7 @@ export default function ListLaporanCapaian({ auth }) {
                     {data.length === 0 && (
                       <tr>
                         <td className="px-6 py-4 border-t" colSpan="4">
-                          No data found.
+                          Tidak ada data.
                         </td>
                       </tr>
                     )}

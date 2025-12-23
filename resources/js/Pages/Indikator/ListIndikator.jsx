@@ -105,7 +105,7 @@ export default function ListIndikator({ auth }) {
               <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                 <div className="flex my-2">
                   <Link href={route('indikator.create')}>
-                    <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Add</Button>
+                    <Button size="sm" className="ml-2" onClick={() => setOpen(true)} color="blue">Tambah</Button>
                   </Link>
                 </div>
                 <table className="w-full min-w-max table-auto text-left">
@@ -123,14 +123,14 @@ export default function ListIndikator({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Numbering</Typography>
+                        >Penomoran</Typography>
                       </th>
                       <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Ordering</Typography>
+                        >Pengurutan</Typography>
                       </th>
                       <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <Typography
@@ -144,7 +144,7 @@ export default function ListIndikator({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Level</Typography>
+                        >Tingkatan</Typography>
                       </th>
                       <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <Typography
@@ -179,7 +179,7 @@ export default function ListIndikator({ auth }) {
                           variant="small"
                           color="blue-gray"
                           className="font-normal leading-none opacity-70"
-                        >Action</Typography>
+                        >Tindakan</Typography>
                       </th>
 
                     </tr>

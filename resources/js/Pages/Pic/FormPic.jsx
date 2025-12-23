@@ -46,7 +46,7 @@ export default function FormPic() {
                             
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
-                                            New PIC
+                                            Tambah PIC
                                         </Typography>
                                     </CardHeader>                                
                             
@@ -89,7 +89,7 @@ export default function FormPic() {
                                         <CardFooter className="space-x-2 ">
                                             <div className="flex place-content-center">
                                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                                    Save
+                                                    Simpan
                                                 </Button>
                                             </div>
                                         </CardFooter>

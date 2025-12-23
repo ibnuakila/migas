@@ -80,7 +80,7 @@ export default function ListSatuan({auth}){
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">
                     <div className="flex my-2">
                         <Link href={route('satuan.create')}>
-                        <Button size="sm" className="ml-2" color="blue">Add</Button>
+                        <Button size="sm" className="ml-2" color="blue">Tambah</Button>
                         </Link>
                     </div>
                     
@@ -128,7 +128,7 @@ export default function ListSatuan({auth}){
                             {satuans.data.length === 0 && (
                               <tr>
                                 <td className="px-6 py-4 border-t" colSpan="4">
-                                  No contacts found.
+                                  Tidak ada data.
                                 </td>
                               </tr>
                             )}

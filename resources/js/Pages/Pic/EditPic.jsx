@@ -52,7 +52,7 @@ export default function FormPeriode() {
                             
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
-                                            New PIC
+                                            Sunting PIC
                                         </Typography>
                                     </CardHeader>
                             
@@ -96,10 +96,10 @@ export default function FormPeriode() {
                                         </CardBody>
                                         <CardFooter className="space-x-2 ">
                                             <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                                Delete
+                                                Hapus
                                             </Button>
                                             <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                                Save
+                                                Delete
                                             </Button>
                             
                                         </CardFooter>

@@ -121,7 +121,7 @@ export default function EditLaporanCapaian() {
 
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                Edit Laporan Capaian
+                                Sunting Laporan Capaian
                             </Typography>
                         </CardHeader>
 
@@ -162,7 +162,7 @@ export default function EditLaporanCapaian() {
                                     <Select label="Format Target" onChange={handleTargetFormatChange}
                                         value={laporan_capaian.data[0].target_format}
                                         error={errors.target_format}>
-                                        <Option value="Decimal">Decimal</Option>
+                                        <Option value="Desimal">Desimal</Option>
                                         <Option value="Persentase">Persentase</Option>
                                     </Select>
                                     {errors.target_format &&
@@ -208,10 +208,10 @@ export default function EditLaporanCapaian() {
                             </CardBody>
                             <CardFooter className="space-x-2">
                                 <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                    Delete
+                                    Hapus
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                    Save
+                                    Simpan
                                 </Button>
                             </CardFooter>
                         </form>

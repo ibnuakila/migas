@@ -108,7 +108,7 @@ export default function EditIndikator() {
                     <Card className="p-5 h-full w-45">
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                Update Indikator
+                                Sunting Indikator
                             </Typography>
                         </CardHeader>
 
@@ -126,7 +126,7 @@ export default function EditIndikator() {
                                         {errors.nama_indikator && <div className="text-red-400 mt-1">{errors.nama_indikator}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Select label="Select Level" onChange={handleChangeLevel}
+                                        <Select label="Pilih Tingkatan" onChange={handleChangeLevel}
                                             value={indikator.data.level_id}
                                             error={errors.level_id}>
                                             {levels.map(({ id, nama_level }) => (
@@ -149,7 +149,7 @@ export default function EditIndikator() {
                                     <div className="sm:w-full md:w-full lg:w-full">
                                         {!isIksp ? (
                                         <div className="sm:w-full md:w-full lg:w-full">
-                                            <SSelect label="Select Parent" id="opt-parent" options={optsParent}
+                                            <SSelect label="Pilih Atasan" id="opt-parent" options={optsParent}
                                                 onChange={handleChangeParent} defaultValue={optParent}
                                                 error={errors.parent_id}>
                                             </SSelect>
@@ -158,7 +158,7 @@ export default function EditIndikator() {
                                     ) : (null)}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Input label="Ordering" variant="outlined" id="Ordering"
+                                        <Input label="Pengurutan" variant="outlined" id="Ordering"
                                             onChange={e => {
                                                 setData('ordering', e.target.value)
                                             }}
@@ -167,7 +167,7 @@ export default function EditIndikator() {
                                         {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Input label="Numbering" variant="outlined" id="Numbering"
+                                        <Input label="Penomoran" variant="outlined" id="Numbering"
                                             onChange={e => {
                                                 setData('numbering', e.target.value)
                                             }}
@@ -193,10 +193,10 @@ export default function EditIndikator() {
                             </CardBody>
                             <CardFooter className="space-x-2 ">
                                 <Button variant="outlined" color="red" onClick={(e) => handleDestroy(e)}>
-                                    Delete
+                                    Hapus
                                 </Button>
                                 <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)}>
-                                    Save
+                                    Simpan
                                 </Button>
                             </CardFooter>
                         </form>

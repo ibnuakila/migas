@@ -117,7 +117,7 @@ export default function FormIndikator() {
                             
                                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                                         <Typography variant="h4" color="white">
-                                            New Indikator
+                                            Tambah Indikator
                                         </Typography>
                                     </CardHeader>                            
                             
@@ -134,7 +134,7 @@ export default function FormIndikator() {
                                                     {errors.nama_indikator && <div className="text-red-400 mt-1">{errors.nama_indikator}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Level" onChange={handleChangeLevel}
+                                                    <Select label="Pilih Tingkatan" onChange={handleChangeLevel}
                                                             value={optionLevel.selectValue}
                                                             error={errors.level_id}>
                                                         {levels.map(({id, nama_level}) => (
@@ -144,7 +144,7 @@ export default function FormIndikator() {
                                                     {errors.level_id && <div className="text-red-400 mt-1">{errors.level_id}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Satuan" onChange={handleChangeSatuan}
+                                                    <Select label="Pilih Satuan" onChange={handleChangeSatuan}
                                                             value={optionSatuan.selectValue}
                                                             error={errors.satuan_id}>
                                                         {satuans.map(({id, nama_satuan}) => (
@@ -155,7 +155,7 @@ export default function FormIndikator() {
                                                 </div>
                                                 {!isIksp? (
                                                     <div className="sm:w-full md:w-full lg:w-full">                                                    
-                                                    <SSelect label="Select Parent" id="opt-parent" options={optsParent}
+                                                    <SSelect label="Pilih Atasan" id="opt-parent" options={optsParent}
                                                         onChange={handleChangeParent}
                                                         error={errors.parent_id}>                                                        
                                                     </SSelect>
@@ -164,7 +164,7 @@ export default function FormIndikator() {
                                                 ):(null)}
                                                 
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Input label="Ordering" variant="outlined" id="Ordering" 
+                                                    <Input label="Pengurutan" variant="outlined" id="Ordering" 
                                                            onChange={e => {
                                                                        setData('ordering', e.target.value)
                                                                    }} 
@@ -172,7 +172,7 @@ export default function FormIndikator() {
                                                     {errors.ordering && <div className="text-red-400 mt-1">{errors.ordering}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Input label="Numbering" variant="outlined" id="Numbering" 
+                                                    <Input label="Penomoran" variant="outlined" id="Numbering" 
                                                            onChange={e => {
                                                                        setData('numbering', e.target.value)
                                                                    }} 
@@ -193,7 +193,7 @@ export default function FormIndikator() {
                                                 </div>
                                                 <div className="flex">
                                                     <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)} id="save-indikator">
-                                                        Save
+                                                        Simpan
                                                     </Button> 
                                                 </div>                            
                             

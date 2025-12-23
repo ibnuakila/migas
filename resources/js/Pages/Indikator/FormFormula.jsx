@@ -49,7 +49,7 @@ export default function FormFormula() {
 
                         <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                                Formula Indikator
+                                Rumusan Indikator
                             </Typography>
                         </CardHeader>
 
@@ -90,7 +90,7 @@ export default function FormFormula() {
                                         </Card>                                        
                                     </div> 
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Textarea label="Formula Realisasi" variant="outlined" id="formulaRealisasi" 
+                                        <Textarea label="Rumusan Realisasi" variant="outlined" id="formulaRealisasi" 
                                         className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
                                                 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
                                                 placeholder-gray-400 resize-y"
@@ -102,7 +102,7 @@ export default function FormFormula() {
                                         {errors.formula_realisasi && <div className="text-red-400 mt-1">{errors.formula_realisasi}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Textarea label="Mapping Realisasi" variant="outlined" id="mappingRealisasi"
+                                        <Textarea label="Pemetaan Realisasi" variant="outlined" id="mappingRealisasi"
                                         className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
                                                 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
                                                 placeholder-gray-400 resize-y"
@@ -115,7 +115,7 @@ export default function FormFormula() {
                                     </div>
                                     
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Textarea label="Formula Kinerja" variant="outlined" id="formulaKinerja"
+                                        <Textarea label="Rumusan Kinerja" variant="outlined" id="formulaKinerja"
                                         className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
                                             shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
                                             placeholder-gray-400 resize-y"
@@ -127,7 +127,7 @@ export default function FormFormula() {
                                         {errors.formula_kinerja && <div className="text-red-400 mt-1">{errors.formula_kinerja}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <Textarea label="Mapping Kinerja" variant="outlined" id="mappingKinerja"
+                                        <Textarea label="Pemetaan Kinerja" variant="outlined" id="mappingKinerja"
                                         className="border border-gray-300 rounded-lg p-4 text-xl font-bold text-gray-800 bg-gray-100 
                                             shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
                                             placeholder-gray-400 resize-y"
@@ -141,7 +141,7 @@ export default function FormFormula() {
                                     
                                     <div className="flex">
                                         <Button variant="gradient" type="submit" color="green" onClick={(e) => handleSave(e)} id="save-indikator">
-                                            Save
+                                            Simpan
                                         </Button>
                                     </div>
 
