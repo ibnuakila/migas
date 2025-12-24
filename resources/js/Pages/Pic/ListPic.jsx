@@ -16,7 +16,7 @@ import NewAdminLayout from '@/layouts/NewAdminLayout';
 
 export default function ListPic( {auth}){
     const {pics} = usePage().props;
-    const TABLE_HEAD = ["ID", "Nama PIC", "Parent", "Keterangan", "Action"];
+    const TABLE_HEAD = ["ID", "Nama PIC", "Atasan", "Keterangan", "Tindakan"];
 
 
     const [open, setOpen] = useState(false);

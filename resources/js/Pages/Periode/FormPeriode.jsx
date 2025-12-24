@@ -66,7 +66,7 @@ export default function FormPeriode() {
                                             </div>
                                                 
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Status" onChange={handleChange}
+                                                    <Select label="Pilih Status" onChange={handleChange}
                                                     value={option.selectValue}
                                                     error={errors.status}>
                                                       {optStatus.map( (opt) => <Option value={opt}>{opt}</Option> )}                                                      

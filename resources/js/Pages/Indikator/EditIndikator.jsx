@@ -176,7 +176,7 @@ export default function EditIndikator() {
                                         {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
                                     </div>
                                     <div className="sm:w-full md:w-full lg:w-full">
-                                        <MSelect options={optPic} defaultValue={def_pics}
+                                        <MSelect options={optPic} defaultValue={def_pics} label="PIC"
                                             onChange={(item) => {
                                                 setSelectedValue(item);
                                                 setData('pics', item)

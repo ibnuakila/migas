@@ -26,7 +26,7 @@ export default function ListIndikatorPeriode({ auth }) {
     } = indikator_periodes;
     console.log(indikator_periodes);
 
-    const TABLE_HEAD = ["ID", "Periode", "Indikator", "Target", "PIC", "Action"];
+    const TABLE_HEAD = ["ID", "Periode", "Indikator", "Target", "PIC", "Tindakan"];
 
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);

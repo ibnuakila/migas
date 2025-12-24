@@ -180,7 +180,7 @@ export default function FormIndikator() {
                                                     {errors.numbering && <div className="text-red-400 mt-1">{errors.numbering}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <MSelect options={optPic}  
+                                                    <MSelect options={optPic} label="PIC"
                                                         onChange={(item) => {
                                                             setSelectedValue(item); 
                                                             setData('pics', item)

@@ -26,7 +26,7 @@ export default function ListSatuan({auth}){
         //meta: { links }
       } = satuans;
     
-    const TABLE_HEAD = ["ID", "Nama Satuan", "Action"];
+    const TABLE_HEAD = ["ID", "Nama Satuan", "Tindakan"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);

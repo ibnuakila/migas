@@ -55,7 +55,7 @@ export default function FormLevel() {
                                 
                                             <div className="flex flex-wrap flex-col place-content-center gap-4">
                                             <div className="sm:w-full md:w-full lg:w-full">
-                                                <Input label="Nama Level" variant="outlined" id="Level" 
+                                                <Input label="Nama Tingkatan" variant="outlined" id="Level" 
                                                         onChange={e => {
                                                             setData('nama_level', e.target.value)
                                                         }} 

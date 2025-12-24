@@ -26,7 +26,7 @@ export default function ListLevel({auth}){
         meta: { links }
       } = levels;
     
-    const TABLE_HEAD = ["ID", "Nama Level", "Action"];
+    const TABLE_HEAD = ["ID", "Nama Tingkatan", "Tindakan"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -70,7 +70,7 @@ export default function ListLevel({auth}){
                     <Card className="mt-12 mb-8 flex flex-col gap-12">
                     <CardHeader variant="gradient" color="blue-gray" className="mb-4 grid h-20 place-items-center">
                             <Typography variant="h4" color="white">
-                              Daftar Level 
+                              Daftar Tingkatan
                             </Typography>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-2 pt-0 pb-2">

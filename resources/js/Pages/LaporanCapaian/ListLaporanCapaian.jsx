@@ -345,7 +345,7 @@ export default function ListLaporanCapaian({ auth }) {
                           <Typography variant="small" color="blue-gray" className="font-medium mr-1 text-amber-600">
                             <Link href={route('laporan-capaian.edit', id)} title="Edit">
                               {target ? (
-                                target_format === "Decimal"
+                                target_format === "Decimal" || target_format === "Desimal"
                                   ? parseFloat(target).toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 3

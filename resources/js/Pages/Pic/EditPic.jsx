@@ -71,7 +71,7 @@ export default function FormPeriode() {
                                                     {errors.nama_pic && <div className="text-red-400 mt-1">{errors.nama_pic}</div>}
                                                 </div>
                                                 <div className="sm:w-full md:w-full lg:w-full">
-                                                    <Select label="Select Parent" onChange={handleChangeParent}
+                                                    <Select label="Pilih Atasan" onChange={handleChangeParent}
                                                             value={pic.data.parent_id}
                                                             error={errors.satuan_id}>
                                                         {parent.map(({id, nama_pic}) => (

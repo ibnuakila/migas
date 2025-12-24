@@ -22,7 +22,7 @@ export default function ListPeriode({auth}){
     const { filter } = usePage().props;
     //console.log(usePage().props);
     
-    const TABLE_HEAD = ["ID", "Periode", "Status", "Action"];
+    const TABLE_HEAD = ["ID", "Periode", "Status", "Tindakan"];
  
     const [open, setOpen] = useState(false);
     const [edit, setEdit] = useState(false);

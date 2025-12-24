@@ -69,7 +69,7 @@ export default function EditPeriode() {
                                                        error={errors.periode}/>                      
                                                        {errors.periode && <div className="text-red-400 mt-1">{errors.periode}</div>}
                                                 
-                                                    <Select label="Select Status" onChange={handleChange}
+                                                    <Select label="Pilih Status" onChange={handleChange}
                                                     value={periode.data.status}                                                    
                                                     error={errors.status}>
                                                     {optStatus.map( (opt) => <Option value={opt}>{opt}</Option> )}
