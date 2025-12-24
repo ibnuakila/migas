@@ -30,4 +30,15 @@ class InputRealisasiRequest extends FormRequest
             'laporan_capaian_id' => ['required','integer']
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'realisasi.required' => 'Realisasi wajib diisi!',
+            'realisasi_format.required' => 'Realisasi Format wajib diisi!',
+            'triwulan_id.required' => 'Triwulan wajib dipilih!',
+            'laporan_capaian_id.required' => 'Laporan Capaian Id wajib diisi!'
+                      
+        ];
+    }
 }

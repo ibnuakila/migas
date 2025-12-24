@@ -35,4 +35,20 @@ class LaporanCapaianRequest extends FormRequest
             'sumber_data' => ['nullable'],
         ];
     }
+
+    public function messages()
+    {
+        return [
+            
+            'periode_id.required' => 'Periode wajib diisi!',               
+            'indikator_id.required' => 'Indikator wajib diisi!',
+            'kategori_kinerja_id.nullable' => '',
+            'target.required' => 'Target wajib diisi!',
+            'target.decimal:2,5' => 'Target Format: 999.00 (maksimal 5 digit dibelakang titik)',
+            'target_format.required' => 'Target Format wajib diisi!',
+            'status_kinerja.nullable' => '',
+            'kinerja_tahunan.nullable' => '',
+            'sumber_data.nullable' => ''
+        ];
+    }
 }

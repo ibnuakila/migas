@@ -30,4 +30,14 @@ class KinerjaTriwulanRequest extends FormRequest
             'kinerja_format' => ['required']
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'laporan_capaian_id.required' => 'Laporan Capaian Id wajib diisi!',
+            'kinerja.nullable' => 'Kinerja dapat diisi!',
+            'triwulan_id.required' => 'Triwulan wajib dipilih!',
+            'kinerja_format.required' => 'Kinerja Format wajib diisi!'                      
+        ];
+    }
 }
